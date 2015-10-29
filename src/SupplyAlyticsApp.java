@@ -1,26 +1,17 @@
 import edu.hm.cs.softengii.cntrl.LoginCtrl;
 import edu.hm.cs.softengii.cntrl.RegistrateCtrl;
-import edu.hm.cs.softengii.db.ApachenEntityManagerFactory;
 import edu.hm.cs.softengii.db.daos.UserDao;
+import edu.hm.cs.softengii.utils.SettingsPropertiesHelper;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SupplyAlyticsApp extends Application {
-
-
-    private final int MAX_WIDTH = 1024;
-    private final int MAX_HEIGHT = 768;
 
     private Stage stage;
     private static SupplyAlyticsApp instance;
@@ -37,11 +28,12 @@ public class SupplyAlyticsApp extends Application {
         launch(args);
     }
 
-    @Override public void start(Stage primaryStage) {
+    @Override
+    public void start(Stage primaryStage) {
 
         UserDao userDao = new UserDao();
 
-        primaryStage.setTitle("NoKloo'boutIT - SupplyAlytics");
+        primaryStage.setTitle(SettingsPropertiesHelper.getInstance().getAppTitle());
         stage = primaryStage;
 
         if(userDao.isEmpty()) {
@@ -90,7 +82,7 @@ public class SupplyAlyticsApp extends Application {
 
         Scene scene = stage.getScene();
         if (scene == null) {
-            scene = new Scene(page, 1024, 768);
+            scene = new Scene(page, SettingsPropertiesHelper.getInstance().getWindowWidth(), SettingsPropertiesHelper.getInstance().getWindowHeight());
 
             // TODO no CSS yet
             //scene.getStylesheets().add(App.class.getResource("demo.css").toExternalForm());

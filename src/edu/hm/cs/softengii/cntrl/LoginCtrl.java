@@ -1,6 +1,7 @@
 package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.daos.UserDao;
+import edu.hm.cs.softengii.utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,7 +23,7 @@ public class LoginCtrl implements Initializable{
     private Stage stage;
 
     @FXML private TextField userName;
-    @FXML private PasswordField password;
+    @FXML private PasswordField pswd;
     @FXML private Button loginButton;
 
     @FXML
@@ -30,8 +31,11 @@ public class LoginCtrl implements Initializable{
 
         UserDao userDao = new UserDao();
 
-        if(userDao.isLoginCorrect(userName.getText(), password.getText())) {
+        if(userDao.isLoginCorrect(userName.getText(), pswd.getText())) {
+
+            Session.getInstance().setAuthenticatedUser(userDao.getUserFromLoginName(userName.getText()));
             gotoMainMenu();
+
         } else {
             System.out.println("ERROR: Wrong login data!");
         }
@@ -53,11 +57,11 @@ public class LoginCtrl implements Initializable{
 
         try {
 
-            String fxmlPath = "../view/mainMenu.fxml";
+            String fxmlPath = "../view/compareSuppliers.fxml";
             FXMLLoader loader = new FXMLLoader(LoginCtrl.class.getResource(fxmlPath));
 
             Parent page = (Parent) loader.load();
-            ((MainMenuCtrl)loader.getController()).setStage(stage);
+            ((CompareSuppliersCtrl)loader.getController()).setStage(stage);
 
             replaceSceneContent(page);
         } catch (Exception ex) {

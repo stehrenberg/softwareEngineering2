@@ -44,8 +44,25 @@ public class UserDao {
         return query.getResultList();
     }
 
+    public UserEntity getUserFromLoginName(String loginName) {
 
-    public void createUser(String loginName, String password, String forename, String surname, boolean isAdmin) {
+        this.entityManager = getEntityManager();
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserEntity> criteriaQuery = cb.createQuery(UserEntity.class);
+
+        Root userRoot = criteriaQuery.from(UserEntity.class);
+
+        Predicate predicate = cb.like(userRoot.get("loginName"), loginName);
+        criteriaQuery.where(predicate);
+
+        Query query = entityManager.createQuery(criteriaQuery);
+
+        return (UserEntity) query.getSingleResult();
+    }
+
+
+    public UserEntity createUser(String loginName, String password, String forename, String surname, boolean isAdmin) {
 
         String generatedPass = null;
         try {
@@ -64,6 +81,8 @@ public class UserDao {
         entityManager.persist(user);
         entityManager.getTransaction().commit();
         entityManager.close();
+
+        return user;
     }
 
 
@@ -84,10 +103,10 @@ public class UserDao {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<UserEntity> criteriaQuery = cb.createQuery(UserEntity.class);
 
-        Root waiterRoot = criteriaQuery.from(UserEntity.class);
+        Root userRoot = criteriaQuery.from(UserEntity.class);
 
-        Predicate predicate1 = cb.like(waiterRoot.get("loginName"), loginName);
-        Predicate predicate2 = cb.like(waiterRoot.get("password"), generatedPass);
+        Predicate predicate1 = cb.like(userRoot.get("loginName"), loginName);
+        Predicate predicate2 = cb.like(userRoot.get("password"), generatedPass);
 
         criteriaQuery.where(cb.and(predicate1, predicate2));
         Query query = entityManager.createQuery(criteriaQuery);
