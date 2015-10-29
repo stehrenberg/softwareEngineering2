@@ -4,9 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class Database {
+public class Database implements IDatabase {
     
     //Database URL
     private final static String DB_URL = "jdbc:mysql://swe2.cs.hm.edu:21964/sap_emulation";
@@ -18,10 +17,11 @@ public class Database {
     /**Connection to the database.*/
     private Connection connection;
     
-    /**Empty constructor*/
-    public DatabaseInterface() {}
+    /**Empty constructor. Not needed here.*/
+    public Database() {}
     
-    /**Opens the connection to the database.*/
+
+    @Override
     public void establishConnection() {
         try {
             connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
@@ -30,7 +30,7 @@ public class Database {
         }
     }
     
-    /**Close the connection to the database.*/
+    @Override
     public void closeConnection() {
         try {
             connection.close();
@@ -39,11 +39,7 @@ public class Database {
         }
     }
     
-    //GetSuppliers soll zur Auswahl der einzelnen Supplier im Drop Down Menü verwendet werden.
-    
-    /**Finds all suppliers listed in the database and collects them in an ArrayList.
-     * @return All suppliers in database.
-     */
+    @Override
     public ArrayList<String> getSuppliers() {
         ArrayList<String> suppliers = new ArrayList<>();
         
@@ -63,14 +59,15 @@ public class Database {
         return suppliers;
     }
     
-    //Soll die Daten für einen gewissen Zeitraum liefern, falls in der GUI die Einstellungen angepasst werden.
-    
-    public void getDataForDateRange(final Date startDate, final Date endDate) {
-        //Should return the data for this range.
+    @Override
+    public ArrayList<Supplier> getSupplierData() {
+        ArrayList<Supplier> supplierData = new ArrayList<>();
+        
+        return supplierData;
     }
 
     public static void main(String[] args) {
-    	Database db = new Database();
+        IDatabase db = new Database();
         db.establishConnection();
         db.getSuppliers();
     }
