@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="mainWindow" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.hm.cs.softengii.cntrl.LoginCtrl">
+   <children>
+      <Text layoutX="471.0" layoutY="176.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to ">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Text>
+      <Text layoutX="403.0" layoutY="221.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The ApachenPub">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Text>
+      <Button fx:id="loginButton" layoutX="498.0" layoutY="400.0" mnemonicParsing="false" onAction="#loginToMainMenu" prefHeight="37.0" prefWidth="69.0" text="OK" />
+      <TextField fx:id="userName" layoutX="457.0" layoutY="316.0" promptText="Username" />
+      <PasswordField fx:id="password" layoutX="458.0" layoutY="349.0" />
+      <Text layoutX="457.0" layoutY="306.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login:" wrappingWidth="44.28515625" />
+   </children>
+</AnchorPane>

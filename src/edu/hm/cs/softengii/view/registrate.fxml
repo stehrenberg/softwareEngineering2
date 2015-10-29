@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="registrateWindow"
+            prefHeight="768.0" prefWidth="1027.0"
+            xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="edu.hm.cs.softengii.cntrl.RegistrateCtrl">
+   <children>
+      <Text layoutX="472.0" layoutY="71.0" strokeType="OUTSIDE" strokeWidth="0.0" text="NoKloo'boutIT">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Text>
+      <Text layoutX="427.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SupplyAlytics">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Text>
+      <Text layoutX="80.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Text>
+      <Line endX="750.0" fill="#00000099" layoutX="180.0" layoutY="165.0" startX="-100.0" />
+      <Text fx:id="welcomeText" layoutX="85.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="welcometext">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <Text layoutX="80.0" layoutY="333.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Information needed">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Text>
+      <Line endX="750.0" fill="#00000099" layoutX="180.0" layoutY="338.0" startX="-100.0" />
+      <Text layoutX="85.0" layoutY="373.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please provide the following information. Don't worry, you can always change these settings later.">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Text>
+      <Text layoutX="90.0" layoutY="433.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Forename:" wrappingWidth="90.8896484375">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font></Text>
+      <TextField fx:id="forename" layoutX="185.0" layoutY="416.0" />
+      <Text layoutX="90.0" layoutY="468.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Surname:" wrappingWidth="90.8896484375">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Text>
+      <TextField fx:id="surname" layoutX="185.0" layoutY="451.0" />
+      <Text layoutX="90.0" layoutY="502.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your Mail:" wrappingWidth="90.8896484375">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Text>
+      <TextField fx:id="userMail" layoutX="185.0" layoutY="485.0" />
+      <Text layoutX="404.0" layoutY="428.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" wrappingWidth="90.8896484375">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Text>
+      <TextField fx:id="userName" layoutX="563.0" layoutY="410.0" />
+      <Text layoutX="404.0" layoutY="461.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password, twice:" wrappingWidth="117.8896484375">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Text>
+      <Text layoutX="404.0" layoutY="481.0" strokeType="OUTSIDE" strokeWidth="0.0" text="A password will be automatically gernerated for you if you leave this blank." wrappingWidth="141.388671875" />
+      <PasswordField fx:id="pswd" layoutX="563.0" layoutY="444.0" />
+      <PasswordField fx:id="pswdConfirm" layoutX="563.0" layoutY="474.0" />
+      <Button fx:id="registrateButton" layoutX="80.0" layoutY="576.0" mnemonicParsing="false" onAction="#registrate" prefHeight="37.0" prefWidth="91.0" text="Registrate" />
+   </children>
+</AnchorPane>
