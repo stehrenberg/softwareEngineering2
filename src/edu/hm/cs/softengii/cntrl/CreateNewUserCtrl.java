@@ -1,7 +1,7 @@
 package edu.hm.cs.softengii.cntrl;
 
-import edu.hm.cs.softengii.db.daos.UserDao;
-import edu.hm.cs.softengii.db.entities.UserEntity;
+import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
+import edu.hm.cs.softengii.db.userAuth.UserEntity;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -43,11 +43,10 @@ public class CreateNewUserCtrl implements Initializable{
     @FXML
     void createUser(ActionEvent event) {
 
-        UserDao userDao = new UserDao();
-        UserEntity newUser = userDao.createUser(userName.getText(), pswd.getText(), forename.getText(), surname.getText(), true);
+
+        UserEntity newUser = DatabaseUserAuth.getInstance().createNewUser(userName.getText(), pswd.getText(), forename.getText(), surname.getText(), userMail.getText(), true);
 
         message.setText(String.format("Created new user: %s %s (%s)", newUser.getForename(), newUser.getSurname(), newUser.getLoginName()));
-        message.setVisible(true);
     }
 
     @FXML

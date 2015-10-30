@@ -1,13 +1,16 @@
 package edu.hm.cs.softengii.cntrl;
 
-import edu.hm.cs.softengii.db.daos.UserDao;
+import edu.hm.cs.softengii.db.sap.Database;
 import edu.hm.cs.softengii.utils.Session;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -16,11 +19,13 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class CompareSuppliersCtrl implements Initializable{
 
     private Stage stage;
 
     @FXML private AnchorPane rootPane;
+    @FXML private ListView<String> suppliersListView;
 
     @FXML
     void gotoCreateNewUser(ActionEvent event) {
@@ -139,6 +144,9 @@ public class CompareSuppliersCtrl implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        ObservableList<String> list = FXCollections.observableArrayList(Database.getInstance().getSuppliers());
+        suppliersListView.setItems(list);
     }
 
 

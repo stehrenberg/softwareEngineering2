@@ -1,6 +1,7 @@
 package edu.hm.cs.softengii.cntrl;
 
-import edu.hm.cs.softengii.db.daos.UserDao;
+import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
+import edu.hm.cs.softengii.db.userAuth.UserEntity;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,11 +30,10 @@ public class LoginCtrl implements Initializable{
     @FXML
     void loginToMainMenu(ActionEvent event) {
 
-        UserDao userDao = new UserDao();
+        if(DatabaseUserAuth.getInstance().isLoginCorrect(userName.getText(), pswd.getText())) {
 
-        if(userDao.isLoginCorrect(userName.getText(), pswd.getText())) {
+            Session.getInstance().setAuthenticatedUser(DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()));
 
-            Session.getInstance().setAuthenticatedUser(userDao.getUserFromLoginName(userName.getText()));
             gotoMainMenu();
 
         } else {

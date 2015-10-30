@@ -39,11 +39,11 @@
                 </Menu>
             </menus>
         </MenuBar>
-      <Line endX="580.0" fill="#00000099" layoutX="30.0" layoutY="77.0" />
       <Text layoutX="30.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="About SupplyAlytics">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Text>
+      <Line endX="580.0" fill="#00000099" layoutX="30.0" layoutY="77.0" />
     </children>
 </AnchorPane>

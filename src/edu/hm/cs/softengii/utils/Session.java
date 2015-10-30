@@ -1,7 +1,6 @@
 package edu.hm.cs.softengii.utils;
 
-
-import edu.hm.cs.softengii.db.entities.UserEntity;
+import edu.hm.cs.softengii.db.userAuth.UserEntity;
 
 /**
  * Created by cmon on 25.05.2014.

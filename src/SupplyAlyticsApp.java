@@ -1,6 +1,6 @@
 import edu.hm.cs.softengii.cntrl.LoginCtrl;
 import edu.hm.cs.softengii.cntrl.RegistrateCtrl;
-import edu.hm.cs.softengii.db.daos.UserDao;
+import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
 import edu.hm.cs.softengii.utils.SettingsPropertiesHelper;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -31,12 +31,11 @@ public class SupplyAlyticsApp extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        UserDao userDao = new UserDao();
 
         primaryStage.setTitle(SettingsPropertiesHelper.getInstance().getAppTitle());
         stage = primaryStage;
 
-        if(userDao.isEmpty()) {
+        if(DatabaseUserAuth.getInstance().isEmpty()) {
             gotoRegistrate();
         } else {
             gotoLogin();

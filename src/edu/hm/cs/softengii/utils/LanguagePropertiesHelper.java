@@ -18,7 +18,7 @@ public class LanguagePropertiesHelper {
      */
     private LanguagePropertiesHelper() {
         try {
-            properties.load(LanguagePropertiesHelper.class.getResourceAsStream("language.properties"));
+            properties.load(LanguagePropertiesHelper.class.getResourceAsStream("properties/language.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }

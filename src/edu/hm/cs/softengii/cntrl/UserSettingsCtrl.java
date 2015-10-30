@@ -1,6 +1,5 @@
 package edu.hm.cs.softengii.cntrl;
 
-import edu.hm.cs.softengii.db.daos.UserDao;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

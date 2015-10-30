@@ -1,7 +1,7 @@
 package edu.hm.cs.softengii.cntrl;
 
-import edu.hm.cs.softengii.db.daos.UserDao;
-import edu.hm.cs.softengii.db.entities.UserEntity;
+import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
+import edu.hm.cs.softengii.db.userAuth.UserEntity;
 import edu.hm.cs.softengii.utils.LanguagePropertiesHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.event.ActionEvent;
@@ -50,9 +50,7 @@ public class RegistrateCtrl implements Initializable{
     @FXML
     void registrate(ActionEvent event) {
 
-        UserDao userDao = new UserDao();
-
-        UserEntity newUser = userDao.createUser(userName.getText(), pswd.getText(), forename.getText(), surname.getText(), true);
+        UserEntity newUser = DatabaseUserAuth.getInstance().createNewUser(userName.getText(), pswd.getText(), forename.getText(), surname.getText(), userMail.getText(),  true);
         Session.getInstance().setAuthenticatedUser(newUser);
 
         gotoMainMenu();

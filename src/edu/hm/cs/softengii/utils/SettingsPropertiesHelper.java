@@ -17,7 +17,7 @@ public class SettingsPropertiesHelper {
      */
     private SettingsPropertiesHelper() {
         try {
-            properties.load(SettingsPropertiesHelper.class.getResourceAsStream("settings.properties"));
+            properties.load(SettingsPropertiesHelper.class.getResourceAsStream("properties/settings.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -42,6 +42,26 @@ public class SettingsPropertiesHelper {
     }
     public String getAppTitle() {
         return properties.getProperty("appTitle");
+    }
+
+    public String getSapDbUrl() {
+        return properties.getProperty("sap.db.url");
+    }
+    public String getSapDbUser() {
+        return properties.getProperty("sap.db.user");
+    }
+    public String getSapDbPswd() {
+        return properties.getProperty("sap.db.pswd");
+    }
+
+    public String getUserAuthDbUrl() {
+        return properties.getProperty("userAuth.db.url");
+    }
+    public String getUserAuthDbUser() {
+        return properties.getProperty("userAuth.db.user");
+    }
+    public String getUserAuthDbPswd() {
+        return properties.getProperty("userAuth.db.pswd");
     }
 
 
