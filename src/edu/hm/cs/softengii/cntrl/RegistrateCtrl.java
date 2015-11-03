@@ -17,18 +17,24 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegistrateCtrl implements Initializable{
 
     private Stage stage;
+    private ArrayList<String> errors = new ArrayList<>();
 
     @FXML private Text welcomeHeadline;
     @FXML private Text welcomeText;
     @FXML private Text infoHeadline;
     @FXML private Text infoText;
+    @FXML private Text errorMessageLeft;
+    @FXML private Text errorMessageRight;
 
     @FXML private Text forenameLabel;
     @FXML private TextField forename;
@@ -50,10 +56,21 @@ public class RegistrateCtrl implements Initializable{
     @FXML
     void registrate(ActionEvent event) {
 
-        UserEntity newUser = DatabaseUserAuth.getInstance().createNewUser(userName.getText(), pswd.getText(), forename.getText(), surname.getText(), userMail.getText(),  true);
-        Session.getInstance().setAuthenticatedUser(newUser);
+        validateInputs();
 
-        gotoMainMenu();
+        if (errors.isEmpty()) {
+
+            UserEntity newUser = DatabaseUserAuth.getInstance().createNewUser(
+                    userName.getText(),
+                    pswd.getText(),
+                    forename.getText(),
+                    surname.getText(),
+                    userMail.getText(),
+                    true);
+
+            Session.getInstance().setAuthenticatedUser(newUser);
+            gotoMainMenu();
+        }
     }
 
     @FXML
@@ -73,12 +90,21 @@ public class RegistrateCtrl implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        clearErrorMessage();
         loadAllTexts();
     }
 
 
-    private void loadAllTexts() {
+    private void clearErrorMessage() {
+        errorMessageLeft.setText("");
+        errorMessageRight.setText("");
+        if(!errors.isEmpty()) {
+            errors.clear();
+        }
+    }
 
+
+    private void loadAllTexts() {
         welcomeHeadline.setText(LanguagePropertiesHelper.getInstance().getWelcomeHeadline());
         welcomeText.setText(LanguagePropertiesHelper.getInstance().getWelcomeText());
         infoHeadline.setText(LanguagePropertiesHelper.getInstance().getInfoHeadline());
@@ -90,6 +116,9 @@ public class RegistrateCtrl implements Initializable{
         pswdLabel.setText(LanguagePropertiesHelper.getInstance().getPswdLabel());
         paswdHintText.setText(LanguagePropertiesHelper.getInstance().getPaswdHintText());
         registrateButton.setText(LanguagePropertiesHelper.getInstance().getRegistrateButton());
+        if(!errors.isEmpty()) {
+            validateInputs();
+        }
     }
 
     private void gotoMainMenu() {
@@ -104,6 +133,66 @@ public class RegistrateCtrl implements Initializable{
             replaceSceneContent(page);
         } catch (Exception ex) {
             Logger.getLogger(RegistrateCtrl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void validateInputs(){
+
+        clearErrorMessage();
+
+        if(forename.getText().isEmpty()) {
+            errors.add(LanguagePropertiesHelper.getInstance().getForenameError());
+        }
+
+        if(surname.getText().isEmpty()) {
+            errors.add(LanguagePropertiesHelper.getInstance().getSurnameError());
+        }
+
+        if(userMail.getText().isEmpty()) {
+            errors.add(LanguagePropertiesHelper.getInstance().getUserMailEmptyError());
+        } else {
+
+            Pattern mailPattern = Pattern.compile("^.+@.+\\..+$");
+            Matcher matcher = mailPattern.matcher(userMail.getText());
+
+            if(!matcher.matches()) {
+                errors.add(LanguagePropertiesHelper.getInstance().getUserMailError());
+            }
+        }
+
+        if(userName.getText().isEmpty()) {
+            errors.add(LanguagePropertiesHelper.getInstance().getUserNameError());
+        } else if(DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()) != null) {
+                errors.add(LanguagePropertiesHelper.getInstance().getUserNameExistsError());
+        }
+
+        if(pswd.getText().isEmpty()){
+            errors.add(LanguagePropertiesHelper.getInstance().getPswdError());
+        } else if (pswdConfirm.getText().isEmpty()) {
+            errors.add(LanguagePropertiesHelper.getInstance().getPswdConfirmError());
+        } else if (!pswd.getText().equals(pswdConfirm.getText())) {
+            errors.add(LanguagePropertiesHelper.getInstance().getPswdNoMatchError());
+        }
+
+        if(!errors.isEmpty()) {
+            populateErrorMessage();
+        }
+    }
+
+    private void populateErrorMessage() {
+
+        if(!errors.isEmpty() && errors.size() > 3) {
+            for (int i = 0; i < errors.size(); i++) {
+                if(i < 3) {
+                    errorMessageLeft.setText(errorMessageLeft.getText() + errors.get(i));
+                } else {
+                    errorMessageRight.setText(errorMessageRight.getText() + errors.get(i));
+                }
+            }
+        } else if (!errors.isEmpty()){
+            for (String error : errors) {
+                errorMessageLeft.setText(errorMessageLeft.getText() + error);
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
 import edu.hm.cs.softengii.db.userAuth.UserEntity;
+import edu.hm.cs.softengii.utils.LanguagePropertiesHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,19 +13,26 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CreateNewUserCtrl implements Initializable{
 
     private Stage stage;
+    private ArrayList<String> errors = new ArrayList<>();
 
     @FXML private AnchorPane rootPane;
+
+    @FXML private Text errorMessage;
 
     @FXML private Text forenameLabel;
     @FXML private TextField forename;
@@ -38,15 +46,28 @@ public class CreateNewUserCtrl implements Initializable{
     @FXML private Text paswdHintText;
     @FXML private PasswordField pswd;
     @FXML private PasswordField pswdConfirm;
-    @FXML private Text message;
 
     @FXML
     void createUser(ActionEvent event) {
 
+        validateInputs();
 
-        UserEntity newUser = DatabaseUserAuth.getInstance().createNewUser(userName.getText(), pswd.getText(), forename.getText(), surname.getText(), userMail.getText(), true);
+        if(errors.isEmpty()) {
 
-        message.setText(String.format("Created new user: %s %s (%s)", newUser.getForename(), newUser.getSurname(), newUser.getLoginName()));
+            UserEntity newUser = DatabaseUserAuth.getInstance().createNewUser(
+                    userName.getText(),
+                    pswd.getText(),
+                    forename.getText(),
+                    surname.getText(),
+                    userMail.getText(),
+                    true);
+
+
+            errorMessage.setFill(Color.GREEN);
+            errorMessage.setText(String.format("Created new user: %s %s (%s)",
+                    newUser.getForename(), newUser.getSurname(), newUser.getLoginName()));
+
+        }
     }
 
     @FXML
@@ -167,8 +188,69 @@ public class CreateNewUserCtrl implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        errorMessage.setText("");
     }
 
+
+    private void clearErrorMessage() {
+        errorMessage.setText("");
+        errorMessage.setFill(Color.RED);
+        if(!errors.isEmpty()) {
+            errors.clear();
+        }
+    }
+
+    private void validateInputs(){
+
+        clearErrorMessage();
+
+        if(forename.getText().isEmpty()) {
+            errors.add(LanguagePropertiesHelper.getInstance().getForenameError());
+        }
+
+        if(surname.getText().isEmpty()) {
+            errors.add(LanguagePropertiesHelper.getInstance().getSurnameError());
+        }
+
+        if(userMail.getText().isEmpty()) {
+            errors.add(LanguagePropertiesHelper.getInstance().getUserMailEmptyError());
+        } else {
+
+            Pattern mailPattern = Pattern.compile("^.+@.+\\..+$");
+            Matcher matcher = mailPattern.matcher(userMail.getText());
+
+            if(!matcher.matches()) {
+                errors.add(LanguagePropertiesHelper.getInstance().getUserMailError());
+            }
+        }
+
+        if(userName.getText().isEmpty()) {
+            errors.add(LanguagePropertiesHelper.getInstance().getUserNameError());
+        } else if(DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()) != null) {
+            errors.add(LanguagePropertiesHelper.getInstance().getUserNameExistsError());
+        }
+
+        if(pswd.getText().isEmpty()){
+            errors.add(LanguagePropertiesHelper.getInstance().getPswdError());
+        } else if (pswdConfirm.getText().isEmpty()) {
+            errors.add(LanguagePropertiesHelper.getInstance().getPswdConfirmError());
+        } else if (!pswd.getText().equals(pswdConfirm.getText())) {
+            errors.add(LanguagePropertiesHelper.getInstance().getPswdNoMatchError());
+        }
+
+        if(!errors.isEmpty()) {
+            populateErrorMessage();
+        }
+    }
+
+
+    private void populateErrorMessage() {
+        if (!errors.isEmpty()){
+            for (String error : errors) {
+                errorMessage.setText(errorMessage.getText() + error);
+            }
+        }
+    }
 
     public void setStage(Stage stage) {
         this.stage = stage;

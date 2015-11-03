@@ -2,6 +2,7 @@ package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
 import edu.hm.cs.softengii.db.userAuth.UserEntity;
+import edu.hm.cs.softengii.utils.LanguagePropertiesHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,9 +13,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,29 +25,58 @@ import java.util.logging.Logger;
 public class LoginCtrl implements Initializable{
 
     private Stage stage;
+    private ArrayList<String> errors = new ArrayList<>();
+
+    @FXML private Text welcomeHeadline;
+    @FXML private Text welcomeText;
+    @FXML private Text errorMessage;
 
     @FXML private TextField userName;
     @FXML private PasswordField pswd;
+
     @FXML private Button loginButton;
+    @FXML private Button germanButton;
+    @FXML private Button englishButton;
 
     @FXML
     void loginToMainMenu(ActionEvent event) {
 
-        if(DatabaseUserAuth.getInstance().isLoginCorrect(userName.getText(), pswd.getText())) {
+        validateInputs();
 
-            Session.getInstance().setAuthenticatedUser(DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()));
+        if(errors.isEmpty()) {
 
+            Session.getInstance().setAuthenticatedUser(
+                    DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()));
             gotoMainMenu();
-
-        } else {
-            System.out.println("ERROR: Wrong login data!");
         }
+    }
 
+    @FXML
+    void switchToGerman(ActionEvent event) {
+
+        LanguagePropertiesHelper.getInstance().setLanguage("de");
+        loadAllTexts();
+    }
+
+    @FXML
+    void switchToEnglish(ActionEvent event) {
+
+        LanguagePropertiesHelper.getInstance().setLanguage("en");
+        loadAllTexts();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        errorMessage.setText("");
+        loadAllTexts();
+    }
 
+    private void loadAllTexts() {
+        welcomeHeadline.setText(LanguagePropertiesHelper.getInstance().getWelcomeHeadline());
+        welcomeText.setText(LanguagePropertiesHelper.getInstance().getWelcomeTextLogin());
+        if(!errors.isEmpty()) {
+            validateInputs();
+        }
     }
 
 
@@ -52,6 +84,47 @@ public class LoginCtrl implements Initializable{
         this.stage = stage;
     }
 
+    private void clearErrorMessage() {
+        errorMessage.setText("");
+        if(!errors.isEmpty()) {
+            errors.clear();
+        }
+    }
+
+    private void validateInputs(){
+
+        clearErrorMessage();
+
+        if(userName.getText().isEmpty()) {
+            errors.add(LanguagePropertiesHelper.getInstance().getUserNameError());
+        }
+
+        if(pswd.getText().isEmpty()){
+            errors.add(LanguagePropertiesHelper.getInstance().getPswdError());
+        }
+
+        if(!userName.getText().isEmpty() && !pswd.getText().isEmpty() && !isCorrectCredentials()) {
+            errors.add(LanguagePropertiesHelper.getInstance().getLoginError());
+        }
+
+        if(!errors.isEmpty()) {
+            populateErrorMessage();
+        }
+
+    }
+
+
+    private void populateErrorMessage() {
+        if (!errors.isEmpty()){
+            for (String error : errors) {
+                errorMessage.setText(errorMessage.getText() + error);
+            }
+        }
+    }
+
+    private boolean isCorrectCredentials(){
+        return DatabaseUserAuth.getInstance().isLoginCorrect(userName.getText(), pswd.getText());
+    }
 
     private void gotoMainMenu() {
 

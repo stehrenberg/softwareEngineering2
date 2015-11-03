@@ -38,7 +38,6 @@ public class LanguagePropertiesHelper {
     public String getLanguage() {
         return language;
     }
-
     public void setLanguage(String language) {
         this.language = language;
     }
@@ -48,6 +47,9 @@ public class LanguagePropertiesHelper {
     }
     public String getWelcomeText() {
         return properties.getProperty(language + ".welcomeText");
+    }
+    public String getWelcomeTextLogin() {
+        return properties.getProperty(language + ".welcomeTextLogin");
     }
     public String getInfoHeadline() {
         return properties.getProperty(language + ".infoHeadline");
@@ -77,5 +79,34 @@ public class LanguagePropertiesHelper {
         return properties.getProperty(language + ".registrateButton");
     }
 
-
+    public String getForenameError() {
+        return properties.getProperty(language + ".forenameError");
+    }
+    public String getSurnameError() {
+        return properties.getProperty(language + ".surnameError");
+    }
+    public String getUserMailEmptyError() {
+        return properties.getProperty(language + ".userMailEmptyError");
+    }
+    public String getUserMailError() {
+        return properties.getProperty(language + ".userMailError");
+    }
+    public String getUserNameExistsError() {
+        return properties.getProperty(language + ".userNameExistsError");
+    }
+    public String getUserNameError() {
+        return properties.getProperty(language + ".userNameError");
+    }
+    public String getPswdError() {
+        return properties.getProperty(language + ".pswdError");
+    }
+    public String getPswdConfirmError() {
+        return properties.getProperty(language + ".pswdConfirmError");
+    }
+    public String getPswdNoMatchError() {
+        return properties.getProperty(language + ".pswdNoMatchError");
+    }
+    public String getLoginError() {
+        return properties.getProperty(language + ".loginError");
+    }
 }
