@@ -13,10 +13,7 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#gotoCreateNewUser" text="New User" />
-                        <MenuItem mnemonicParsing="false" onAction="#gotoManageAllUsers" text="Manage all Users" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Export" />
+                        <MenuItem mnemonicParsing="false" text="Export PDF" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#quitApplication" text="Quit" />
                     </items>
@@ -29,6 +26,9 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="User">
                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#gotoCreateNewUser" text="New User" />
+                        <MenuItem mnemonicParsing="false" onAction="#gotoManageAllUsers" text="Manage all Users" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#gotoUserSettings" text="Settings" />
                         <MenuItem mnemonicParsing="false" onAction="#gotoLogin" text="Logout" />
                     </items>
