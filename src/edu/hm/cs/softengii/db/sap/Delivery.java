@@ -2,7 +2,7 @@
  * @author Maximilian Renk
  */
 
-package edu.hm.cs.softengii.model;
+package edu.hm.cs.softengii.db.sap;
 
 import java.util.Date;
 

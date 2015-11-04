@@ -9,8 +9,8 @@ package edu.hm.cs.softengii.control;
 
 import java.util.Date;
 
-import edu.hm.cs.softengii.model.Delivery;
-import edu.hm.cs.softengii.model.Supplier;
+import edu.hm.cs.softengii.db.sap.Delivery;
+import edu.hm.cs.softengii.db.sap.Supplier;
 
 /**
  * Class to calculate the score of a supplier
@@ -47,14 +47,19 @@ public class ScoreCalculator {
 		
 		for (Delivery delivery: supplier.getDeliveries()) {
 			
-			// Calculate difference of actual and promised delivery date in days
-			int diffInDays = calculateDayDiff(delivery.getPromisedDeliveryDate(),
-					delivery.getActualDeliveryDate());
-			
-			// Calculate single score
-			int singleScore = calculateScore(diffInDays);
-			
-			scoreSum += singleScore;
+			try {
+				// Calculate difference of actual and promised delivery date in days
+				int diffInDays = calculateDayDiff(delivery.getPromisedDeliveryDate(),
+						delivery.getActualDeliveryDate());
+				
+				// Calculate single score
+				int singleScore = calculateSingleScore(diffInDays);
+				
+				scoreSum += singleScore;
+			}
+			catch (Exception e) {
+				// couldn't calculate score for this delivery
+			}
 		}
 		
 		// Calculate averange
@@ -85,7 +90,7 @@ public class ScoreCalculator {
 	 * @param delayedDays
 	 * @return Single score value
 	 */
-	private int calculateScore(int delayedDays) {
+	private int calculateSingleScore(int delayedDays) {
 		
 		// Default score is 0%
 		int singleScore = 0;

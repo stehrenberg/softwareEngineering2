@@ -13,13 +13,17 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import edu.hm.cs.softengii.control.ScoreCalculator;
-import edu.hm.cs.softengii.model.Delivery;
-import edu.hm.cs.softengii.model.Supplier;
+import edu.hm.cs.softengii.db.sap.Database;
+import edu.hm.cs.softengii.db.sap.Delivery;
+import edu.hm.cs.softengii.db.sap.IDatabase;
+import edu.hm.cs.softengii.db.sap.Supplier;
 
 public class SupplyAlyticsApp extends Application {
 
@@ -47,25 +51,29 @@ public class SupplyAlyticsApp extends Application {
     	
     	ScoreCalculator scoreCalculator = new ScoreCalculator();
     	
-		ArrayList<Delivery> deliveries = new ArrayList<>();
-		deliveries.add(new Delivery(new Date(2015, 10, 16), new Date(2015, 10, 30)));
-		deliveries.add(new Delivery(new Date(2014, 7, 2), new Date(2014, 7, 3)));
-		deliveries.add(new Delivery(new Date(2014, 2, 15), new Date(2014, 2, 11)));
-		deliveries.add(new Delivery(new Date(2013, 11, 19), new Date(2013, 11, 23)));
-		Supplier supplier = new Supplier("MySupplier", deliveries);
-		
-		double score = scoreCalculator.calculateScore(supplier);
-        
-		list.add(new SupplierScoreViewModel(supplier.getName(), score));
+    	IDatabase db = Database.getInstance();
+    	ArrayList<Supplier> suppliers = db.getSupplierData();
+    	
+    	for (Supplier supplier: suppliers) {
+    		double score = scoreCalculator.calculateScore(supplier);
+			list.add(new SupplierScoreViewModel(supplier.getName(), score));
+    	}
+    	
+    	Collections.sort(list, new Comparator<SupplierScoreViewModel>() {
+    	    @Override
+    	    public int compare(SupplierScoreViewModel s1, SupplierScoreViewModel s2) {
+    	        return - Double.compare(s1.getScoreValue(), s2.getScoreValue());
+    	    }
+    	});
 		
         TableView<SupplierScoreViewModel> tableView = new TableView<>();
         
         TableColumn supplierColumn = new TableColumn("Supplier");
-        supplierColumn.setMinWidth(100);
+        supplierColumn.setMinWidth(300);
         supplierColumn.setCellValueFactory(new PropertyValueFactory<>("supplierName"));
         
         TableColumn scoreColumn = new TableColumn("Score");
-        scoreColumn.setMinWidth(100);
+        scoreColumn.setMinWidth(50);
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
         
         tableView.getColumns().addAll(supplierColumn, scoreColumn);
@@ -81,11 +89,14 @@ public class SupplyAlyticsApp extends Application {
     	
     	private final SimpleStringProperty supplierName;
         private final SimpleStringProperty score;
+        
+        private double scoreValue;
 
         public SupplierScoreViewModel(String supplierName, double score) {
         	
+        	this.scoreValue = score;
             this.supplierName = new SimpleStringProperty(supplierName);
-            this.score = new SimpleStringProperty(String.valueOf(Math.round(score)));
+            this.score = new SimpleStringProperty(String.valueOf(Math.round(score)) + "%");
         }
         
         public String getSupplierName() {
@@ -96,8 +107,13 @@ public class SupplyAlyticsApp extends Application {
             return score.get();
         }
         
+        public double getScoreValue() {
+        	return scoreValue;
+        }
+        
         public void setScore(double score) {
-        	this.score.set(String.valueOf(Math.round(score)));
+        	this.scoreValue = score;
+        	this.score.set(String.valueOf(Math.round(score)) + "%");
         }
         
         public void setSupplierName(String supplierName) {
