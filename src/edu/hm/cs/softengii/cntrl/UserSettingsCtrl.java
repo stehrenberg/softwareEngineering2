@@ -1,5 +1,7 @@
 package edu.hm.cs.softengii.cntrl;
 
+import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
+import edu.hm.cs.softengii.db.userAuth.UserEntity;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,12 +9,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,9 +26,51 @@ public class UserSettingsCtrl implements Initializable{
 
     @FXML private AnchorPane rootPane;
 
-    @FXML private Text userName;
-    @FXML private Text forename;
-    @FXML private Text surname;
+    @FXML private Text forenameLabel;
+    @FXML private TextField forename;
+    @FXML private Text surnameLabel;
+    @FXML private TextField surname;
+    @FXML private Text userMailLabel;
+    @FXML private TextField userMail;
+    @FXML private Text userNameLabel;
+    @FXML private TextField userName;
+    @FXML private Text isAdminLabel;
+    @FXML private CheckBox isAdmin;
+    @FXML private Text pswdLabel;
+    @FXML private Text paswdHintText;
+    @FXML private PasswordField pswd;
+    @FXML private PasswordField pswdConfirm;
+
+    @FXML private Button updateButton;
+
+    @FXML
+    void updateUser(ActionEvent event) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Update User");
+
+        alert.setHeaderText("Update user account settings.");
+
+        alert.setContentText("Do you want to update your account settings now?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+
+            UserEntity updatedUser = DatabaseUserAuth.getInstance().updateUser(
+                    Session.getInstance().getAuthenticatedUser().getLoginName(),
+                    userName.getText(),
+                    pswd.getText(),
+                    forename.getText(),
+                    surname.getText(),
+                    userMail.getText(),
+                    true);
+
+            Session.getInstance().setAuthenticatedUser(updatedUser);
+            populateInputs();
+        }
+
+    }
+
 
     @FXML
     void gotoCreateNewUser(ActionEvent event) {
@@ -146,10 +191,15 @@ public class UserSettingsCtrl implements Initializable{
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        populateInputs();
+    }
 
-        userName.setText("Logged in as: " + Session.getInstance().getAuthenticatedUser().getLoginName());
-        forename.setText("Forename: " + Session.getInstance().getAuthenticatedUser().getForename());
-        surname.setText("Surname: " + Session.getInstance().getAuthenticatedUser().getSurname());
+    private void populateInputs() {
+        forename.setText(Session.getInstance().getAuthenticatedUser().getForename());
+        surname.setText(Session.getInstance().getAuthenticatedUser().getSurname());
+        userMail.setText(Session.getInstance().getAuthenticatedUser().getEmail());
+        userName.setText(Session.getInstance().getAuthenticatedUser().getLoginName());
+        isAdmin.setSelected(Session.getInstance().getAuthenticatedUser().isAdmin());
     }
 
 
