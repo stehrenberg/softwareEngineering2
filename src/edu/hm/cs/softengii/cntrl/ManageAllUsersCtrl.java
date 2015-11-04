@@ -1,16 +1,26 @@
 package edu.hm.cs.softengii.cntrl;
 
+import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
+import edu.hm.cs.softengii.db.userAuth.UserEntity;
 import edu.hm.cs.softengii.utils.Session;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,8 +28,81 @@ import java.util.logging.Logger;
 public class ManageAllUsersCtrl implements Initializable{
 
     private Stage stage;
+    private UserEntity selectedUser;
+    ObservableList<UserEntity> usersObservableList;
 
     @FXML private AnchorPane rootPane;
+    @FXML private ListView<UserEntity> usersListView;
+    @FXML private Text forenameLabel;
+    @FXML private TextField forename;
+    @FXML private Text surnameLabel;
+    @FXML private TextField surname;
+    @FXML private Text userMailLabel;
+    @FXML private TextField userMail;
+    @FXML private Text userNameLabel;
+    @FXML private TextField userName;
+    @FXML private Text isAdminLabel;
+    @FXML private CheckBox isAdmin;
+    @FXML private Text pswdLabel;
+    @FXML private Text paswdHintText;
+    @FXML private PasswordField pswd;
+    @FXML private PasswordField pswdConfirm;
+
+    @FXML private Button updateButton;
+    @FXML private Button deleteButton;
+
+    @FXML
+    void deleteSelectedUser(ActionEvent event) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete User");
+
+        alert.setHeaderText(String.format("Delete selected user:%n\t%s %s (%s)",
+                selectedUser.getForename(),
+                selectedUser.getSurname(),
+                selectedUser.getLoginName()));
+
+        alert.setContentText("Do you want to delete the selected user?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            DatabaseUserAuth.getInstance().deleteUserFromLoginName(selectedUser.getLoginName());
+            usersObservableList.remove(selectedUser);
+        }
+    }
+    @FXML
+    void updateSelectedUser(ActionEvent event) {
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Update User");
+
+        alert.setHeaderText(String.format("Update selected user:%n\t%s %s (%s)",
+                selectedUser.getForename(),
+                selectedUser.getSurname(),
+                selectedUser.getLoginName()));
+
+        alert.setContentText("Do you want to update the selected user?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+
+
+            UserEntity updatedUser = DatabaseUserAuth.getInstance().updateUser(
+                    //TODO fix update
+                    selectedUser.getLoginName(),
+                    userName.getText(),
+                    pswd.getText(),
+                    forename.getText(),
+                    surname.getText(),
+                    userMail.getText(),
+                    true);
+
+            usersObservableList.remove(selectedUser);
+            usersObservableList.add(updatedUser);
+        }
+
+    }
+
 
     @FXML
     void gotoCreateNewUser(ActionEvent event) {
@@ -139,6 +222,52 @@ public class ManageAllUsersCtrl implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        usersObservableList = FXCollections.observableArrayList(DatabaseUserAuth.getInstance().getAllUsers());
+        usersListView.setItems(usersObservableList);
+
+        usersListView.setCellFactory(new Callback<ListView<UserEntity>, ListCell<UserEntity>>() {
+
+            @Override
+            public ListCell<UserEntity> call(ListView<UserEntity> p) {
+
+                ListCell<UserEntity> cell = new ListCell<UserEntity>() {
+
+                    @Override
+                    protected void updateItem(UserEntity user, boolean empty) {
+                        super.updateItem(user, empty);
+
+                        if(empty) {
+                            setText(null);
+                            setGraphic(null);
+                        }else if (user != null) {
+                            setText(user.getForename() + " " + user.getSurname() + " (" + user.getLoginName() + ")");
+                        }
+                    }
+
+                };
+
+                return cell;
+            }
+        });
+
+        usersListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserEntity>() {
+            @Override
+            public void changed(ObservableValue<? extends UserEntity> observable, UserEntity oldValue, UserEntity newValue) {
+                selectedUser = newValue;
+                populateInputsFromSelection();
+            }
+        });
+    }
+
+    private void populateInputsFromSelection() {
+        if(usersListView.getSelectionModel().getSelectedItem() != null) {
+            forename.setText(usersListView.getSelectionModel().getSelectedItem().getForename());
+            surname.setText(usersListView.getSelectionModel().getSelectedItem().getSurname());
+            userMail.setText(usersListView.getSelectionModel().getSelectedItem().getEmail());
+            userName.setText(usersListView.getSelectionModel().getSelectedItem().getLoginName());
+            isAdmin.setSelected(usersListView.getSelectionModel().getSelectedItem().isAdmin());
+        }
     }
 
 

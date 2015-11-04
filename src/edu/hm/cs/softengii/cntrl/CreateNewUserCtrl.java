@@ -67,6 +67,7 @@ public class CreateNewUserCtrl implements Initializable{
             errorMessage.setText(String.format("Created new user: %s %s (%s)",
                     newUser.getForename(), newUser.getSurname(), newUser.getLoginName()));
 
+            clearAllInputs();
         }
     }
 
@@ -189,6 +190,16 @@ public class CreateNewUserCtrl implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         errorMessage.setText("");
+    }
+
+
+    private void clearAllInputs() {
+        forename.setText("");
+        surname.setText("");
+        userMail.setText("");
+        userName.setText("");
+        pswd.setText("");
+        pswdConfirm.setText("");
     }
 
 

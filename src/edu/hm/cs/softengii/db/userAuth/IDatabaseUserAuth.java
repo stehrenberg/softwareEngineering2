@@ -17,10 +17,12 @@ public interface IDatabaseUserAuth {
     /**Finds all suppliers listed in the database and collects them in an ArrayList.
      * @return All suppliers in database.
      */
-    ArrayList<String> getAllUsers();
+    ArrayList<UserEntity> getAllUsers();
     boolean isEmpty();
     UserEntity getUserFromLoginName(String loginName);
     boolean isLoginCorrect(String loginName, String password);
     UserEntity createNewUser(String loginName, String password, String forename, String surname, String email, boolean isAdmin);
+    void deleteUserFromLoginName(String loginName);
+    UserEntity updateUser(String loginName, String newLoginName, String password, String forename, String surname, String email, boolean isAdmin);
 
 }

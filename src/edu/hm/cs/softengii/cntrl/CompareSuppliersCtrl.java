@@ -147,7 +147,12 @@ public class CompareSuppliersCtrl implements Initializable{
 
         ObservableList<String> list = FXCollections.observableArrayList(Database.getInstance().getSuppliers());
         suppliersListView.setItems(list);
+
+
+
     }
+
+
 
 
     public void setStage(Stage stage) {

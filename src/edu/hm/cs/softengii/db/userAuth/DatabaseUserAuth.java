@@ -56,17 +56,18 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     }
 
     @Override
-    public ArrayList<String> getAllUsers() {
+    public ArrayList<UserEntity> getAllUsers() {
 
         establishConnection();
-        ArrayList<String> users = new ArrayList<>();
+        ArrayList<String> userLogins = new ArrayList<>();
+        ArrayList<UserEntity> users = new ArrayList<>();
 
         try {
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery("SELECT * FROM Users");
 
             while(set.next()) {
-                users.add(set.getString("loginName"));
+                userLogins.add(set.getString("loginName"));
             }
 
         } catch (SQLException e) {
@@ -74,6 +75,10 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
         }
 
         closeConnection();
+
+        for (String login : userLogins) {
+            users.add(getUserFromLoginName(login));
+        }
 
         return users;
     }
@@ -91,8 +96,6 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
 
         try {
             String query = String.format("SELECT * FROM Users WHERE loginName LIKE '%s'", loginName);
-            System.out.println("query: " + query);
-
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
 
@@ -103,7 +106,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
                     String loginNameTmp = set.getString("loginName");
                     String emailTmp = set.getString("email");
                     boolean isAdminTmp = set.getBoolean("isAdmin");
-                    System.out.println("createdUser");
+                    System.out.println("isAdmin: " + set.getBoolean("isAdmin"));
                     tmpUser = new UserEntity(isAdminTmp, forenameTmp, surnameTmp, loginNameTmp, emailTmp);
                 }
             }
@@ -173,9 +176,14 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
 
         try {
 
+            int admin = 0;
+            if(isAdmin){
+                admin = 1;
+            }
+
             String query = String.format("INSERT INTO Users (forename, surname, loginName, pswd, email, isAdmin)" +
-                            "VALUES('%s','%s', '%s', '%s', '%s', '%b')",
-                    forename, surname, loginName, generatedPswd, email, isAdmin);
+                            "VALUES('%s','%s', '%s', '%s', '%s', '%d')",
+                    forename, surname, loginName, generatedPswd, email, admin);
 
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
@@ -190,6 +198,62 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
         closeConnection();
 
         return newUser;
+    }
 
+    @Override
+    public void deleteUserFromLoginName(String loginName) {
+        establishConnection();
+        try {
+            String query = String.format("DELETE FROM Users WHERE loginName = '%s'",loginName);
+            Statement statement = connection.createStatement();
+            statement.execute(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        closeConnection();
+    }
+
+
+    @Override
+    public UserEntity updateUser(String loginName, String newLoginName, String password, String forename, String surname, String email, boolean isAdmin) {
+        establishConnection();
+        String generatedPswd = "";
+        UserEntity newUser = null;
+
+        if (password != null){
+            try {
+                generatedPswd = PasswordGen.generatePassword(password);
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            int admin = 0;
+            if(isAdmin){
+                admin = 1;
+            }
+
+            String query = "";
+            if (password != null) {
+                query = String.format("UPDATE Users " +
+                                "SET forename='%s', surname='%s', loginName='%s', pswd='%s', email='%s', isAdmin='%d'" +
+                                "WHERE loginName='%s'",
+                        forename, surname, newLoginName, generatedPswd, email, admin, loginName);
+            } else {
+                query = String.format("UPDATE Users " +
+                                "SET forename='%s', surname='%s', loginName='%s', email='%s', isAdmin='%d'" +
+                                "WHERE loginName='%s'",
+                        forename, surname, newLoginName, email, admin, loginName);
+            }
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
+            newUser = new UserEntity(isAdmin, forename, surname,  loginName, email);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        closeConnection();
+        return newUser;
     }
 }
