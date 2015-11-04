@@ -106,7 +106,6 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
                     String loginNameTmp = set.getString("loginName");
                     String emailTmp = set.getString("email");
                     boolean isAdminTmp = set.getBoolean("isAdmin");
-                    System.out.println("isAdmin: " + set.getBoolean("isAdmin"));
                     tmpUser = new UserEntity(isAdminTmp, forenameTmp, surnameTmp, loginNameTmp, emailTmp);
                 }
             }
@@ -221,7 +220,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
         String generatedPswd = "";
         UserEntity newUser = null;
 
-        if (password != null){
+        if (!password.equals("")){
             try {
                 generatedPswd = PasswordGen.generatePassword(password);
             } catch (NoSuchAlgorithmException e) {
@@ -236,7 +235,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
             }
 
             String query = "";
-            if (password != null) {
+            if (!password.equals("")) {
                 query = String.format("UPDATE Users " +
                                 "SET forename='%s', surname='%s', loginName='%s', pswd='%s', email='%s', isAdmin='%d'" +
                                 "WHERE loginName='%s'",

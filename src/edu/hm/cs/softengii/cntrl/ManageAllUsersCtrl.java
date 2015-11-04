@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -86,9 +87,7 @@ public class ManageAllUsersCtrl implements Initializable{
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK){
 
-
             UserEntity updatedUser = DatabaseUserAuth.getInstance().updateUser(
-                    //TODO fix update
                     selectedUser.getLoginName(),
                     userName.getText(),
                     pswd.getText(),
@@ -223,8 +222,7 @@ public class ManageAllUsersCtrl implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        usersObservableList = FXCollections.observableArrayList(DatabaseUserAuth.getInstance().getAllUsers());
-        usersListView.setItems(usersObservableList);
+        populateUsersList();
 
         usersListView.setCellFactory(new Callback<ListView<UserEntity>, ListCell<UserEntity>>() {
 
@@ -258,6 +256,16 @@ public class ManageAllUsersCtrl implements Initializable{
                 populateInputsFromSelection();
             }
         });
+    }
+
+    private void populateUsersList(){
+        usersObservableList = FXCollections.observableArrayList();
+        for(UserEntity user : DatabaseUserAuth.getInstance().getAllUsers()) {
+            if (!user.getLoginName().equals(Session.getInstance().getAuthenticatedUser().getLoginName())) {
+                usersObservableList.add(user);
+            }
+        }
+        usersListView.setItems(usersObservableList);
     }
 
     private void populateInputsFromSelection() {
