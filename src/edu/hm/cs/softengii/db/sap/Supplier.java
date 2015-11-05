@@ -1,50 +1,36 @@
-/**Class representing the necessary data for each supplier.
- * @author Maximilian Renk
- */
-
 package edu.hm.cs.softengii.db.sap;
 
 import java.util.ArrayList;
 
+/**Class representing the necessary data for each supplier.
+ * @author Maximilian Renk
+ */
 public class Supplier {
-    
+
 	/**
-	 * Supplier id
+	 * Suppliers id
 	 */
-	private String id;
+	private final String id;
 	
     /**Name of the supplier.*/
-    private final String supplier;
-    
+    private final String name;
+
     /**Deliveries from this supplier.*/
-    private ArrayList<Delivery> deliveries = new ArrayList<>();
-    
-    public Supplier(final String id, final String supplier, ArrayList<Delivery> deliveries) {
+    private final ArrayList<Delivery> deliveries = new ArrayList<>();
+
+    public Supplier(final String id, final String name) {
     	this.id = id;
-        this.supplier = supplier;
-        this.deliveries = deliveries;
+        this.name = name;
     }
     
-    /**
-     * Get the id of this supplier
-     * @return Suppliers id
-     */
     public String getId() {
     	return id;
     }
     
-    /**
-     * Get the suppliers name
-     * @return Suppliers name
-     */
     public String getName() {
-    	return supplier;
-    }
+	    return name;
+	}
     
-    /**
-     * Get all deliveries of this supplier
-     * @return List with all deliveries
-     */
     public ArrayList<Delivery> getDeliveries() {
     	return deliveries;
     }

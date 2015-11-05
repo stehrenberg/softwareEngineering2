@@ -7,33 +7,47 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import edu.hm.cs.softengii.utils.SettingsPropertiesHelper;
+
 public class Database implements IDatabase {
 
     private static Database instance = null;
 
     //Database URL
-    private final static String DB_URL = "jdbc:mysql://swe2.cs.hm.edu:21964/sap_emulation";
+    private final static String DB_URL = SettingsPropertiesHelper.getInstance().getSapDbUrl();
 
     //Database credentials
-    private final static String USER = "ExtDev2";
-    private final static String PASSWORD = "2N682Gsa";
+    private final static String USER = SettingsPropertiesHelper.getInstance().getSapDbUser();
+    private final static String PASSWORD = SettingsPropertiesHelper.getInstance().getSapDbPswd();
 
     /**Connection to the database.*/
     private Connection connection;
 
+    private ArrayList<Supplier> supplierData = new ArrayList<>();
+    
     /**Empty constructor. Not needed here.*/
     private Database() {
-        establishConnection();
+    	
+        Runnable dataLoader = new Runnable() {
+			@Override
+			public void run() {
+				loadSupplierData();
+			}
+		};
+		new Thread(dataLoader).start();
     }
 
 
     public static Database getInstance() {
         if (instance == null) {
-            instance = new Database();
+            createInstance();
         }
         return instance;
     }
 
+    public static void createInstance() {
+    	instance = new Database();
+    }
 
     @Override
     public void establishConnection() {
@@ -91,6 +105,11 @@ public class Database implements IDatabase {
     @Override
     public ArrayList<Supplier> getSupplierData() {
     	
+        return supplierData;
+    }
+    
+    private void loadSupplierData() {
+
     	establishConnection();
     	
         ArrayList<Supplier> suppliers = new ArrayList<>();
@@ -110,7 +129,7 @@ public class Database implements IDatabase {
             	
             	Supplier supplier = findSupplierInList(suppliers, set.getString("l.lifnr"));
             	if (supplier == null) {
-            		supplier = new Supplier(set.getString("l.lifnr"), set.getString("name1"), new ArrayList<>());
+            		supplier = new Supplier(set.getString("l.lifnr"), set.getString("name1"));
             		suppliers.add(supplier);
             	}
             	
@@ -122,9 +141,9 @@ public class Database implements IDatabase {
             e.printStackTrace();
         }
         
-        closeConnection();
+        supplierData = suppliers;
         
-        return suppliers;
+        closeConnection();
     }
     
     private static Supplier findSupplierInList(ArrayList<Supplier> suppliers, String id) {
