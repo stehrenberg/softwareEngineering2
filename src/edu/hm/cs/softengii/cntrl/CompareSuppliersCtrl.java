@@ -14,9 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -34,6 +32,9 @@ public class CompareSuppliersCtrl implements Initializable{
     private Stage stage;
 
     @FXML private AnchorPane rootPane;
+    @FXML private MenuItem newUserMenuItem;
+    @FXML private MenuItem manageAllUsersMenuItem;
+    @FXML private SeparatorMenuItem userMenuSeperator;
     @FXML private ListView<String> suppliersListView;
     @FXML private TableView<SupplierScoreViewModel> suppliersTableView;
 
@@ -155,6 +156,8 @@ public class CompareSuppliersCtrl implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
+        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+
     	ObservableList<SupplierScoreViewModel> list = FXCollections.observableArrayList();
     	
     	ScoreCalculator scoreCalculator = new ScoreCalculator();
@@ -189,7 +192,18 @@ public class CompareSuppliersCtrl implements Initializable{
 
     }
 
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if(isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+        }
 
+    }
 
 
     public void setStage(Stage stage) {

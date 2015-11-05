@@ -11,6 +11,8 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -24,6 +26,10 @@ public class AverageSuppliersCtrl implements Initializable{
     private Stage stage;
 
     @FXML private AnchorPane rootPane;
+    @FXML private MenuItem newUserMenuItem;
+    @FXML private MenuItem manageAllUsersMenuItem;
+    @FXML private SeparatorMenuItem userMenuSeperator;
+
     @FXML private BarChart<String, Number> averageBarChart = new BarChart<String, Number>(new CategoryAxis(), new NumberAxis());
 
     @FXML
@@ -143,10 +149,21 @@ public class AverageSuppliersCtrl implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
         createDemoBarChart();
     }
 
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if(isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+        }
+    }
 
     public void createDemoBarChart() {
 

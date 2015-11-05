@@ -20,7 +20,6 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -33,6 +32,11 @@ public class ManageAllUsersCtrl implements Initializable{
     ObservableList<UserEntity> usersObservableList;
 
     @FXML private AnchorPane rootPane;
+
+    @FXML private MenuItem newUserMenuItem;
+    @FXML private MenuItem manageAllUsersMenuItem;
+    @FXML private SeparatorMenuItem userMenuSeperator;
+
     @FXML private ListView<UserEntity> usersListView;
     @FXML private Text forenameLabel;
     @FXML private TextField forename;
@@ -42,8 +46,6 @@ public class ManageAllUsersCtrl implements Initializable{
     @FXML private TextField userMail;
     @FXML private Text userNameLabel;
     @FXML private TextField userName;
-    @FXML private Text isAdminLabel;
-    @FXML private CheckBox isAdmin;
     @FXML private Text pswdLabel;
     @FXML private Text paswdHintText;
     @FXML private PasswordField pswd;
@@ -106,8 +108,7 @@ public class ManageAllUsersCtrl implements Initializable{
                         pswd.getText(),
                         forename.getText(),
                         surname.getText(),
-                        userMail.getText(),
-                        true);
+                        userMail.getText());
 
                 usersObservableList.remove(selectedUser);
                 usersObservableList.add(updatedUser);
@@ -237,6 +238,7 @@ public class ManageAllUsersCtrl implements Initializable{
     public void initialize(URL location, ResourceBundle resources) {
 
         populateUsersList();
+        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
 
         usersListView.setCellFactory(new Callback<ListView<UserEntity>, ListCell<UserEntity>>() {
 
@@ -272,6 +274,19 @@ public class ManageAllUsersCtrl implements Initializable{
         });
     }
 
+    private void setAdminMenusVisible(boolean isAdmin) {
+
+        if(isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+        }
+    }
+
     private void noUserSelectedWaring(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("No User");
@@ -296,7 +311,6 @@ public class ManageAllUsersCtrl implements Initializable{
             surname.setText(usersListView.getSelectionModel().getSelectedItem().getSurname());
             userMail.setText(usersListView.getSelectionModel().getSelectedItem().getEmail());
             userName.setText(usersListView.getSelectionModel().getSelectedItem().getLoginName());
-            isAdmin.setSelected(usersListView.getSelectionModel().getSelectedItem().isAdmin());
         }
     }
 

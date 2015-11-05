@@ -8,10 +8,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -23,7 +26,9 @@ public class AboutCtrl implements Initializable{
 
     @FXML private AnchorPane rootPane;
 
-    @FXML private MenuBar menuBar;
+    @FXML private MenuItem newUserMenuItem;
+    @FXML private MenuItem manageAllUsersMenuItem;
+    @FXML private SeparatorMenuItem userMenuSeperator;
 
     @FXML
     void gotoCreateNewUser(ActionEvent event) {
@@ -142,8 +147,22 @@ public class AboutCtrl implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
     }
 
+    private void setAdminMenusVisible(boolean isAdmin) {
+
+        if(isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+        }
+
+    }
 
     public void setStage(Stage stage) {
         this.stage = stage;

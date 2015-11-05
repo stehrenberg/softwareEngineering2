@@ -21,8 +21,9 @@ public interface IDatabaseUserAuth {
     boolean isEmpty();
     UserEntity getUserFromLoginName(String loginName);
     boolean isLoginCorrect(String loginName, String password);
-    UserEntity createNewUser(String loginName, String password, String forename, String surname, String email, boolean isAdmin);
+    UserEntity createNewAdminUser(String loginName, String password, String forename, String surname, String email);
+    UserEntity createNewUser(String loginName, String password, String forename, String surname, String email);
     void deleteUserFromLoginName(String loginName);
-    UserEntity updateUser(String loginName, String newLoginName, String password, String forename, String surname, String email, boolean isAdmin);
+    UserEntity updateUser(String loginName, String newLoginName, String password, String forename, String surname, String email);
 
 }

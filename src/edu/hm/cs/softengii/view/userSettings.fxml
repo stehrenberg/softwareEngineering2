@@ -25,9 +25,9 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="User">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#gotoCreateNewUser" text="New User" />
-                        <MenuItem mnemonicParsing="false" onAction="#gotoManageAllUsers" text="Manage all Users" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="newUserMenuItem" mnemonicParsing="false" onAction="#gotoCreateNewUser" text="New User" />
+                        <MenuItem fx:id="manageAllUsersMenuItem" mnemonicParsing="false" onAction="#gotoManageAllUsers" text="Manage all Users" />
+                        <SeparatorMenuItem fx:id="userMenuSeperator" mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#gotoUserSettings" text="Settings" />
                         <MenuItem mnemonicParsing="false" onAction="#gotoLogin" text="Logout" />
                     </items>
@@ -79,7 +79,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Text>
-      <CheckBox fx:id="isAdmin" layoutX="168.0" layoutY="268.0" mnemonicParsing="false" />
+      <CheckBox fx:id="isAdmin" disable="true" layoutX="168.0" layoutY="268.0" mnemonicParsing="false" />
       <Text fx:id="pswdLabel" layoutX="37.0" layoutY="321.0" strokeType="OUTSIDE" strokeWidth="0.0" text="New Password:" wrappingWidth="149.0">
          <font>
             <Font name="System Bold" size="14.0" />

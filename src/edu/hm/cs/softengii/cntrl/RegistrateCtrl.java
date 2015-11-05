@@ -60,13 +60,12 @@ public class RegistrateCtrl implements Initializable{
 
         if (errors.isEmpty()) {
 
-            UserEntity newUser = DatabaseUserAuth.getInstance().createNewUser(
+            UserEntity newUser = DatabaseUserAuth.getInstance().createNewAdminUser(
                     userName.getText(),
                     pswd.getText(),
                     forename.getText(),
                     surname.getText(),
-                    userMail.getText(),
-                    true);
+                    userMail.getText());
 
             Session.getInstance().setAuthenticatedUser(newUser);
             gotoMainMenu();

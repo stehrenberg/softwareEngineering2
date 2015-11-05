@@ -25,9 +25,9 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="User">
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#gotoCreateNewUser" text="New User" />
-                        <MenuItem mnemonicParsing="false" onAction="#gotoManageAllUsers" text="Manage all Users" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem fx:id="newUserMenuItem" mnemonicParsing="false" onAction="#gotoCreateNewUser" text="New User" />
+                        <MenuItem fx:id="manageAllUsersMenuItem" mnemonicParsing="false" onAction="#gotoManageAllUsers" text="Manage all Users" />
+                        <SeparatorMenuItem fx:id="userMenuSeperator" mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" onAction="#gotoUserSettings" text="Settings" />
                         <MenuItem mnemonicParsing="false" onAction="#gotoLogin" text="Logout" />
                     </items>
@@ -71,12 +71,6 @@
       </Text>
       <TextField fx:id="userName" layoutX="470.0" layoutY="225.0" />
       <Text fx:id="userNameLabel" layoutX="340.0" layoutY="243.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" wrappingWidth="141.388671875">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Text>
-      <CheckBox fx:id="isAdmin" layoutX="471.0" layoutY="270.0" mnemonicParsing="false" />
-      <Text fx:id="isAdminLabel" layoutX="340.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Admin:" wrappingWidth="141.388671875">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

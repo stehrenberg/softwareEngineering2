@@ -10,7 +10,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -31,6 +33,10 @@ public class CreateNewUserCtrl implements Initializable{
     private ArrayList<String> errors = new ArrayList<>();
 
     @FXML private AnchorPane rootPane;
+
+    @FXML private MenuItem newUserMenuItem;
+    @FXML private MenuItem manageAllUsersMenuItem;
+    @FXML private SeparatorMenuItem userMenuSeperator;
 
     @FXML private Text errorMessage;
 
@@ -59,8 +65,7 @@ public class CreateNewUserCtrl implements Initializable{
                     pswd.getText(),
                     forename.getText(),
                     surname.getText(),
-                    userMail.getText(),
-                    true);
+                    userMail.getText());
 
 
             errorMessage.setFill(Color.GREEN);
@@ -189,9 +194,24 @@ public class CreateNewUserCtrl implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
         errorMessage.setText("");
     }
 
+
+    private void setAdminMenusVisible(boolean isAdmin) {
+
+        if(isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+        }
+
+    }
 
     private void clearAllInputs() {
         forename.setText("");

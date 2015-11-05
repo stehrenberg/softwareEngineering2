@@ -26,6 +26,10 @@ public class UserSettingsCtrl implements Initializable{
 
     @FXML private AnchorPane rootPane;
 
+    @FXML private MenuItem newUserMenuItem;
+    @FXML private MenuItem manageAllUsersMenuItem;
+    @FXML private SeparatorMenuItem userMenuSeperator;
+
     @FXML private Text forenameLabel;
     @FXML private TextField forename;
     @FXML private Text surnameLabel;
@@ -62,8 +66,7 @@ public class UserSettingsCtrl implements Initializable{
                     pswd.getText(),
                     forename.getText(),
                     surname.getText(),
-                    userMail.getText(),
-                    true);
+                    userMail.getText());
 
             Session.getInstance().setAuthenticatedUser(updatedUser);
             populateInputs();
@@ -192,6 +195,23 @@ public class UserSettingsCtrl implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         populateInputs();
+        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+    }
+
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if(isAdmin) {
+            isAdminLabel.setVisible(true);
+            this.isAdmin.setVisible(true);
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+        } else {
+            isAdminLabel.setVisible(false);
+            this.isAdmin.setVisible(false);
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+        }
     }
 
     private void populateInputs() {

@@ -159,7 +159,16 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     }
 
     @Override
-    public UserEntity createNewUser(String loginName, String password, String forename, String surname, String email, boolean isAdmin) {
+    public UserEntity createNewAdminUser(String loginName, String password, String forename, String surname, String email) {
+        return createUser(loginName, password, forename, surname, email, true);
+    }
+
+    @Override
+    public UserEntity createNewUser(String loginName, String password, String forename, String surname, String email) {
+        return createUser(loginName, password, forename, surname, email, false);
+    }
+
+    private UserEntity createUser(String loginName, String password, String forename, String surname, String email, boolean isAdmin) {
 
         establishConnection();
 
@@ -215,7 +224,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
 
 
     @Override
-    public UserEntity updateUser(String loginName, String newLoginName, String password, String forename, String surname, String email, boolean isAdmin) {
+    public UserEntity updateUser(String loginName, String newLoginName, String password, String forename, String surname, String email) {
         establishConnection();
         String generatedPswd = "";
         UserEntity newUser = null;
@@ -229,30 +238,26 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
         }
 
         try {
-            int admin = 0;
-            if(isAdmin){
-                admin = 1;
-            }
 
             String query = "";
             if (!password.equals("")) {
                 query = String.format("UPDATE Users " +
-                                "SET forename='%s', surname='%s', loginName='%s', pswd='%s', email='%s', isAdmin='%d'" +
+                                "SET forename='%s', surname='%s', loginName='%s', pswd='%s', email='%s'" +
                                 "WHERE loginName='%s'",
-                        forename, surname, newLoginName, generatedPswd, email, admin, loginName);
+                        forename, surname, newLoginName, generatedPswd, email, loginName);
             } else {
                 query = String.format("UPDATE Users " +
-                                "SET forename='%s', surname='%s', loginName='%s', email='%s', isAdmin='%d'" +
+                                "SET forename='%s', surname='%s', loginName='%s', email='%s'" +
                                 "WHERE loginName='%s'",
-                        forename, surname, newLoginName, email, admin, loginName);
+                        forename, surname, newLoginName, email, loginName);
             }
             Statement statement = connection.createStatement();
             statement.executeUpdate(query);
-            newUser = new UserEntity(isAdmin, forename, surname,  loginName, email);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         closeConnection();
-        return newUser;
+        return getUserFromLoginName(newLoginName);
     }
 }
