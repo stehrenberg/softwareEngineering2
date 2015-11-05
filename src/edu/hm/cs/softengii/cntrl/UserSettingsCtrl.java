@@ -46,28 +46,28 @@ public class UserSettingsCtrl implements Initializable{
     @FXML
     void updateUser(ActionEvent event) {
 
-//        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-//        alert.setTitle("Update User");
-//
-//        alert.setHeaderText("Update user account settings.");
-//
-//        alert.setContentText("Do you want to update your account settings now?");
-//
-//        Optional<ButtonType> result = alert.showAndWait();
-//        if (result.get() == ButtonType.OK){
-//
-//            UserEntity updatedUser = DatabaseUserAuth.getInstance().updateUser(
-//                    Session.getInstance().getAuthenticatedUser().getLoginName(),
-//                    userName.getText(),
-//                    pswd.getText(),
-//                    forename.getText(),
-//                    surname.getText(),
-//                    userMail.getText(),
-//                    true);
-//
-//            Session.getInstance().setAuthenticatedUser(updatedUser);
-//            populateInputs();
-//        }
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Update User");
+
+        alert.setHeaderText("Update user account settings.");
+
+        alert.setContentText("Do you want to update your account settings now?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+
+            UserEntity updatedUser = DatabaseUserAuth.getInstance().updateUser(
+                    Session.getInstance().getAuthenticatedUser().getLoginName(),
+                    userName.getText(),
+                    pswd.getText(),
+                    forename.getText(),
+                    surname.getText(),
+                    userMail.getText(),
+                    true);
+
+            Session.getInstance().setAuthenticatedUser(updatedUser);
+            populateInputs();
+        }
 
     }
 
