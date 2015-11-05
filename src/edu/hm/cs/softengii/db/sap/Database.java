@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
 import edu.hm.cs.softengii.utils.SettingsPropertiesHelper;
 
 public class Database implements IDatabase {
@@ -53,7 +56,7 @@ public class Database implements IDatabase {
     public void establishConnection() {
         try {
             if(connection == null || connection.isClosed()) {
-                connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+                connection = DriverManager.getConnection(DB_URL, USER, decryptPassword(PASSWORD));
 
                 System.out.println("connection esstablished");
                 System.out.println("url: " + DB_URL);
@@ -154,5 +157,23 @@ public class Database implements IDatabase {
     	}
     	
     	return null;
+    }
+    
+    private String decryptPassword(final String cryptedPassword) {
+		byte[] keyBytes = new byte[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31,37, 41, 43, 47, 53 };
+		SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
+
+		String password = "";
+
+		try {
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+			cipher.init(Cipher.DECRYPT_MODE, key);
+
+			byte[] decryptedPwd = cipher.doFinal(cryptedPassword.getBytes());
+			password = new String(decryptedPwd);
+		} catch (Exception e) {
+
+		}
+		return password;
     }
 }
