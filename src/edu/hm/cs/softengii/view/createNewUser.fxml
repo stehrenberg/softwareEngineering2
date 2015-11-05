@@ -39,13 +39,13 @@
                 </Menu>
             </menus>
         </MenuBar>
-      <Text layoutX="30.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registrate New User">
+      <Text layoutX="30.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register New User">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Text>
       <Line endX="580.0" fill="#00000099" layoutX="30.0" layoutY="77.0" />
-      <Text layoutX="35.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Here you can registrate new users!">
+      <Text layoutX="35.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Here you can register new users!">
          <font>
             <Font size="14.0" />
          </font>
@@ -82,7 +82,7 @@
       <Text fx:id="paswdHintText" layoutX="305.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="A password will be automatically gernerated for you if you leave this blank." wrappingWidth="141.388671875" />
       <PasswordField fx:id="pswd" layoutX="453.0" layoutY="163.0" />
       <PasswordField fx:id="pswdConfirm" layoutX="453.0" layoutY="193.0" />
-      <Button fx:id="registrateButton" layoutX="35.0" layoutY="276.0" mnemonicParsing="false" onAction="#createUser" prefHeight="37.0" prefWidth="91.0" text="Registrate" />
+      <Button fx:id="registerButton" layoutX="35.0" layoutY="276.0" mnemonicParsing="false" onAction="#createUser" prefHeight="37.0" prefWidth="91.0" text="Register" />
       <Text fx:id="errorMessage" fill="#dd0000" layoutX="154.0" layoutY="291.0" strokeType="OUTSIDE" strokeWidth="0.0" text="errorMessage">
          <font>
             <Font size="14.0" />

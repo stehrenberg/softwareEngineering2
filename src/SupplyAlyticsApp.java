@@ -1,5 +1,5 @@
 import edu.hm.cs.softengii.cntrl.LoginCtrl;
-import edu.hm.cs.softengii.cntrl.RegistrateCtrl;
+import edu.hm.cs.softengii.cntrl.RegistrationCtrl;
 import edu.hm.cs.softengii.db.sap.Database;
 import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
 import edu.hm.cs.softengii.utils.SettingsPropertiesHelper;
@@ -38,7 +38,7 @@ public class SupplyAlyticsApp extends Application {
         stage = primaryStage;
 
         if(DatabaseUserAuth.getInstance().isEmpty()) {
-            gotoRegistrate();
+            gotoRegistration();
         } else {
             gotoLogin();
         }
@@ -47,14 +47,14 @@ public class SupplyAlyticsApp extends Application {
     }
 
 
-    private void gotoRegistrate() {
+    private void gotoRegistration() {
         try {
 
-            String fxmlPath = "edu/hm/cs/softengii/view/registrate.fxml";
+            String fxmlPath = "edu/hm/cs/softengii/view/registration.fxml";
             FXMLLoader loader = new FXMLLoader (SupplyAlyticsApp.class.getResource(fxmlPath));
 
             Parent page = (Parent) loader.load();
-            ((RegistrateCtrl)loader.getController()).setStage(stage);
+            ((RegistrationCtrl)loader.getController()).setStage(stage);
 
             replaceSceneContent(page);
 

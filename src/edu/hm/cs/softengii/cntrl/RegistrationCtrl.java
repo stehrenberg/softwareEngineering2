@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegistrateCtrl implements Initializable{
+public class RegistrationCtrl implements Initializable{
 
     private Stage stage;
     private ArrayList<String> errors = new ArrayList<>();
@@ -49,12 +49,12 @@ public class RegistrateCtrl implements Initializable{
     @FXML private PasswordField pswd;
     @FXML private PasswordField pswdConfirm;
 
-    @FXML private Button registrateButton;
+    @FXML private Button registerButton;
     @FXML private Button germanButton;
     @FXML private Button englishButton;
 
     @FXML
-    void registrate(ActionEvent event) {
+    void register(ActionEvent event) {
 
         validateInputs();
 
@@ -114,7 +114,7 @@ public class RegistrateCtrl implements Initializable{
         userNameLabel.setText(LanguagePropertiesHelper.getInstance().getUserNameLabel());
         pswdLabel.setText(LanguagePropertiesHelper.getInstance().getPswdLabel());
         paswdHintText.setText(LanguagePropertiesHelper.getInstance().getPaswdHintText());
-        registrateButton.setText(LanguagePropertiesHelper.getInstance().getRegistrateButton());
+        registerButton.setText(LanguagePropertiesHelper.getInstance().getRegisterButton());
         if(!errors.isEmpty()) {
             validateInputs();
         }
@@ -124,14 +124,14 @@ public class RegistrateCtrl implements Initializable{
         try {
 
             String fxmlPath = "../view/compareSuppliers.fxml";
-            FXMLLoader loader = new FXMLLoader(RegistrateCtrl.class.getResource(fxmlPath));
+            FXMLLoader loader = new FXMLLoader(RegistrationCtrl.class.getResource(fxmlPath));
 
             Parent page = (Parent) loader.load();
             ((CompareSuppliersCtrl)loader.getController()).setStage(stage);
 
             replaceSceneContent(page);
         } catch (Exception ex) {
-            Logger.getLogger(RegistrateCtrl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RegistrationCtrl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -75,8 +75,8 @@ public class LanguagePropertiesHelper {
     public String getPaswdHintText() {
         return properties.getProperty(language + ".paswdHintText");
     }
-    public String getRegistrateButton() {
-        return properties.getProperty(language + ".registrateButton");
+    public String getRegisterButton() {
+        return properties.getProperty(language + ".registerButton");
     }
 
     public String getForenameError() {
