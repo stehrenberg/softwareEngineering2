@@ -28,19 +28,6 @@ public class Database implements IDatabase {
 
     private ArrayList<Supplier> supplierData = new ArrayList<>();
     
-    /**Empty constructor. Not needed here.*/
-    private Database() {
-    	
-        Runnable dataLoader = new Runnable() {
-			@Override
-			public void run() {
-				loadSupplierData();
-			}
-		};
-		new Thread(dataLoader).start();
-    }
-
-
     public static Database getInstance() {
         if (instance == null) {
             createInstance();
