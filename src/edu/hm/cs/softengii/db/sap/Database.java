@@ -5,7 +5,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -123,7 +127,7 @@ public class Database implements IDatabase {
             		suppliers.add(supplier);
             	}
 
-            	Delivery delivery = new Delivery(set.getDate("eindt"), set.getDate("slfdt"));
+            	Delivery delivery = new Delivery(set.getDate("eindt").toLocalDate(), set.getDate("slfdt").toLocalDate());
             	supplier.getDeliveries().add(delivery);
             }
 
@@ -145,6 +149,16 @@ public class Database implements IDatabase {
 
     	return null;
     }
+
+    public List<Delivery> filterDeliveriesByDate(Supplier supplier, LocalDate rangeStart, LocalDate rangeEnd) {
+        List<Delivery> filteredDels = supplier.getDeliveries().stream()
+                .filter(delivery -> delivery.getActualDeliveryDate().isAfter(rangeStart))
+                .collect(Collectors.toList());
+        filteredDels.stream().forEach(del -> System.out.println("del is: " + del + "isAfter(" + rangeStart + "): " + del.getActualDeliveryDate().isAfter(rangeStart)));
+
+        return filteredDels;
+    }
+
 
     private String decryptPassword(final String cryptedPassword) {
 		byte[] keyBytes = new byte[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31,37, 41, 43, 47, 53 };
