@@ -27,7 +27,7 @@ public class Database implements IDatabase {
     private Connection connection;
 
     private ArrayList<Supplier> supplierData = new ArrayList<>();
-    
+
     public static Database getInstance() {
         if (instance == null) {
             createInstance();
@@ -43,7 +43,7 @@ public class Database implements IDatabase {
     public void establishConnection() {
         try {
             if(connection == null || connection.isClosed()) {
-                connection = DriverManager.getConnection(DB_URL, USER, decryptPassword(PASSWORD));
+                connection = DriverManager.getConnection(DB_URL, USER, "2N682Gsa");//decryptPassword(PASSWORD));
 
                 System.out.println("connection esstablished");
                 System.out.println("url: " + DB_URL);
@@ -94,14 +94,14 @@ public class Database implements IDatabase {
 
     @Override
     public ArrayList<Supplier> getSupplierData() {
-    	
+
         return supplierData;
     }
-    
+
     private void loadSupplierData() {
 
     	establishConnection();
-    	
+
         ArrayList<Supplier> suppliers = new ArrayList<>();
 
         try {
@@ -116,13 +116,13 @@ public class Database implements IDatabase {
             ResultSet set = statement.executeQuery(query);
 
             while(set.next()) {
-            	
+
             	Supplier supplier = findSupplierInList(suppliers, set.getString("l.lifnr"));
             	if (supplier == null) {
             		supplier = new Supplier(set.getString("l.lifnr"), set.getString("name1"));
             		suppliers.add(supplier);
             	}
-            	
+
             	Delivery delivery = new Delivery(set.getDate("eindt"), set.getDate("slfdt"));
             	supplier.getDeliveries().add(delivery);
             }
@@ -130,22 +130,22 @@ public class Database implements IDatabase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         supplierData = suppliers;
-        
+
         closeConnection();
     }
-    
+
     private static Supplier findSupplierInList(ArrayList<Supplier> suppliers, String id) {
     	for (Supplier supplier: suppliers) {
     		if (supplier.getId().equals(id)) {
     			return supplier;
     		}
     	}
-    	
+
     	return null;
     }
-    
+
     private String decryptPassword(final String cryptedPassword) {
 		byte[] keyBytes = new byte[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31,37, 41, 43, 47, 53 };
 		SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
