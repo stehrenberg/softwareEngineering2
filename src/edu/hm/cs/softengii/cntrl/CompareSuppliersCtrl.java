@@ -1,11 +1,10 @@
 package edu.hm.cs.softengii.cntrl;
 
-import edu.hm.cs.softengii.db.sap.Database;
-import edu.hm.cs.softengii.db.sap.IDatabase;
-import edu.hm.cs.softengii.db.sap.Supplier;
-import edu.hm.cs.softengii.utils.ScoreCalculator;
-import edu.hm.cs.softengii.utils.Session;
-import javafx.beans.property.SimpleStringProperty;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,252 +13,238 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
+import edu.hm.cs.softengii.db.sap.Database;
+import edu.hm.cs.softengii.utils.Session;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+public class CompareSuppliersCtrl implements Initializable {
 
-public class CompareSuppliersCtrl implements Initializable{
+	private Stage stage;
 
-    private Stage stage;
+	@FXML
+	private BarChart<String, Number> compareChart;
 
-    @FXML private AnchorPane rootPane;
-    @FXML private MenuItem newUserMenuItem;
-    @FXML private MenuItem manageAllUsersMenuItem;
-    @FXML private SeparatorMenuItem userMenuSeperator;
-    @FXML private ListView<String> suppliersListView;
-    @FXML private TableView<SupplierScoreViewModel> suppliersTableView;
+	@FXML
+	private ComboBox<String> supplier1Combo;
 
-    @FXML
-    void gotoCreateNewUser(ActionEvent event) {
+	@FXML
+	private ComboBox<String> supplier2Combo;
 
-        try {
+	@FXML
+	private ComboBox<String> supplier3Combo;
 
-            String fxmlPath = "../view/createNewUser.fxml";
-            FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
+	@FXML
+	private ComboBox<String> supplier4Combo;
 
-            Parent page = (Parent) loader.load();
-            ((CreateNewUserCtrl)loader.getController()).setStage(stage);
+	@FXML
+	void gotoCreateNewUser(ActionEvent event) {
 
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+		try {
 
-    @FXML
-    void gotoManageAllUsers(ActionEvent event) {
+			String fxmlPath = "../view/createNewUser.fxml";
+			FXMLLoader loader = new FXMLLoader(
+					CompareSuppliersCtrl.class.getResource(fxmlPath));
 
-        try {
+			Parent page = (Parent) loader.load();
+			((CreateNewUserCtrl) loader.getController()).setStage(stage);
 
-            String fxmlPath = "../view/manageAllUsers.fxml";
-            FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(
+					Level.SEVERE, null, ex);
+		}
+	}
 
-            Parent page = (Parent) loader.load();
-            ((ManageAllUsersCtrl)loader.getController()).setStage(stage);
+	@FXML
+	void gotoManageAllUsers(ActionEvent event) {
 
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+		try {
 
-    @FXML
-    void gotoCompareSuppliers(ActionEvent event) {
+			String fxmlPath = "../view/manageAllUsers.fxml";
+			FXMLLoader loader = new FXMLLoader(
+					CompareSuppliersCtrl.class.getResource(fxmlPath));
 
-        //Do nothing, we are already here
-    }
+			Parent page = (Parent) loader.load();
+			((ManageAllUsersCtrl) loader.getController()).setStage(stage);
 
-    @FXML
-    void gotoAverageSuppliers(ActionEvent event) {
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(
+					Level.SEVERE, null, ex);
+		}
+	}
 
-        try {
+	@FXML
+	void gotoCompareSuppliers(ActionEvent event) {
 
-            String fxmlPath = "../view/averageSuppliers.fxml";
-            FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
+		// Do nothing, we are already here
+	}
 
-            Parent page = (Parent) loader.load();
-            ((AverageSuppliersCtrl)loader.getController()).setStage(stage);
+	@FXML
+	void gotoAverageSuppliers(ActionEvent event) {
 
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+		try {
 
-    @FXML
-    void gotoUserSettings(ActionEvent event) {
+			String fxmlPath = "../view/averageSuppliers.fxml";
+			FXMLLoader loader = new FXMLLoader(
+					CompareSuppliersCtrl.class.getResource(fxmlPath));
 
-        try {
+			Parent page = (Parent) loader.load();
+			((AverageSuppliersCtrl) loader.getController()).setStage(stage);
 
-            String fxmlPath = "../view/userSettings.fxml";
-            FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(
+					Level.SEVERE, null, ex);
+		}
+	}
 
-            Parent page = (Parent) loader.load();
-            ((UserSettingsCtrl)loader.getController()).setStage(stage);
+	@FXML
+	void gotoUserSettings(ActionEvent event) {
 
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+		try {
 
-    @FXML
-    void gotoAbout(ActionEvent event) {
+			String fxmlPath = "../view/userSettings.fxml";
+			FXMLLoader loader = new FXMLLoader(
+					CompareSuppliersCtrl.class.getResource(fxmlPath));
 
-        try {
+			Parent page = (Parent) loader.load();
+			((UserSettingsCtrl) loader.getController()).setStage(stage);
 
-            String fxmlPath = "../view/about.fxml";
-            FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(
+					Level.SEVERE, null, ex);
+		}
+	}
 
-            Parent page = (Parent) loader.load();
-            ((AboutCtrl)loader.getController()).setStage(stage);
+	@FXML
+	void gotoAbout(ActionEvent event) {
 
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+		try {
 
-    @FXML
-    void gotoLogin(ActionEvent event) {
+			String fxmlPath = "../view/about.fxml";
+			FXMLLoader loader = new FXMLLoader(
+					CompareSuppliersCtrl.class.getResource(fxmlPath));
 
-        Session.getInstance().close();
+			Parent page = (Parent) loader.load();
+			((AboutCtrl) loader.getController()).setStage(stage);
 
-        try {
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(
+					Level.SEVERE, null, ex);
+		}
+	}
 
-            String fxmlPath = "../view/login.fxml";
-            FXMLLoader loader = new FXMLLoader(UserSettingsCtrl.class.getResource(fxmlPath));
+	@FXML
+	void gotoLogin(ActionEvent event) {
 
-            Parent page = (Parent) loader.load();
-            ((LoginCtrl)loader.getController()).setStage(stage);
+		Session.getInstance().close();
 
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(UserSettingsCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+		try {
 
-    @FXML
-    void quitApplication(ActionEvent event) {
-        stage.close();
-    }
+			String fxmlPath = "../view/login.fxml";
+			FXMLLoader loader = new FXMLLoader(
+					UserSettingsCtrl.class.getResource(fxmlPath));
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+			Parent page = (Parent) loader.load();
+			((LoginCtrl) loader.getController()).setStage(stage);
 
-        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(UserSettingsCtrl.class.getName()).log(
+					Level.SEVERE, null, ex);
+		}
+	}
 
-    	ObservableList<SupplierScoreViewModel> list = FXCollections.observableArrayList();
-    	
-    	ScoreCalculator scoreCalculator = new ScoreCalculator();
-    	
-    	IDatabase db = Database.getInstance();
-    	ArrayList<Supplier> suppliers = db.getSupplierData();
-    	
-    	for (Supplier supplier: suppliers) {
-    		double score = scoreCalculator.calculateScore(supplier);
-			list.add(new SupplierScoreViewModel(supplier.getName(), score));
-    	}
-    	
-    	Collections.sort(list, new Comparator<SupplierScoreViewModel>() {
-    	    @Override
-    	    public int compare(SupplierScoreViewModel s1, SupplierScoreViewModel s2) {
-    	        return - Double.compare(s1.getScoreValue(), s2.getScoreValue());
-    	    }
-    	});
-		      
-        TableColumn supplierColumn = new TableColumn("Supplier");
-        supplierColumn.setMinWidth(300);
-        supplierColumn.setCellValueFactory(new PropertyValueFactory<>("supplierName"));
-        
-        TableColumn scoreColumn = new TableColumn("Score");
-        scoreColumn.setMinWidth(50);
-        scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
-        
-        suppliersTableView.getColumns().addAll(supplierColumn, scoreColumn);
-        
-        suppliersTableView.setItems(list);
+	@FXML
+	void quitApplication(ActionEvent event) {
+		stage.close();
+	}
 
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
 
-    }
+		 ObservableList<String> list = FXCollections.observableArrayList("Supplier 1", "Supplier 2", "Supplier 3");
 
-    private void setAdminMenusVisible(boolean isAdmin) {
-        if(isAdmin) {
-            newUserMenuItem.setVisible(true);
-            manageAllUsersMenuItem.setVisible(true);
-            userMenuSeperator.setVisible(true);
-        } else {
-            newUserMenuItem.setVisible(false);
-            manageAllUsersMenuItem.setVisible(false);
-            userMenuSeperator.setVisible(false);
-        }
+		// ObservableList<String> list =
+		// FXCollections.observableArrayList(Database.getInstance().getSuppliers());
+		 supplier1Combo.setItems(list);
+		 supplier2Combo.setItems(list);
+		 supplier3Combo.setItems(list);
+		 supplier4Combo.setItems(list);
+	}
 
-    }
+	@FXML
+	void supplier1ComboAction(ActionEvent event) {
+		System.out.println("Supplier1Combo");
+		updateChart();
+	}
 
+	@FXML
+	void supplier2ComboAction(ActionEvent event) {
+		System.out.println("Supplier2Combo");
+		updateChart();
+	}
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
+	@FXML
+	void supplier3ComboAction(ActionEvent event) {
+		System.out.println("Supplier3Combo");
+		updateChart();
+	}
 
-    private Parent replaceSceneContent(Parent page) throws Exception {
+	@FXML
+	void supplier4ComboAction(ActionEvent event) {
+		System.out.println("Supplier4Combo");
+		updateChart();
+	}
+	
+	@FXML
+	void startDatePickerAction(ActionEvent event) {
+		System.out.println("startDatePicker");
+	}
 
-        Scene scene = stage.getScene();
-        if (scene == null) {
-            scene = new Scene(page, 640, 480);
+	@FXML
+	void endDatePickerAction(ActionEvent event) {
+		System.out.println("endDatePicker");
+	}
 
-            // TODO no CSS yet
-            //scene.getStylesheets().add(App.class.getResource("demo.css").toExternalForm());
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
 
-            stage.setScene(scene);
-        } else {
-            stage.getScene().setRoot(page);
-        }
-        stage.sizeToScene();
-        return page;
-    }
+	private void updateChart() {
+		XYChart.Series<String, Number> supplier1 = new XYChart.Series<>();
+		supplier1.setName("Supplier 1");
+		supplier1.getData().add(new XYChart.Data<String, Number>("very early", 20));
+		supplier1.getData().add(new XYChart.Data<String, Number>("early", 40));
+		supplier1.getData().add(new XYChart.Data<String, Number>("in time", 90));
+		supplier1.getData().add(new XYChart.Data<String, Number>("late", 10));
+		supplier1.getData().add(new XYChart.Data<String, Number>("very late", 5));
 
-    public static class SupplierScoreViewModel {
-    	
-    	private final SimpleStringProperty supplierName;
-        private final SimpleStringProperty score;
-        
-        private double scoreValue;
+		
+		compareChart.getData().add(supplier1);
+	}
 
-        public SupplierScoreViewModel(String supplierName, double score) {
-        	
-        	this.scoreValue = score;
-            this.supplierName = new SimpleStringProperty(supplierName);
-            this.score = new SimpleStringProperty(String.valueOf(Math.round(score)) + "%");
-        }
-        
-        public String getSupplierName() {
-        	return supplierName.get();
-        }
-        
-        public String getScore() {
-            return score.get();
-        }
-        
-        public double getScoreValue() {
-        	return scoreValue;
-        }
-        
-        public void setScore(double score) {
-        	this.scoreValue = score;
-        	this.score.set(String.valueOf(Math.round(score)) + "%");
-        }
-        
-        public void setSupplierName(String supplierName) {
-        	this.supplierName.set(supplierName);
-        }
-    }
+	private Parent replaceSceneContent(Parent page) throws Exception {
+
+		Scene scene = stage.getScene();
+		if (scene == null) {
+			scene = new Scene(page, 640, 480);
+
+			// TODO no CSS yet
+			// scene.getStylesheets().add(App.class.getResource("demo.css").toExternalForm());
+
+			stage.setScene(scene);
+		} else {
+			stage.getScene().setRoot(page);
+		}
+		stage.sizeToScene();
+		return page;
+	}
+
 }
