@@ -4,24 +4,25 @@
 
 package edu.hm.cs.softengii.db.sap;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Delivery {
 
-	private Date promisedDeliveryDate;
-	
-	private Date actualDeliveryDate;
-	
-    public Delivery(Date promisedDeliveryDate, Date actualDeliveryDate) {
+	private LocalDate promisedDeliveryDate;
+
+	private LocalDate actualDeliveryDate;
+
+    public Delivery(LocalDate promisedDeliveryDate, LocalDate actualDeliveryDate) {
     	this.promisedDeliveryDate = promisedDeliveryDate;
     	this.actualDeliveryDate = actualDeliveryDate;
     }
-    
-    public Date getPromisedDeliveryDate() {
+
+    public LocalDate getPromisedDeliveryDate() {
     	return promisedDeliveryDate;
     }
-    
-    public Date getActualDeliveryDate() {
+
+    public LocalDate getActualDeliveryDate() {
     	return actualDeliveryDate;
     }
 }
