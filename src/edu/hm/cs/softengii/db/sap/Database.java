@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -106,6 +108,33 @@ public class Database implements IDatabase {
         return suppliers;
     }
 
+    public Map<String, String> getSupplierList() {
+
+        Map<String, String> suppliers = new HashMap<>();
+        establishConnection();
+
+        try {
+            String query = String.format("SELECT * FROM lfa1");
+
+            Statement statement = connection.createStatement();
+            ResultSet set = statement.executeQuery(query);
+
+            while(set.next()) {
+                String supplierID = set.getString("lifnr");
+                String name = set.getString("name1");
+                System.out.println(supplierID + "/" + name);
+                suppliers.put(supplierID, name);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        closeConnection();
+
+        return suppliers;
+    }
+
     @Override
     public ArrayList<Supplier> getSupplierData() {
         loadSupplierData();
@@ -121,13 +150,20 @@ public class Database implements IDatabase {
         try {
 
             String query = String.format(
-            		"SELECT l.lifnr, name1, eindt, slfdt "
-            		+ "FROM lfa1 l, eket m, ekko n "
-            		+ "WHERE m.ebeln = n.ebeln AND l.lifnr = n.lifnr"
-        		);
+                    "SELECT l.lifnr, name1, eindt, slfdt, m.ebeln "
+                            + "FROM lfa1 l, eket m, ekko n "
+                            + "WHERE m.ebeln = n.ebeln AND l.lifnr = n.lifnr LIMIT 10"
+            );
 
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
+
+/*            String deliveryDelaysQuery = "SELECT ekbe.EBELN, BUDAT, SLFDT, VGABE, DATEDIFF(BUDAT, SLFDT) AS DIFF " +
+                    "FROM ekbe ekbe, eket eket " +
+                    "WHERE ekbe.EBELN = eket.EBELN " +
+                    "AND ekbe.VGABE = 1 " +
+                    "GROUP BY ekbe.EBELN;";
+            ResultSet deliveriesWithDelay = connection.createStatement().executeQuery(deliveryDelaysQuery);*/
 
             while(set.next()) {
 
@@ -136,8 +172,14 @@ public class Database implements IDatabase {
             		supplier = new Supplier(set.getString("l.lifnr"), set.getString("name1"));
             		suppliers.add(supplier);
             	}
+                LocalDate eindt = set.getDate("eindt").toLocalDate();
+                LocalDate slfdt = set.getDate("slfdt").toLocalDate();
+                System.out.println("eindt / slfdt: " + eindt + "/" + slfdt);
 
-            	Delivery delivery = new Delivery(set.getDate("eindt").toLocalDate(), set.getDate("slfdt").toLocalDate());
+            	Delivery delivery = new Delivery(
+                        set.getDate("eindt").toLocalDate(),
+                        set.getDate("slfdt").toLocalDate());
+                //delivery.setDelay(set.getInt("DIFF"));
             	supplier.getDeliveries().add(delivery);
             }
 
