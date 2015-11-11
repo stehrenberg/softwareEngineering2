@@ -1,10 +1,12 @@
 package edu.hm.cs.softengii.cntrl;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import edu.hm.cs.softengii.db.sap.IDatabase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 import edu.hm.cs.softengii.db.sap.Database;
 import edu.hm.cs.softengii.utils.Session;
@@ -38,6 +41,12 @@ public class CompareSuppliersCtrl implements Initializable {
 
 	@FXML
 	private ComboBox<String> supplier4Combo;
+
+	@FXML
+	private DatePicker startDatePicker;
+
+	@FXML
+	private DatePicker endDatePicker;
 
 	@FXML
 	void gotoCreateNewUser(ActionEvent event) {
@@ -202,15 +211,27 @@ public class CompareSuppliersCtrl implements Initializable {
 		System.out.println("Supplier4Combo");
 		updateChart();
 	}
-	
+
 	@FXML
 	void startDatePickerAction(ActionEvent event) {
-		System.out.println("startDatePicker");
+		LocalDate dateRangeStart = startDatePicker.getValue();
+		LocalDate dateRangeEnd = endDatePicker.getValue();
+		System.out.println("range Start: " + dateRangeStart + " / range End: " + dateRangeEnd);
+
 	}
 
 	@FXML
 	void endDatePickerAction(ActionEvent event) {
-		System.out.println("endDatePicker");
+		LocalDate dateRangeStart = startDatePicker.getValue();
+		LocalDate dateRangeEnd = endDatePicker.getValue();
+		System.out.println("range Start: " + dateRangeStart + " / range End: " + dateRangeEnd);
+	}
+
+	private void filterSupplierData(LocalDate startRange, LocalDate endRange) {
+		Database db = Database.getInstance();
+		db.getSupplierData();
+		db.filterDeliveriesByDate(/*supplier1Combo.getValue()*/"0001000056", startRange, endRange);
+		updateChart();
 	}
 
 	public void setStage(Stage stage) {
@@ -226,7 +247,7 @@ public class CompareSuppliersCtrl implements Initializable {
 		supplier1.getData().add(new XYChart.Data<String, Number>("late", 10));
 		supplier1.getData().add(new XYChart.Data<String, Number>("very late", 5));
 
-		
+
 		compareChart.getData().add(supplier1);
 	}
 
