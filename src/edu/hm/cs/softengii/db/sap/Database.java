@@ -37,13 +37,7 @@ public class Database implements IDatabase {
 
     private Database() {
 
-    	Runnable dataLoader = new Runnable() {
-			@Override
-			public void run() {
-		    	loadSupplierData();
-			}
-		};
-
+    	Runnable dataLoader = () -> loadSupplierData();
 		new Thread(dataLoader).start();
     }
 
@@ -92,7 +86,7 @@ public class Database implements IDatabase {
 
         try {
 
-            String query = String.format("SELECT * FROM lfa1");
+            String query = "SELECT * FROM lfa1";
 
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
@@ -122,7 +116,7 @@ public class Database implements IDatabase {
         establishConnection();
 
         try {
-            String query = String.format("SELECT * FROM lfa1");
+            String query = "SELECT * FROM lfa1";
 
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
