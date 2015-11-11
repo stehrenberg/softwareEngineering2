@@ -12,6 +12,8 @@ public class Delivery {
 
 	private LocalDate actualDeliveryDate;
 
+    private int delayInDays;
+
     public Delivery(LocalDate promisedDeliveryDate, LocalDate actualDeliveryDate) {
     	this.promisedDeliveryDate = promisedDeliveryDate;
     	this.actualDeliveryDate = actualDeliveryDate;
@@ -23,5 +25,9 @@ public class Delivery {
 
     public LocalDate getActualDeliveryDate() {
     	return actualDeliveryDate;
+    }
+
+    public void setDelay(int delayInDays) {
+        this.delayInDays = delayInDays;
     }
 }
