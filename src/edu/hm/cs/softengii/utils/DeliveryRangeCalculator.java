@@ -108,20 +108,17 @@ public class DeliveryRangeCalculator {
 		double deliveryCounter = 0;
 		List<Delivery> deliveries = supplier.getDeliveries();
 		List<Delivery> filteredDels = deliveries.stream()
-				.filter(delivery -> delivery.getActualDeliveryDate().isAfter(rangeStart))
+				.filter(delivery -> {
+					boolean isBefore = delivery.getActualDeliveryDate().isBefore(rangeEnd);
+					boolean isAfter = delivery.getActualDeliveryDate().isAfter(rangeStart);
+					return isBefore && isAfter;
+				})
 				.collect(Collectors.toList());
 
 		// Count all deliveries of this supplier which are in this day period
-		for (Delivery delivery: deliveries) {
-			int dayDiff = delivery.getDelay(); //calculateDayDiff(asUtilDate(delivery.getPromisedDeliveryDate()), asUtilDate(delivery.getActualDeliveryDate()));
-			System.out.println("delivery / actualDel / promised / delay: "
-					+ delivery.getDeliveryID()
-					+ " / "
-					+ delivery.getActualDeliveryDate()
-					+ " / "
-					+ delivery.getPromisedDeliveryDate()
-					+ " / "
-					+ delivery.getDelay());
+		for (Delivery delivery: filteredDels) {
+			int dayDiff = delivery.getDelay();
+
 			// Check if this delivery is in the given day period
 			if (dayDiff >= dayDiffMin && dayDiff <= dayDiffMax) {
 				deliveryCounter++;

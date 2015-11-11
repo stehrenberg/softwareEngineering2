@@ -52,8 +52,8 @@ public class ScoreCalculator {
 
 			try {
 				// Calculate difference of actual and promised delivery date in days
-				int diffInDays = calculateDayDiff(asUtilDate(delivery.getPromisedDeliveryDate()),
-						asUtilDate(delivery.getActualDeliveryDate()));
+				int diffInDays = delivery.getDelay();//calculateDayDiff(asUtilDate(delivery.getPromisedDeliveryDate()),
+						//asUtilDate(delivery.getActualDeliveryDate()));
 
 				// Calculate single score
 				int singleScore = calculateSingleScore(diffInDays);
