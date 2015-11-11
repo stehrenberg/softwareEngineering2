@@ -5,7 +5,6 @@
 package edu.hm.cs.softengii.db.sap;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Delivery {
 
