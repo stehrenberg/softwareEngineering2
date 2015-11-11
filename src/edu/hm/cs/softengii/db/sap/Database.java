@@ -31,6 +31,16 @@ public class Database implements IDatabase {
     private Connection connection;
 
     private ArrayList<Supplier> supplierData = new ArrayList<>();
+    private ArrayList<Supplier> suppliers;
+
+    private Database() {
+        Runnable dataLoader = new Runnable() {
+            @Override public void run() {
+                loadSupplierData();
+            }
+        };
+        new Thread(dataLoader).start();
+    }
 
     public static Database getInstance() {
         if (instance == null) {
@@ -98,7 +108,7 @@ public class Database implements IDatabase {
 
     @Override
     public ArrayList<Supplier> getSupplierData() {
-
+        loadSupplierData();
         return supplierData;
     }
 
@@ -135,6 +145,7 @@ public class Database implements IDatabase {
             e.printStackTrace();
         }
 
+        this.suppliers = suppliers;
         supplierData = suppliers;
 
         closeConnection();
@@ -150,13 +161,18 @@ public class Database implements IDatabase {
     	return null;
     }
 
-    public List<Delivery> filterDeliveriesByDate(Supplier supplier, LocalDate rangeStart, LocalDate rangeEnd) {
+    public List<Delivery> filterDeliveriesByDate(String supplierID, LocalDate rangeStart, LocalDate rangeEnd) {
+        Supplier supplier = getSupplierByID(supplierID);
         List<Delivery> filteredDels = supplier.getDeliveries().stream()
                 .filter(delivery -> delivery.getActualDeliveryDate().isAfter(rangeStart))
                 .collect(Collectors.toList());
         filteredDels.stream().forEach(del -> System.out.println("del is: " + del + "isAfter(" + rangeStart + "): " + del.getActualDeliveryDate().isAfter(rangeStart)));
 
         return filteredDels;
+    }
+
+    private Supplier getSupplierByID(String supplierID) {
+        return findSupplierInList(suppliers, supplierID);
     }
 
 
