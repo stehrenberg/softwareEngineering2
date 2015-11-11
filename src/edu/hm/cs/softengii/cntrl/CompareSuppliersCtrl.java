@@ -2,11 +2,14 @@ package edu.hm.cs.softengii.cntrl;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import edu.hm.cs.softengii.db.sap.IDatabase;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,7 +23,12 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import edu.hm.cs.softengii.db.sap.Database;
+import edu.hm.cs.softengii.db.sap.DemoDatabase;
+import edu.hm.cs.softengii.db.sap.Supplier;
+import edu.hm.cs.softengii.utils.DeliveryRangeCalculator;
+import edu.hm.cs.softengii.utils.DeliveryRangeCalculator.Range;
 import edu.hm.cs.softengii.utils.Session;
 
 public class CompareSuppliersCtrl implements Initializable {
@@ -31,17 +39,27 @@ public class CompareSuppliersCtrl implements Initializable {
 	private BarChart<String, Number> compareChart;
 
 	@FXML
-	private ComboBox<String> supplier1Combo;
+	private ComboBox<Supplier> supplier1Combo;
 
 	@FXML
-	private ComboBox<String> supplier2Combo;
+	private ComboBox<Supplier> supplier2Combo;
 
 	@FXML
-	private ComboBox<String> supplier3Combo;
+	private ComboBox<Supplier> supplier3Combo;
 
 	@FXML
-	private ComboBox<String> supplier4Combo;
+	private ComboBox<Supplier> supplier4Combo;
 
+	XYChart.Series<String, Number> serie1 = new XYChart.Series<>();
+	
+	XYChart.Series<String, Number> serie2 = new XYChart.Series<>();
+	
+	XYChart.Series<String, Number> serie3 = new XYChart.Series<>();
+	
+	XYChart.Series<String, Number> serie4 = new XYChart.Series<>();
+	
+	DeliveryRangeCalculator rangeCalculator = new DeliveryRangeCalculator();
+	
 	@FXML
 	private DatePicker startDatePicker;
 
@@ -177,39 +195,76 @@ public class CompareSuppliersCtrl implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		compareChart.getData().add(serie1);
+		compareChart.getData().add(serie2);
+		compareChart.getData().add(serie3);
+		compareChart.getData().add(serie4);
+		
+		 ObservableList<Supplier> list = FXCollections.observableArrayList();
 
-		 ObservableList<String> list = FXCollections.observableArrayList("Supplier 1", "Supplier 2", "Supplier 3");
-
-		// ObservableList<String> list =
-		// FXCollections.observableArrayList(Database.getInstance().getSuppliers());
+		 // Add null for nothing to select
+		 list.add(null);
+		 
+		 ArrayList<Supplier> suppliers = Database.getInstance().getSupplierData();
+		 
+		 for (int i = 0; i < suppliers.size(); i++) {
+			 list.add(suppliers.get(i));
+		 }
+		 
+		 StringConverter<Supplier> converter = new StringConverter<Supplier>() {
+		    @Override
+		    public String toString(Supplier supplier) {
+		        if (supplier == null) {
+		            return null;
+		        } else {
+		            return supplier.getName();
+		        }
+		    }
+	
+		    @Override
+		    public Supplier fromString(String supplierString) {
+		        return null; // No conversion fromString needed.
+		    }
+		 };
+		 
 		 supplier1Combo.setItems(list);
+		 supplier1Combo.setConverter(converter);
 		 supplier2Combo.setItems(list);
+		 supplier2Combo.setConverter(converter);
 		 supplier3Combo.setItems(list);
+		 supplier3Combo.setConverter(converter);
 		 supplier4Combo.setItems(list);
+		 supplier4Combo.setConverter(converter);
 	}
 
 	@FXML
 	void supplier1ComboAction(ActionEvent event) {
+		
 		System.out.println("Supplier1Combo");
-		updateChart();
+		//updateChart();
+		updateChartForSupplier(supplier1Combo.getValue(), serie1);
 	}
 
 	@FXML
 	void supplier2ComboAction(ActionEvent event) {
 		System.out.println("Supplier2Combo");
-		updateChart();
+		//updateChart();
+		updateChartForSupplier(supplier2Combo.getValue(), serie2);
 	}
 
 	@FXML
 	void supplier3ComboAction(ActionEvent event) {
 		System.out.println("Supplier3Combo");
-		updateChart();
+		//updateChart();
+		updateChartForSupplier(supplier3Combo.getValue(), serie3);
 	}
 
 	@FXML
 	void supplier4ComboAction(ActionEvent event) {
 		System.out.println("Supplier4Combo");
-		updateChart();
+		//updateChart();
+		updateChartForSupplier(supplier4Combo.getValue(), serie4);
 	}
 
 	@FXML
@@ -237,18 +292,25 @@ public class CompareSuppliersCtrl implements Initializable {
 	public void setStage(Stage stage) {
 		this.stage = stage;
 	}
-
-	private void updateChart() {
-		XYChart.Series<String, Number> supplier1 = new XYChart.Series<>();
-		supplier1.setName("Supplier 1");
-		supplier1.getData().add(new XYChart.Data<String, Number>("very early", 20));
-		supplier1.getData().add(new XYChart.Data<String, Number>("early", 40));
-		supplier1.getData().add(new XYChart.Data<String, Number>("in time", 90));
-		supplier1.getData().add(new XYChart.Data<String, Number>("late", 10));
-		supplier1.getData().add(new XYChart.Data<String, Number>("very late", 5));
-
-
-		compareChart.getData().add(supplier1);
+	
+	private void updateChartForSupplier(Supplier supplier, XYChart.Series<String, Number> serie) {
+		
+		// First remove all data from this serie
+		serie.getData().clear();
+		
+		if (supplier != null) {
+			
+			// Change serie data for this supplier
+			serie.setName(supplier.getName());
+			
+			Map<Range, Double> ranges = rangeCalculator.calculateDeliveryRanges(supplier);
+			
+			serie.getData().add(new XYChart.Data<String, Number>("very early", 100* ranges.get(Range.VERY_EARLY)));
+			serie.getData().add(new XYChart.Data<String, Number>("early", 100 * ranges.get(Range.EARLY)));
+			serie.getData().add(new XYChart.Data<String, Number>("in time", 100 * ranges.get(Range.IN_TIME)));
+			serie.getData().add(new XYChart.Data<String, Number>("late", 100 * ranges.get(Range.LATE)));
+			serie.getData().add(new XYChart.Data<String, Number>("very late", 100 * ranges.get(Range.VERY_LATE)));
+		}
 	}
 
 	private Parent replaceSceneContent(Parent page) throws Exception {

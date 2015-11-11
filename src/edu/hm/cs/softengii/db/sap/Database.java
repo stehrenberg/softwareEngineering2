@@ -33,17 +33,20 @@ public class Database implements IDatabase {
     private Connection connection;
 
     private ArrayList<Supplier> supplierData = new ArrayList<>();
-    private ArrayList<Supplier> suppliers;
 
+    
     private Database() {
-        Runnable dataLoader = new Runnable() {
-            @Override public void run() {
-                loadSupplierData();
-            }
-        };
-        new Thread(dataLoader).start();
+    	
+    	Runnable dataLoader = new Runnable() {
+			@Override
+			public void run() {
+		    	loadSupplierData();
+			}
+		};
+    	
+		new Thread(dataLoader).start();
     }
-
+    
     public static Database getInstance() {
         if (instance == null) {
             createInstance();
@@ -137,7 +140,7 @@ public class Database implements IDatabase {
 
     @Override
     public ArrayList<Supplier> getSupplierData() {
-        loadSupplierData();
+        origin/master
         return supplierData;
     }
 
