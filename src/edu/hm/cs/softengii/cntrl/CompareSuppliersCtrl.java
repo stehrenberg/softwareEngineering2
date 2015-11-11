@@ -242,28 +242,24 @@ public class CompareSuppliersCtrl implements Initializable {
 	void supplier1ComboAction(ActionEvent event) {
 
 		System.out.println("Supplier1Combo");
-		//updateChart();
 		updateChartForSupplier(supplier1Combo.getValue(), serie1);
 	}
 
 	@FXML
 	void supplier2ComboAction(ActionEvent event) {
 		System.out.println("Supplier2Combo");
-		//updateChart();
 		updateChartForSupplier(supplier2Combo.getValue(), serie2);
 	}
 
 	@FXML
 	void supplier3ComboAction(ActionEvent event) {
 		System.out.println("Supplier3Combo");
-		//updateChart();
 		updateChartForSupplier(supplier3Combo.getValue(), serie3);
 	}
 
 	@FXML
 	void supplier4ComboAction(ActionEvent event) {
 		System.out.println("Supplier4Combo");
-		//updateChart();
 		updateChartForSupplier(supplier4Combo.getValue(), serie4);
 	}
 
@@ -271,16 +267,25 @@ public class CompareSuppliersCtrl implements Initializable {
 	void startDatePickerAction(ActionEvent event) {
 		LocalDate dateRangeStart = startDatePicker.getValue();
 		rangeCalculator.setRangeStart(dateRangeStart);
+		updateChartForAllSuppliers();
 	}
 
 	@FXML
 	void endDatePickerAction(ActionEvent event) {
 		LocalDate dateRangeEnd = endDatePicker.getValue();
 		rangeCalculator.setRangeEnd(dateRangeEnd);
+		updateChartForAllSuppliers();
 	}
 
 	public void setStage(Stage stage) {
 		this.stage = stage;
+	}
+
+	private void updateChartForAllSuppliers() {
+		updateChartForSupplier(supplier1Combo.getValue(), serie1);
+		updateChartForSupplier(supplier2Combo.getValue(), serie2);
+		updateChartForSupplier(supplier3Combo.getValue(), serie3);
+		updateChartForSupplier(supplier4Combo.getValue(), serie4);
 	}
 
 	private void updateChartForSupplier(Supplier supplier, XYChart.Series<String, Number> serie) {
