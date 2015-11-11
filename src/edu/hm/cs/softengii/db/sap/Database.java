@@ -179,7 +179,6 @@ public class Database implements IDatabase {
                 String delID = set.getString("eket.EBELN");
                 System.out.println("budat / slfdt: " + actual + "/" + promised);
 
-                // promised, actual
             	Delivery delivery = new Delivery(delID, promised, actual);
                 delivery.setDelay(set.getInt("DIFF"));
             	supplier.getDeliveries().add(delivery);
