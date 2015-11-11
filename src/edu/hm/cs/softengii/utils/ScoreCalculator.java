@@ -7,11 +7,6 @@ Date: 30-10-2015
 
 package edu.hm.cs.softengii.utils;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-
 import edu.hm.cs.softengii.db.sap.Delivery;
 import edu.hm.cs.softengii.db.sap.Supplier;
 
@@ -52,8 +47,7 @@ public class ScoreCalculator {
 
 			try {
 				// Calculate difference of actual and promised delivery date in days
-				int diffInDays = delivery.getDelay();//calculateDayDiff(asUtilDate(delivery.getPromisedDeliveryDate()),
-						//asUtilDate(delivery.getActualDeliveryDate()));
+				int diffInDays = delivery.getDelay();
 
 				// Calculate single score
 				int singleScore = calculateSingleScore(diffInDays);
@@ -72,21 +66,6 @@ public class ScoreCalculator {
 	}
 
 	// Private methods ------------------------------------------------------------------
-
-	/**
-	 * Calculate the difference in days between two dates
-	 * @param date1
-	 * @param date2
-	 * @return Difference in days
-	 */
-	private int calculateDayDiff(Date date1, Date date2) {
-
-		long diffInSeconds = (date2.getTime() - date1.getTime()) / 1000;
-
-	    int diffInDays = (int)(diffInSeconds / SECS_PER_DAY);
-
-	    return diffInDays;
-	}
 
 	/**
 	 * Calculate score for a single delivery by a specific algorithm
@@ -115,10 +94,5 @@ public class ScoreCalculator {
 		}
 
 		return singleScore;
-	}
-
-	private java.util.Date asUtilDate(LocalDate localDate) {
-		Instant instant = localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
-		return Date.from(instant);
 	}
 }
