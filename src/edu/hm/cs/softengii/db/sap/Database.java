@@ -33,20 +33,20 @@ public class Database implements IDatabase {
     private Connection connection;
 
     private ArrayList<Supplier> supplierData = new ArrayList<>();
+    private List<Supplier> suppliers;
 
-    
     private Database() {
-    	
+
     	Runnable dataLoader = new Runnable() {
 			@Override
 			public void run() {
 		    	loadSupplierData();
 			}
 		};
-    	
+
 		new Thread(dataLoader).start();
     }
-    
+
     public static Database getInstance() {
         if (instance == null) {
             createInstance();
@@ -111,6 +111,11 @@ public class Database implements IDatabase {
         return suppliers;
     }
 
+    /**
+     * Idea for a function getting a list of suppliers with their respective ID (== lifnr from DB)
+     * to show within application when a supplier is to be picted.
+     * @return
+     */
     public Map<String, String> getSupplierList() {
 
         Map<String, String> suppliers = new HashMap<>();
@@ -140,7 +145,6 @@ public class Database implements IDatabase {
 
     @Override
     public ArrayList<Supplier> getSupplierData() {
-        origin/master
         return supplierData;
     }
 
@@ -152,37 +156,32 @@ public class Database implements IDatabase {
 
         try {
 
-            String query = String.format(
-                    "SELECT l.lifnr, name1, eindt, slfdt, m.ebeln "
-                            + "FROM lfa1 l, eket m, ekko n "
-                            + "WHERE m.ebeln = n.ebeln AND l.lifnr = n.lifnr LIMIT 10"
-            );
+            String query = "SELECT DISTINCT "
+                    + "eket.EBELN, SLFDT, BUDAT, lfa1.LIFNR, NAME1, DATEDIFF(BUDAT, SLFDT) AS DIFF "
+                    + "FROM eket, ekbe, ekko, lfa1 "
+                    + "WHERE ekko.EBELN = ekbe.EBELN "
+                    + "AND eket.ebeln = ekbe.ebeln "
+                    + "AND lfa1.lifnr = ekko.lifnr "
+                    + "AND VGABE = 1 LIMIT 100";
 
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
 
-/*            String deliveryDelaysQuery = "SELECT ekbe.EBELN, BUDAT, SLFDT, VGABE, DATEDIFF(BUDAT, SLFDT) AS DIFF " +
-                    "FROM ekbe ekbe, eket eket " +
-                    "WHERE ekbe.EBELN = eket.EBELN " +
-                    "AND ekbe.VGABE = 1 " +
-                    "GROUP BY ekbe.EBELN;";
-            ResultSet deliveriesWithDelay = connection.createStatement().executeQuery(deliveryDelaysQuery);*/
-
             while(set.next()) {
 
-            	Supplier supplier = findSupplierInList(suppliers, set.getString("l.lifnr"));
+            	Supplier supplier = findSupplierInList(suppliers, set.getString("lfa1.LIFNR"));
             	if (supplier == null) {
-            		supplier = new Supplier(set.getString("l.lifnr"), set.getString("name1"));
+            		supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
             		suppliers.add(supplier);
             	}
-                LocalDate eindt = set.getDate("eindt").toLocalDate();
-                LocalDate slfdt = set.getDate("slfdt").toLocalDate();
-                System.out.println("eindt / slfdt: " + eindt + "/" + slfdt);
+                LocalDate actual = set.getDate("BUDAT").toLocalDate();
+                LocalDate promised = set.getDate("SLFDT").toLocalDate();
+                String delID = set.getString("eket.EBELN");
+                System.out.println("budat / slfdt: " + actual + "/" + promised);
 
-            	Delivery delivery = new Delivery(
-                        set.getDate("eindt").toLocalDate(),
-                        set.getDate("slfdt").toLocalDate());
-                //delivery.setDelay(set.getInt("DIFF"));
+                // promised, actual
+            	Delivery delivery = new Delivery(delID, promised, actual);
+                delivery.setDelay(set.getInt("DIFF"));
             	supplier.getDeliveries().add(delivery);
             }
 
@@ -196,7 +195,7 @@ public class Database implements IDatabase {
         closeConnection();
     }
 
-    private static Supplier findSupplierInList(ArrayList<Supplier> suppliers, String id) {
+    private static Supplier findSupplierInList(List<Supplier> suppliers, String id) {
     	for (Supplier supplier: suppliers) {
     		if (supplier.getId().equals(id)) {
     			return supplier;
@@ -205,21 +204,6 @@ public class Database implements IDatabase {
 
     	return null;
     }
-
-    public List<Delivery> filterDeliveriesByDate(String supplierID, LocalDate rangeStart, LocalDate rangeEnd) {
-        Supplier supplier = getSupplierByID(supplierID);
-        List<Delivery> filteredDels = supplier.getDeliveries().stream()
-                .filter(delivery -> delivery.getActualDeliveryDate().isAfter(rangeStart))
-                .collect(Collectors.toList());
-        filteredDels.stream().forEach(del -> System.out.println("del is: " + del + "isAfter(" + rangeStart + "): " + del.getActualDeliveryDate().isAfter(rangeStart)));
-
-        return filteredDels;
-    }
-
-    private Supplier getSupplierByID(String supplierID) {
-        return findSupplierInList(suppliers, supplierID);
-    }
-
 
     private String decryptPassword(final String cryptedPassword) {
 		byte[] keyBytes = new byte[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31,37, 41, 43, 47, 53 };

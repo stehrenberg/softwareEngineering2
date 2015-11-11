@@ -51,15 +51,15 @@ public class CompareSuppliersCtrl implements Initializable {
 	private ComboBox<Supplier> supplier4Combo;
 
 	XYChart.Series<String, Number> serie1 = new XYChart.Series<>();
-	
+
 	XYChart.Series<String, Number> serie2 = new XYChart.Series<>();
-	
+
 	XYChart.Series<String, Number> serie3 = new XYChart.Series<>();
-	
+
 	XYChart.Series<String, Number> serie4 = new XYChart.Series<>();
-	
+
 	DeliveryRangeCalculator rangeCalculator = new DeliveryRangeCalculator();
-	
+
 	@FXML
 	private DatePicker startDatePicker;
 
@@ -195,23 +195,23 @@ public class CompareSuppliersCtrl implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
 		compareChart.getData().add(serie1);
 		compareChart.getData().add(serie2);
 		compareChart.getData().add(serie3);
 		compareChart.getData().add(serie4);
-		
+
 		 ObservableList<Supplier> list = FXCollections.observableArrayList();
 
 		 // Add null for nothing to select
 		 list.add(null);
-		 
+
 		 ArrayList<Supplier> suppliers = Database.getInstance().getSupplierData();
-		 
+
 		 for (int i = 0; i < suppliers.size(); i++) {
 			 list.add(suppliers.get(i));
 		 }
-		 
+
 		 StringConverter<Supplier> converter = new StringConverter<Supplier>() {
 		    @Override
 		    public String toString(Supplier supplier) {
@@ -221,13 +221,13 @@ public class CompareSuppliersCtrl implements Initializable {
 		            return supplier.getName();
 		        }
 		    }
-	
+
 		    @Override
 		    public Supplier fromString(String supplierString) {
 		        return null; // No conversion fromString needed.
 		    }
 		 };
-		 
+
 		 supplier1Combo.setItems(list);
 		 supplier1Combo.setConverter(converter);
 		 supplier2Combo.setItems(list);
@@ -240,7 +240,7 @@ public class CompareSuppliersCtrl implements Initializable {
 
 	@FXML
 	void supplier1ComboAction(ActionEvent event) {
-		
+
 		System.out.println("Supplier1Combo");
 		//updateChart();
 		updateChartForSupplier(supplier1Combo.getValue(), serie1);
@@ -270,41 +270,31 @@ public class CompareSuppliersCtrl implements Initializable {
 	@FXML
 	void startDatePickerAction(ActionEvent event) {
 		LocalDate dateRangeStart = startDatePicker.getValue();
-		LocalDate dateRangeEnd = endDatePicker.getValue();
-		System.out.println("range Start: " + dateRangeStart + " / range End: " + dateRangeEnd);
-
+		rangeCalculator.setRangeStart(dateRangeStart);
 	}
 
 	@FXML
 	void endDatePickerAction(ActionEvent event) {
-		LocalDate dateRangeStart = startDatePicker.getValue();
 		LocalDate dateRangeEnd = endDatePicker.getValue();
-		System.out.println("range Start: " + dateRangeStart + " / range End: " + dateRangeEnd);
-	}
-
-	private void filterSupplierData(LocalDate startRange, LocalDate endRange) {
-		Database db = Database.getInstance();
-		db.getSupplierData();
-		db.filterDeliveriesByDate(/*supplier1Combo.getValue()*/"0001000056", startRange, endRange);
-		updateChart();
+		rangeCalculator.setRangeEnd(dateRangeEnd);
 	}
 
 	public void setStage(Stage stage) {
 		this.stage = stage;
 	}
-	
+
 	private void updateChartForSupplier(Supplier supplier, XYChart.Series<String, Number> serie) {
-		
+
 		// First remove all data from this serie
 		serie.getData().clear();
-		
+
 		if (supplier != null) {
-			
+
 			// Change serie data for this supplier
 			serie.setName(supplier.getName());
-			
+
 			Map<Range, Double> ranges = rangeCalculator.calculateDeliveryRanges(supplier);
-			
+
 			serie.getData().add(new XYChart.Data<String, Number>("very early", 100* ranges.get(Range.VERY_EARLY)));
 			serie.getData().add(new XYChart.Data<String, Number>("early", 100 * ranges.get(Range.EARLY)));
 			serie.getData().add(new XYChart.Data<String, Number>("in time", 100 * ranges.get(Range.IN_TIME)));
