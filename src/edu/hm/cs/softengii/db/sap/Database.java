@@ -28,6 +28,12 @@ public class Database implements IDatabase {
 
     private ArrayList<Supplier> supplierData = new ArrayList<>();
     
+    private Database() {
+    	
+    	loadSupplierData();
+    	
+    }
+    
     public static Database getInstance() {
         if (instance == null) {
             createInstance();
@@ -94,7 +100,6 @@ public class Database implements IDatabase {
 
     @Override
     public ArrayList<Supplier> getSupplierData() {
-    	
         return supplierData;
     }
     

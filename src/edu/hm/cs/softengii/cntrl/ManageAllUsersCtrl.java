@@ -63,21 +63,21 @@ public class ManageAllUsersCtrl implements Initializable{
 
         } else {
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete User");
-
-            alert.setHeaderText(String.format("Delete selected user:%n\t%s %s (%s)",
-                    selectedUser.getForename(),
-                    selectedUser.getSurname(),
-                    selectedUser.getLoginName()));
-
-            alert.setContentText("Do you want to delete the selected user?");
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK){
-                DatabaseUserAuth.getInstance().deleteUserFromLoginName(selectedUser.getLoginName());
-                usersObservableList.remove(selectedUser);
-            }
+//            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//            alert.setTitle("Delete User");
+//
+//            alert.setHeaderText(String.format("Delete selected user:%n\t%s %s (%s)",
+//                    selectedUser.getForename(),
+//                    selectedUser.getSurname(),
+//                    selectedUser.getLoginName()));
+//
+//            alert.setContentText("Do you want to delete the selected user?");
+//
+//            Optional<ButtonType> result = alert.showAndWait();
+//            if (result.get() == ButtonType.OK){
+//                DatabaseUserAuth.getInstance().deleteUserFromLoginName(selectedUser.getLoginName());
+//                usersObservableList.remove(selectedUser);
+//            }
         }
     }
     @FXML
@@ -89,30 +89,30 @@ public class ManageAllUsersCtrl implements Initializable{
 
         } else {
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Update User");
-
-            alert.setHeaderText(String.format("Update selected user:%n\t%s %s (%s)",
-                    selectedUser.getForename(),
-                    selectedUser.getSurname(),
-                    selectedUser.getLoginName()));
-
-            alert.setContentText("Do you want to update the selected user?");
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-
-                UserEntity updatedUser = DatabaseUserAuth.getInstance().updateUser(
-                        selectedUser.getLoginName(),
-                        userName.getText(),
-                        pswd.getText(),
-                        forename.getText(),
-                        surname.getText(),
-                        userMail.getText());
-
-                usersObservableList.remove(selectedUser);
-                usersObservableList.add(updatedUser);
-            }
+//            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//            alert.setTitle("Update User");
+//
+//            alert.setHeaderText(String.format("Update selected user:%n\t%s %s (%s)",
+//                    selectedUser.getForename(),
+//                    selectedUser.getSurname(),
+//                    selectedUser.getLoginName()));
+//
+//            alert.setContentText("Do you want to update the selected user?");
+//
+//            Optional<ButtonType> result = alert.showAndWait();
+//            if (result.get() == ButtonType.OK) {
+//
+//                UserEntity updatedUser = DatabaseUserAuth.getInstance().updateUser(
+//                        selectedUser.getLoginName(),
+//                        userName.getText(),
+//                        pswd.getText(),
+//                        forename.getText(),
+//                        surname.getText(),
+//                        userMail.getText());
+//
+//                usersObservableList.remove(selectedUser);
+//                usersObservableList.add(updatedUser);
+//            }
         }
 
     }
@@ -288,11 +288,11 @@ public class ManageAllUsersCtrl implements Initializable{
     }
 
     private void noUserSelectedWaring(){
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("No User");
-        alert.setHeaderText("No user selected.");
-        alert.setContentText("Please select an user to delete or update!");
-        alert.showAndWait();
+//        Alert alert = new Alert(Alert.AlertType.WARNING);
+//        alert.setTitle("No User");
+//        alert.setHeaderText("No user selected.");
+//        alert.setContentText("Please select an user to delete or update!");
+//        alert.showAndWait();
     }
 
     private void populateUsersList(){

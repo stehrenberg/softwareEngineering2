@@ -32,7 +32,7 @@ public class SupplyAlyticsApp extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-    	Database.createInstance();
+    	//Database.createInstance();
 
         primaryStage.setTitle(SettingsPropertiesHelper.getInstance().getAppTitle());
         stage = primaryStage;
