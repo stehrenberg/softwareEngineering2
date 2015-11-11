@@ -30,8 +30,14 @@ public class Database implements IDatabase {
     
     private Database() {
     	
-    	loadSupplierData();
+    	Runnable dataLoader = new Runnable() {
+			@Override
+			public void run() {
+		    	loadSupplierData();
+			}
+		};
     	
+		new Thread(dataLoader).start();
     }
     
     public static Database getInstance() {
