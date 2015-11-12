@@ -56,10 +56,18 @@ public class DeliveryRangeCalculator {
 
 	// Public methods -------------------------------------------------------------------
 
+	/**
+	 * Set start range
+	 * @param start
+	 */
 	public void setRangeStart(LocalDate start) {
 		rangeStart = start;
 	}
 
+	/**
+	 * Set end range
+	 * @param end
+	 */
 	public void setRangeEnd(LocalDate end) {
 		rangeEnd = end;
 	}
@@ -71,11 +79,11 @@ public class DeliveryRangeCalculator {
 	public Map<Range, Double> calculateDeliveryRanges(Supplier supplier) {
 
 		Map<Range, Double> ranges = new HashMap<>();
-		ranges.put(Range.VERY_EARLY, calculateRangeRate(supplier, Integer.MIN_VALUE, -8));
-		ranges.put(Range.EARLY, calculateRangeRate(supplier, -7, -2));
+		ranges.put(Range.VERY_EARLY, calculateRangeRate(supplier, Integer.MIN_VALUE, -6));
+		ranges.put(Range.EARLY, calculateRangeRate(supplier, -5, -2));
 		ranges.put(Range.IN_TIME, calculateRangeRate(supplier, -1, 0));
-		ranges.put(Range.LATE, calculateRangeRate(supplier, 1, 14));
-		ranges.put(Range.VERY_LATE, calculateRangeRate(supplier, 15, Integer.MAX_VALUE));
+		ranges.put(Range.LATE, calculateRangeRate(supplier, 1, 5));
+		ranges.put(Range.VERY_LATE, calculateRangeRate(supplier, 6, Integer.MAX_VALUE));
 
 		return ranges;
 	}
