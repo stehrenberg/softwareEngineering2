@@ -10,6 +10,8 @@ package edu.hm.cs.softengii.utils;
 import edu.hm.cs.softengii.db.sap.Delivery;
 import edu.hm.cs.softengii.db.sap.Supplier;
 
+import java.time.LocalDate;
+
 /**
  * Class to calculate the score of a supplier
  * @author Kevin Beck
@@ -22,6 +24,8 @@ public class ScoreCalculator {
 	 * Number of seconds per day (24 * 60 * 60)
 	 */
 	private static final long SECS_PER_DAY = 86400;
+	private static LocalDate rangeEnd;
+	private static LocalDate rangeStart;
 
 	// Ctor -----------------------------------------------------------------------------
 
@@ -30,6 +34,14 @@ public class ScoreCalculator {
 	 */
 	public ScoreCalculator() {
 
+	}
+
+	public static void setRangeEnd(LocalDate rangeEnd) {
+		ScoreCalculator.rangeEnd = rangeEnd;
+	}
+
+	public static void setRangeStart(LocalDate rangeStart) {
+		ScoreCalculator.rangeStart = rangeStart;
 	}
 
 	// Public methods -------------------------------------------------------------------

@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javafx.application.Application;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -64,7 +62,7 @@ public class Database implements IDatabase {
                 System.out.println("pswd: " + PASSWORD);
             }
         } catch (SQLException e) {
-        	Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
+            e.printStackTrace();
         }
     }
 
@@ -73,7 +71,7 @@ public class Database implements IDatabase {
         try {
             connection.close();
         } catch (SQLException e) {
-        	Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
+            e.printStackTrace();
         }
     }
 
@@ -97,7 +95,7 @@ public class Database implements IDatabase {
             }
 
         } catch (SQLException e) {
-        	Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
+            e.printStackTrace();
         }
 
         closeConnection();
@@ -129,7 +127,7 @@ public class Database implements IDatabase {
             }
 
         } catch (SQLException e) {
-        	Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
+            e.printStackTrace();
         }
 
         closeConnection();
@@ -179,7 +177,7 @@ public class Database implements IDatabase {
             }
 
         } catch (SQLException e) {
-        	javafx.application.Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
+            e.printStackTrace();
         }
 
         this.suppliers = suppliers;
@@ -210,7 +208,9 @@ public class Database implements IDatabase {
 
 			byte[] decryptedPwd = cipher.doFinal(cryptedPassword.getBytes());
 			password = new String(decryptedPwd);
-		} catch (Exception e) {}
+		} catch (Exception e) {
+
+		}
 		return password;
     }
 }
