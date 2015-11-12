@@ -1,6 +1,7 @@
 package edu.hm.cs.softengii.cntrl;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -17,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import edu.hm.cs.softengii.db.sap.Database;
@@ -54,6 +56,12 @@ public class AverageSuppliersCtrl implements Initializable {
 	XYChart.Series<Number, String> serie = new XYChart.Series<>();
 
 	ScoreCalculator scoreCalculator = new ScoreCalculator();
+	
+	@FXML
+	private DatePicker startDatePicker;
+
+	@FXML
+	private DatePicker endDatePicker;
 	
 	@FXML
 	void gotoCreateNewUser(ActionEvent event) {
@@ -253,12 +261,16 @@ public class AverageSuppliersCtrl implements Initializable {
 	
 	@FXML
 	void startDatePickerAction(ActionEvent event) {
-		System.out.println("startDatePicker");
+		LocalDate dateRangeStart = startDatePicker.getValue();
+		scoreCalculator.setRangeStart(dateRangeStart);
+		updateChart();
 	}
 
 	@FXML
 	void endDatePickerAction(ActionEvent event) {
-		System.out.println("endDatePicker");
+		LocalDate dateRangeEnd = endDatePicker.getValue();
+		scoreCalculator.setRangeEnd(dateRangeEnd);
+		updateChart();
 	}
 
 	public void setStage(Stage stage) {

@@ -7,6 +7,10 @@ Date: 30-10-2015
 
 package edu.hm.cs.softengii.utils;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import edu.hm.cs.softengii.db.sap.Delivery;
 import edu.hm.cs.softengii.db.sap.Supplier;
 
@@ -23,6 +27,13 @@ public class ScoreCalculator {
 	 */
 	private static final long SECS_PER_DAY = 86400;
 
+	// Fields ---------------------------------------------------------------------------
+	
+	/** For selecting deliveries after a certain date. */
+	private LocalDate rangeStart = LocalDate.MIN;
+	/** For selecting deliveries before a certain date. */
+	private LocalDate rangeEnd = LocalDate.now();
+	
 	// Ctor -----------------------------------------------------------------------------
 
 	/**
@@ -34,6 +45,14 @@ public class ScoreCalculator {
 
 	// Public methods -------------------------------------------------------------------
 
+	public void setRangeStart(LocalDate start) {
+		rangeStart = start;
+	}
+
+	public void setRangeEnd(LocalDate end) {
+		rangeEnd = end;
+	}
+
 	/**
 	 * Calculate a score to rate this supplier
 	 * @param supplier
@@ -43,8 +62,16 @@ public class ScoreCalculator {
 
 		double scoreSum = 0;
 
-		for (Delivery delivery: supplier.getDeliveries()) {
+		List<Delivery> filteredDels = supplier.getDeliveries().stream()
+				.filter(delivery -> {
+					boolean isBefore = delivery.getActualDeliveryDate().isBefore(rangeEnd);
+					boolean isAfter = delivery.getActualDeliveryDate().isAfter(rangeStart);
+					return isBefore && isAfter;
+				})
+				.collect(Collectors.toList());
 
+		for (Delivery delivery: filteredDels) {
+			
 			try {
 				// Calculate difference of actual and promised delivery date in days
 				int diffInDays = delivery.getDelay();
@@ -60,7 +87,10 @@ public class ScoreCalculator {
 		}
 
 		// Calculate averange
-		double score = scoreSum / supplier.getDeliveries().size();
+		double score = 0;
+		if (filteredDels.size() > 0) {
+			score = scoreSum / filteredDels.size();
+		}
 
 		return score;
 	}
