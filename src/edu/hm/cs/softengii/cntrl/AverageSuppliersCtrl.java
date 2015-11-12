@@ -1,6 +1,7 @@
 package edu.hm.cs.softengii.cntrl;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +18,10 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
+import edu.hm.cs.softengii.db.sap.Database;
+import edu.hm.cs.softengii.db.sap.Supplier;
+import edu.hm.cs.softengii.utils.ScoreCalculator;
 import edu.hm.cs.softengii.utils.Session;
 
 public class AverageSuppliersCtrl implements Initializable {
@@ -27,17 +32,29 @@ public class AverageSuppliersCtrl implements Initializable {
 	private BarChart<Number, String> compareChart;
 
 	@FXML
-	private ComboBox<String> supplier1Combo;
+	private ComboBox<Supplier> supplier1Combo;
 
 	@FXML
-	private ComboBox<String> supplier2Combo;
+	private ComboBox<Supplier> supplier2Combo;
 
 	@FXML
-	private ComboBox<String> supplier3Combo;
+	private ComboBox<Supplier> supplier3Combo;
 
 	@FXML
-	private ComboBox<String> supplier4Combo;
+	private ComboBox<Supplier> supplier4Combo;
+	
+//	XYChart.Series<Number, String> serie1 = new XYChart.Series<>();
+//
+//	XYChart.Series<Number, String> serie2 = new XYChart.Series<>();
+//
+//	XYChart.Series<Number, String> serie3 = new XYChart.Series<>();
+//
+//	XYChart.Series<Number, String> serie4 = new XYChart.Series<>();
+	
+	XYChart.Series<Number, String> serie = new XYChart.Series<>();
 
+	ScoreCalculator scoreCalculator = new ScoreCalculator();
+	
 	@FXML
 	void gotoCreateNewUser(ActionEvent event) {
 
@@ -78,27 +95,23 @@ public class AverageSuppliersCtrl implements Initializable {
 
 	@FXML
 	void gotoCompareSuppliers(ActionEvent event) {
+        try {
 
-		// Do nothing, we are already here
+            String fxmlPath = "../view/compareSuppliers.fxml";
+            FXMLLoader loader = new FXMLLoader(AverageSuppliersCtrl.class.getResource(fxmlPath));
+
+            Parent page = (Parent) loader.load();
+            ((CompareSuppliersCtrl)loader.getController()).setStage(stage);
+
+            replaceSceneContent(page);
+        } catch (Exception ex) {
+            Logger.getLogger(AverageSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
+        }
 	}
 
 	@FXML
 	void gotoAverageSuppliers(ActionEvent event) {
-
-		try {
-
-			String fxmlPath = "../view/averageSuppliers.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					AverageSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((AverageSuppliersCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(AverageSuppliersCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
-		}
+		// Do nothing, we are already here
 	}
 
 	@FXML
@@ -168,38 +181,74 @@ public class AverageSuppliersCtrl implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		 ObservableList<String> list = FXCollections.observableArrayList("Supplier 1", "Supplier 2", "Supplier 3", "Supplier 4");
+//		compareChart.getData().add(serie1);
+//		compareChart.getData().add(serie2);
+//		compareChart.getData().add(serie3);
+//		compareChart.getData().add(serie4);
 
-		// ObservableList<String> list =
-		// FXCollections.observableArrayList(Database.getInstance().getSuppliers());
+		 ObservableList<Supplier> list = FXCollections.observableArrayList();
+
+//		 // Add null for nothing to select
+//		 list.add(null);
+
+		 ArrayList<Supplier> suppliers = Database.getInstance().getSupplierData();
+
+		 for (int i = 0; i < suppliers.size(); i++) {
+			 list.add(suppliers.get(i));
+		 }
+
+		 StringConverter<Supplier> converter = new StringConverter<Supplier>() {
+		    @Override
+		    public String toString(Supplier supplier) {
+		        if (supplier == null) {
+		            return null;
+		        } else {
+		            return supplier.getName();
+		        }
+		    }
+
+		    @Override
+		    public Supplier fromString(String supplierString) {
+		        return null; // No conversion fromString needed.
+		    }
+		 };
+
 		 supplier1Combo.setItems(list);
+		 supplier1Combo.setConverter(converter);
 		 supplier2Combo.setItems(list);
+		 supplier2Combo.setConverter(converter);
 		 supplier3Combo.setItems(list);
+		 supplier3Combo.setConverter(converter);
 		 supplier4Combo.setItems(list);
+		 supplier4Combo.setConverter(converter);
 	}
 
 	@FXML
 	void supplier1ComboAction(ActionEvent event) {
 		System.out.println("Supplier1Combo");
 		updateChart();
+//		addSupplierScoreToSerie(supplier1Combo.getValue(), serie);
 	}
 
 	@FXML
 	void supplier2ComboAction(ActionEvent event) {
 		System.out.println("Supplier2Combo");
 		updateChart();
+//		addSupplierScoreToSerie(supplier2Combo.getValue(), serie);
 	}
 
 	@FXML
 	void supplier3ComboAction(ActionEvent event) {
 		System.out.println("Supplier3Combo");
 		updateChart();
+//		addSupplierScoreToSerie(supplier3Combo.getValue(), serie);
 	}
 
 	@FXML
 	void supplier4ComboAction(ActionEvent event) {
 		System.out.println("Supplier4Combo");
 		updateChart();
+//		addSupplierScoreToSerie(supplier4Combo.getValue(), serie);
 	}
 	
 	@FXML
@@ -216,28 +265,29 @@ public class AverageSuppliersCtrl implements Initializable {
 		this.stage = stage;
 	}
 
-	private void updateChart() {
-		XYChart.Series<Number, String> supplier1 = new XYChart.Series<>();
+	private void updateChart() {		
 		
+		serie = new XYChart.Series<>();
 		
+	
+		addSupplierScoreToSerie(supplier1Combo.getValue());
+		addSupplierScoreToSerie(supplier2Combo.getValue());
+		addSupplierScoreToSerie(supplier3Combo.getValue());
+		addSupplierScoreToSerie(supplier4Combo.getValue());
 		
-		if (supplier1Combo.getValue() != null) {
-			supplier1.getData().add(new XYChart.Data<Number, String>(100, supplier1Combo.getValue()));			
-		}
-		if (supplier2Combo.getValue() != null) {
-			supplier1.getData().add(new XYChart.Data<Number, String>(90, supplier2Combo.getValue()));			
-		}
-		if (supplier3Combo.getValue() != null) {
-			supplier1.getData().add(new XYChart.Data<Number, String>(80, supplier3Combo.getValue()));			
-		}
-		if (supplier4Combo.getValue() != null) {
-			supplier1.getData().add(new XYChart.Data<Number, String>(70, supplier4Combo.getValue()));			
-		}
-
 		compareChart.getData().clear();
-		compareChart.getData().add(supplier1);
+		compareChart.getData().add(serie);
+		
 	}
 
+	private void addSupplierScoreToSerie(Supplier supplier) {
+
+		if (supplier != null) {
+			serie.getData().add(new XYChart.Data<Number, String>(scoreCalculator.calculateScore(supplier), supplier.getName()));			
+		}
+		
+	}
+	
 	private Parent replaceSceneContent(Parent page) throws Exception {
 
 		Scene scene = stage.getScene();
