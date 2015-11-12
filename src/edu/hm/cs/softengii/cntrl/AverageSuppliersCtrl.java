@@ -19,6 +19,8 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import edu.hm.cs.softengii.db.sap.Database;
@@ -29,6 +31,10 @@ import edu.hm.cs.softengii.utils.Session;
 public class AverageSuppliersCtrl implements Initializable {
 
 	private Stage stage;
+
+    @FXML private MenuItem newUserMenuItem;
+    @FXML private MenuItem manageAllUsersMenuItem;
+    @FXML private SeparatorMenuItem userMenuSeperator;
 
 	@FXML
 	private BarChart<Number, String> compareChart;
@@ -188,7 +194,7 @@ public class AverageSuppliersCtrl implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
 //		compareChart.getData().add(serie1);
 //		compareChart.getData().add(serie2);
 //		compareChart.getData().add(serie3);
@@ -230,6 +236,18 @@ public class AverageSuppliersCtrl implements Initializable {
 		 supplier4Combo.setItems(list);
 		 supplier4Combo.setConverter(converter);
 	}
+
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if(isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+        }
+    }
 
 	@FXML
 	void supplier1ComboAction(ActionEvent event) {
