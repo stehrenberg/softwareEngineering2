@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
+
+import javafx.application.Application;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -64,7 +64,7 @@ public class Database implements IDatabase {
                 System.out.println("pswd: " + PASSWORD);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+        	Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
         }
     }
 
@@ -73,7 +73,7 @@ public class Database implements IDatabase {
         try {
             connection.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+        	Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
         }
     }
 
@@ -97,7 +97,7 @@ public class Database implements IDatabase {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+        	Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
         }
 
         closeConnection();
@@ -129,7 +129,7 @@ public class Database implements IDatabase {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+        	Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
         }
 
         closeConnection();
@@ -179,7 +179,7 @@ public class Database implements IDatabase {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+        	javafx.application.Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
         }
 
         this.suppliers = suppliers;
@@ -210,9 +210,7 @@ public class Database implements IDatabase {
 
 			byte[] decryptedPwd = cipher.doFinal(cryptedPassword.getBytes());
 			password = new String(decryptedPwd);
-		} catch (Exception e) {
-
-		}
+		} catch (Exception e) {}
 		return password;
     }
 }
