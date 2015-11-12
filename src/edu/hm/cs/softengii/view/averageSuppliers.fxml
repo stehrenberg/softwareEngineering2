@@ -9,37 +9,37 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.hm.cs.softengii.cntrl.AverageSuppliersCtrl">
    <top>
-	  <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#gotoCreateNewUser" text="New User" />
-                  <MenuItem mnemonicParsing="false" onAction="#gotoManageAllUsers" text="Manage all Users" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Export" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#quitApplication" text="Quit" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Perspectives">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#gotoCompareSuppliers" text="Compare Suppliers" />
-                  <MenuItem mnemonicParsing="false" onAction="#gotoAverageSuppliers" text="Suppliers Average" />
-            </items>
-          </Menu>
-            <Menu mnemonicParsing="false" text="User">
-               <items>
-                  <MenuItem mnemonicParsing="false" onAction="#gotoUserSettings" text="Settings" />
-                  <MenuItem mnemonicParsing="false" onAction="#gotoLogin" text="Logout" />
-               </items>
-            </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#gotoAbout" text="About SupplyAlytics" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
+        <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Export PDF" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#quitApplication" text="Quit" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Perspectives">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#gotoCompareSuppliers" text="Compare Suppliers" />
+                        <MenuItem mnemonicParsing="false" onAction="#gotoAverageSuppliers" text="Suppliers Average" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="User">
+                    <items>
+                        <MenuItem fx:id="newUserMenuItem" mnemonicParsing="false" onAction="#gotoCreateNewUser" text="New User" />
+                        <MenuItem fx:id="manageAllUsersMenuItem" mnemonicParsing="false" onAction="#gotoManageAllUsers" text="Manage all Users" />
+                        <SeparatorMenuItem fx:id="userMenuSeperator" mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#gotoUserSettings" text="Settings" />
+                        <MenuItem mnemonicParsing="false" onAction="#gotoLogin" text="Logout" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#gotoAbout" text="About SupplyAlytics" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
 	  
    </top>
    <center>

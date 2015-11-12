@@ -154,7 +154,7 @@ public class Database implements IDatabase {
                     + "WHERE ekko.EBELN = ekbe.EBELN "
                     + "AND eket.ebeln = ekbe.ebeln "
                     + "AND lfa1.lifnr = ekko.lifnr "
-                    + "AND VGABE = 1 LIMIT 100";
+                    + "AND VGABE = 1 LIMIT 1000";
 
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);

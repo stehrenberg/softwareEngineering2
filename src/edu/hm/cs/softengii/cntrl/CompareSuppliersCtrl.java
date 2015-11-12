@@ -7,9 +7,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import edu.hm.cs.softengii.db.sap.IDatabase;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,10 +20,12 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import edu.hm.cs.softengii.db.sap.Database;
-import edu.hm.cs.softengii.db.sap.DemoDatabase;
 import edu.hm.cs.softengii.db.sap.Supplier;
 import edu.hm.cs.softengii.utils.DeliveryRangeCalculator;
 import edu.hm.cs.softengii.utils.DeliveryRangeCalculator.Range;
@@ -34,6 +34,11 @@ import edu.hm.cs.softengii.utils.Session;
 public class CompareSuppliersCtrl implements Initializable {
 
 	private Stage stage;
+
+    @FXML private MenuItem newUserMenuItem;
+    @FXML private MenuItem manageAllUsersMenuItem;
+    @FXML private SeparatorMenuItem userMenuSeperator;
+    @FXML private ListView<String> suppliersListView;
 
 	@FXML
 	private BarChart<String, Number> compareChart;
@@ -196,6 +201,8 @@ public class CompareSuppliersCtrl implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
+		setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+
 		compareChart.getData().add(serie1);
 		compareChart.getData().add(serie2);
 		compareChart.getData().add(serie3);
@@ -203,8 +210,8 @@ public class CompareSuppliersCtrl implements Initializable {
 
 		 ObservableList<Supplier> list = FXCollections.observableArrayList();
 
-		 // Add null for nothing to select
-		 list.add(null);
+//		 // Add null for nothing to select
+//		 list.add(null);
 
 		 ArrayList<Supplier> suppliers = Database.getInstance().getSupplierData();
 
@@ -238,29 +245,45 @@ public class CompareSuppliersCtrl implements Initializable {
 		 supplier4Combo.setConverter(converter);
 	}
 
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if(isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+        }
+
+    }
 	@FXML
 	void supplier1ComboAction(ActionEvent event) {
 
 		System.out.println("Supplier1Combo");
-		updateChartForSupplier(supplier1Combo.getValue(), serie1);
+//		updateChartForSupplier(supplier1Combo.getValue(), serie1);
+		updateChartForAllSuppliers();
 	}
 
 	@FXML
 	void supplier2ComboAction(ActionEvent event) {
 		System.out.println("Supplier2Combo");
-		updateChartForSupplier(supplier2Combo.getValue(), serie2);
+//		updateChartForSupplier(supplier2Combo.getValue(), serie2);
+		updateChartForAllSuppliers();
 	}
 
 	@FXML
 	void supplier3ComboAction(ActionEvent event) {
 		System.out.println("Supplier3Combo");
-		updateChartForSupplier(supplier3Combo.getValue(), serie3);
+//		updateChartForSupplier(supplier3Combo.getValue(), serie3);
+		updateChartForAllSuppliers();
 	}
 
 	@FXML
 	void supplier4ComboAction(ActionEvent event) {
 		System.out.println("Supplier4Combo");
-		updateChartForSupplier(supplier4Combo.getValue(), serie4);
+//		updateChartForSupplier(supplier4Combo.getValue(), serie4);
+		updateChartForAllSuppliers();
 	}
 
 	@FXML
@@ -282,16 +305,26 @@ public class CompareSuppliersCtrl implements Initializable {
 	}
 
 	private void updateChartForAllSuppliers() {
+		compareChart.getData().clear();
+		
+		serie1 = new XYChart.Series<>();
+		serie2 = new XYChart.Series<>();
+		serie3 = new XYChart.Series<>();
+		serie4 = new XYChart.Series<>();
+		
 		updateChartForSupplier(supplier1Combo.getValue(), serie1);
 		updateChartForSupplier(supplier2Combo.getValue(), serie2);
 		updateChartForSupplier(supplier3Combo.getValue(), serie3);
 		updateChartForSupplier(supplier4Combo.getValue(), serie4);
+		
+		compareChart.getData().addAll(serie1, serie2, serie3, serie4);
+		
 	}
 
 	private void updateChartForSupplier(Supplier supplier, XYChart.Series<String, Number> serie) {
 
 		// First remove all data from this serie
-		serie.getData().clear();
+//		serie.getData().clear();
 
 		if (supplier != null) {
 
