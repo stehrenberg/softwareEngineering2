@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 import edu.hm.cs.softengii.db.sap.Delivery;
 import edu.hm.cs.softengii.db.sap.Supplier;
 
-import java.time.LocalDate;
-
 /**
  * Class to calculate the score of a supplier
  * @author Kevin Beck
@@ -28,16 +26,14 @@ public class ScoreCalculator {
 	 * Number of seconds per day (24 * 60 * 60)
 	 */
 	private static final long SECS_PER_DAY = 86400;
-	private static LocalDate rangeEnd;
-	private static LocalDate rangeStart;
 
 	// Fields ---------------------------------------------------------------------------
-	
+
 	/** For selecting deliveries after a certain date. */
 	private LocalDate rangeStart = LocalDate.MIN;
 	/** For selecting deliveries before a certain date. */
 	private LocalDate rangeEnd = LocalDate.now();
-	
+
 	// Ctor -----------------------------------------------------------------------------
 
 	/**
@@ -45,14 +41,6 @@ public class ScoreCalculator {
 	 */
 	public ScoreCalculator() {
 
-	}
-
-	public static void setRangeEnd(LocalDate rangeEnd) {
-		ScoreCalculator.rangeEnd = rangeEnd;
-	}
-
-	public static void setRangeStart(LocalDate rangeStart) {
-		ScoreCalculator.rangeStart = rangeStart;
 	}
 
 	// Public methods -------------------------------------------------------------------
@@ -83,7 +71,7 @@ public class ScoreCalculator {
 				.collect(Collectors.toList());
 
 		for (Delivery delivery: filteredDels) {
-			
+
 			try {
 				// Calculate difference of actual and promised delivery date in days
 				int diffInDays = delivery.getDelay();
