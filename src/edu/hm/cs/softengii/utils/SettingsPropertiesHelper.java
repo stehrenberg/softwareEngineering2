@@ -64,6 +64,13 @@ public class SettingsPropertiesHelper {
         return properties.getProperty("userAuth.db.pswd");
     }
 
-
-
+    public String getDataStorageDbUrl() {
+        return properties.getProperty("dataStorage.db.url");
+    }
+    public String getDataStorageDbUser() {
+        return properties.getProperty("dataStorage.db.user");
+    }
+    public String getDataStorageDbPswd() {
+        return properties.getProperty("dataStorage.db.pswd");
+    }
 }
