@@ -42,7 +42,7 @@
         </MenuBar>
    </top>
    <center>
-      <BarChart fx:id="compareChart" legendVisible="false" title="Compare Suppliers" BorderPane.alignment="CENTER">
+      <BarChart fx:id="compareChart" animated="false" legendVisible="false" title="Compare Suppliers" BorderPane.alignment="CENTER">
         <xAxis>
           <CategoryAxis side="BOTTOM" />
         </xAxis>
