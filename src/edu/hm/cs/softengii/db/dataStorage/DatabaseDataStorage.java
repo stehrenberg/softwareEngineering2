@@ -97,8 +97,9 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
     	ArrayList<ScoreThresholdEntity> thresholds = new ArrayList<>();
     	
     	establishConnection();
+    	
 		try {
-		    String query = String.format("SELECT * FROM ScoreThresholds;");
+		    String query = "SELECT * FROM ScoreThresholds;";
 		    Statement statement = this.connection.createStatement();
 		    ResultSet set = statement.executeQuery(query);
 		    
@@ -116,8 +117,43 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
 		} catch (SQLException e) {
 		    e.printStackTrace();
 		}
+		
 		closeConnection();
 		
 		return thresholds;
+    }
+    
+    /**
+     * Set new score thresholds to the database. Old thresholds are removed.
+     * @param thresholds New thresholds
+     */
+    public void setScoreThresholds(ArrayList<ScoreThresholdEntity> thresholds) {
+    	
+    	establishConnection();
+    	
+		try {
+			// First remove all old thresholds in db
+		    String query = "DELETE FROM ScoreThresholds;";
+		    Statement statement = this.connection.createStatement();
+		    statement.execute(query);
+		    
+		    // Then insert new thresholds to database
+		    for (ScoreThresholdEntity threshold: thresholds) {
+		    	
+		    	query = "INSERT INTO ScoreThresholds VALUES (" +
+		    			threshold.getScoreValue() + ", " + 
+		    			threshold.getEarlyMin() + ", " + 
+		    			threshold.getEarlyMax() + ", " + 
+		    			threshold.getLateMin() + ", " + 
+		    			threshold.getLateMax() + ");";
+			    statement = this.connection.createStatement();
+			    statement.execute(query);
+		    }
+		
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+		
+		closeConnection();
     }
 }

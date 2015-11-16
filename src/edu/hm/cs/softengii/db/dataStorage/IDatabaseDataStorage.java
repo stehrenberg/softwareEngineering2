@@ -28,4 +28,10 @@ public interface IDatabaseDataStorage {
      * Get all score thresholds from the database
      */
     ArrayList<ScoreThresholdEntity> getScoreThresholds();
+    
+    /**
+     * Set new score thresholds to the database. Old thresholds are removed.
+     * @param thresholds New thresholds
+     */
+    void setScoreThresholds(ArrayList<ScoreThresholdEntity> thresholds);
 }
