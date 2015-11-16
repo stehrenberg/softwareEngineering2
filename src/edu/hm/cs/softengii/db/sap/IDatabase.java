@@ -1,6 +1,7 @@
 package edu.hm.cs.softengii.db.sap;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**Interface representing database access.
  * @author Maximilian Renk
@@ -16,7 +17,7 @@ public interface IDatabase {
     /**Finds all suppliers listed in the database and collects them in an ArrayList.
      * @return All suppliers in database.
      */
-    public ArrayList<String> getSuppliers();
+    public List<String> getSuppliersList();
 
     /**Collects all necessary data for each supplier and collects them in an ArrayList.
      * @return necessary data for each supplier.

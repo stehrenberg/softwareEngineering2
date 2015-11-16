@@ -2,7 +2,7 @@ package edu.hm.cs.softengii.db.sap;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 /**
  * Demo database object with demo data to use when you wanna test it in an offline environment
@@ -30,7 +30,7 @@ public class DemoDatabase implements IDatabase {
     }
 
     @Override
-    public ArrayList<String> getSuppliers() {
+    public List<String> getSuppliersList() {
 
         ArrayList<String> supplierNames = new ArrayList<>();
 

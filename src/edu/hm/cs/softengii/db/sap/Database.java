@@ -22,10 +22,10 @@ public class Database implements IDatabase {
 
     private static Database instance = null;
 
-    //Database URL
+    /** Database URL */
     private final static String DB_URL = SettingsPropertiesHelper.getInstance().getSapDbUrl();
 
-    //Database credentials
+    /**Credentials for connection to the database*/
     private final static String USER = SettingsPropertiesHelper.getInstance().getSapDbUser();
     private final static String PASSWORD = SettingsPropertiesHelper.getInstance().getSapDbPswd();
 
@@ -35,11 +35,17 @@ public class Database implements IDatabase {
     private ArrayList<Supplier> supplierData = new ArrayList<>();
     private List<Supplier> suppliers;
 
+    /** Loading supplier data upon creation of database instance. */
     private Database() {
         Runnable dataLoader = () -> loadSupplierData();
         new Thread(dataLoader).start();
     }
 
+    /**
+     * Returns a db instance, if existant.
+     * Creates and returns a new instance of the db otherwise.
+     * @return A db instance.
+     */
     public static Database getInstance() {
         if (instance == null) {
             createInstance();
@@ -77,11 +83,10 @@ public class Database implements IDatabase {
     }
 
     @Override
-    public ArrayList<String> getSuppliers() {
+    public List<String> getSuppliersList() {
 
         establishConnection();
-
-        ArrayList<String> suppliers = new ArrayList<>();
+        List<String> suppliers = new ArrayList<>();
 
         try {
 
@@ -91,7 +96,6 @@ public class Database implements IDatabase {
             ResultSet set = statement.executeQuery(query);
 
             while(set.next()) {
-                System.out.println(set.getString("name1"));
                 suppliers.add(set.getString("name1"));
             }
 
