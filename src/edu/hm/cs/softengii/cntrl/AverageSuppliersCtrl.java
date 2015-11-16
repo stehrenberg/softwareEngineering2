@@ -7,22 +7,25 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import edu.hm.cs.softengii.db.sap.Database;
 import edu.hm.cs.softengii.db.sap.Supplier;
 import edu.hm.cs.softengii.utils.ScoreCalculator;
@@ -40,28 +43,15 @@ public class AverageSuppliersCtrl implements Initializable {
 	private BarChart<Number, String> compareChart;
 
 	@FXML
-	private ComboBox<Supplier> supplier1Combo;
-
-	@FXML
-	private ComboBox<Supplier> supplier2Combo;
-
-	@FXML
-	private ComboBox<Supplier> supplier3Combo;
-
-	@FXML
-	private ComboBox<Supplier> supplier4Combo;
+	private CheckBox topCheckBox;
 	
-//	XYChart.Series<Number, String> serie1 = new XYChart.Series<>();
-//
-//	XYChart.Series<Number, String> serie2 = new XYChart.Series<>();
-//
-//	XYChart.Series<Number, String> serie3 = new XYChart.Series<>();
-//
-//	XYChart.Series<Number, String> serie4 = new XYChart.Series<>();
-	
-	XYChart.Series<Number, String> serie = new XYChart.Series<>();
+	@FXML
+	private CheckBox normalCheckBox;
 
-	ScoreCalculator scoreCalculator = new ScoreCalculator();
+	@FXML
+	private CheckBox oneOffCheckBox;
+	
+	private ScoreCalculator scoreCalculator = new ScoreCalculator();
 	
 	@FXML
 	private DatePicker startDatePicker;
@@ -195,46 +185,8 @@ public class AverageSuppliersCtrl implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
-//		compareChart.getData().add(serie1);
-//		compareChart.getData().add(serie2);
-//		compareChart.getData().add(serie3);
-//		compareChart.getData().add(serie4);
+		updateChart();
 
-		 ObservableList<Supplier> list = FXCollections.observableArrayList();
-
-//		 // Add null for nothing to select
-//		 list.add(null);
-
-		 ArrayList<Supplier> suppliers = Database.getInstance().getSupplierData();
-
-		 for (int i = 0; i < suppliers.size(); i++) {
-			 list.add(suppliers.get(i));
-		 }
-
-		 StringConverter<Supplier> converter = new StringConverter<Supplier>() {
-		    @Override
-		    public String toString(Supplier supplier) {
-		        if (supplier == null) {
-		            return null;
-		        } else {
-		            return supplier.getName();
-		        }
-		    }
-
-		    @Override
-		    public Supplier fromString(String supplierString) {
-		        return null; // No conversion fromString needed.
-		    }
-		 };
-
-		 supplier1Combo.setItems(list);
-		 supplier1Combo.setConverter(converter);
-		 supplier2Combo.setItems(list);
-		 supplier2Combo.setConverter(converter);
-		 supplier3Combo.setItems(list);
-		 supplier3Combo.setConverter(converter);
-		 supplier4Combo.setItems(list);
-		 supplier4Combo.setConverter(converter);
 	}
 
     private void setAdminMenusVisible(boolean isAdmin) {
@@ -248,34 +200,6 @@ public class AverageSuppliersCtrl implements Initializable {
             userMenuSeperator.setVisible(false);
         }
     }
-
-	@FXML
-	void supplier1ComboAction(ActionEvent event) {
-		System.out.println("Supplier1Combo");
-		updateChart();
-//		addSupplierScoreToSerie(supplier1Combo.getValue(), serie);
-	}
-
-	@FXML
-	void supplier2ComboAction(ActionEvent event) {
-		System.out.println("Supplier2Combo");
-		updateChart();
-//		addSupplierScoreToSerie(supplier2Combo.getValue(), serie);
-	}
-
-	@FXML
-	void supplier3ComboAction(ActionEvent event) {
-		System.out.println("Supplier3Combo");
-		updateChart();
-//		addSupplierScoreToSerie(supplier3Combo.getValue(), serie);
-	}
-
-	@FXML
-	void supplier4ComboAction(ActionEvent event) {
-		System.out.println("Supplier4Combo");
-		updateChart();
-//		addSupplierScoreToSerie(supplier4Combo.getValue(), serie);
-	}
 	
 	@FXML
 	void startDatePickerAction(ActionEvent event) {
@@ -291,33 +215,49 @@ public class AverageSuppliersCtrl implements Initializable {
 		updateChart();
 	}
 
+	@FXML
+	void checkBoxAction(ActionEvent event) {
+		System.out.println("CheckBox");
+	}
+
 	public void setStage(Stage stage) {
 		this.stage = stage;
 	}
 
 	private void updateChart() {		
 		
-		serie = new XYChart.Series<>();
-		
-	
-		addSupplierScoreToSerie(supplier1Combo.getValue());
-		addSupplierScoreToSerie(supplier2Combo.getValue());
-		addSupplierScoreToSerie(supplier3Combo.getValue());
-		addSupplierScoreToSerie(supplier4Combo.getValue());
-		
+		XYChart.Series<Number, String> serie = new XYChart.Series<>();
+
+		ArrayList<Supplier> suppliers = Database.getInstance().getSupplierData();
+		for (Supplier supplier: suppliers) {
+    		serie.getData().add(new XYChart.Data<Number, String>(scoreCalculator.calculateScore(supplier), supplier.getName()));
+    	}
+
 		compareChart.getData().clear();
 		compareChart.getData().add(serie);
-		
-	}
-
-	private void addSupplierScoreToSerie(Supplier supplier) {
-
-		if (supplier != null) {
-			serie.getData().add(new XYChart.Data<Number, String>(scoreCalculator.calculateScore(supplier), supplier.getName()));			
+		for (XYChart.Data<Number, String> data : serie.getData()) {
+			displayLabelForData(data);
 		}
-		
 	}
-	
+
+	/**
+	 * places a text label with a bar's value in a bar node for a given
+	 * XYChart.Data
+	 */
+	private void displayLabelForData(XYChart.Data<Number, String> data) {
+		final Node node = data.getNode();
+		final Text dataText = new Text(data.getXValue() + " %");
+		((Group)node.getParent()).getChildren().add(dataText);
+		
+		node.boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
+			@Override
+			public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {
+				dataText.setLayoutX(Math.round(bounds.getMinX() + bounds.getWidth() / 2 - dataText.prefWidth(-1) / 2));
+				dataText.setLayoutY(Math.round(bounds.getMaxY() - bounds.getHeight() / 2 +  dataText.prefHeight(-1) / 2));
+			}
+		});
+	}
+
 	private Parent replaceSceneContent(Parent page) throws Exception {
 
 		Scene scene = stage.getScene();

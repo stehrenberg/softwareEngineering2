@@ -333,11 +333,11 @@ public class CompareSuppliersCtrl implements Initializable {
 
 			Map<Range, Double> ranges = rangeCalculator.calculateDeliveryRanges(supplier);
 
-			serie.getData().add(new XYChart.Data<String, Number>("very early", 100* ranges.get(Range.VERY_EARLY)));
-			serie.getData().add(new XYChart.Data<String, Number>("early", 100 * ranges.get(Range.EARLY)));
-			serie.getData().add(new XYChart.Data<String, Number>("in time", 100 * ranges.get(Range.IN_TIME)));
-			serie.getData().add(new XYChart.Data<String, Number>("late", 100 * ranges.get(Range.LATE)));
-			serie.getData().add(new XYChart.Data<String, Number>("very late", 100 * ranges.get(Range.VERY_LATE)));
+			serie.getData().add(new XYChart.Data<String, Number>("much too early", 100* ranges.get(Range.VERY_EARLY)));
+			serie.getData().add(new XYChart.Data<String, Number>("too early", 100 * ranges.get(Range.EARLY)));
+			serie.getData().add(new XYChart.Data<String, Number>("on time", 100 * ranges.get(Range.IN_TIME)));
+			serie.getData().add(new XYChart.Data<String, Number>("too late", 100 * ranges.get(Range.LATE)));
+			serie.getData().add(new XYChart.Data<String, Number>("much too late", 100 * ranges.get(Range.VERY_LATE)));
 		}
 	}
 
