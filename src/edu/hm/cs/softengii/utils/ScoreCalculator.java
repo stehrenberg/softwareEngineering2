@@ -8,9 +8,12 @@ Date: 30-10-2015
 package edu.hm.cs.softengii.utils;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import edu.hm.cs.softengii.db.dataStorage.DatabaseDataStorage;
+import edu.hm.cs.softengii.db.dataStorage.ScoreThresholdEntity;
 import edu.hm.cs.softengii.db.sap.Delivery;
 import edu.hm.cs.softengii.db.sap.Supplier;
 
@@ -106,21 +109,19 @@ public class ScoreCalculator {
 
 		// Default score is 0%
 		int singleScore = 0;
-
-		if (delayedDays == 0 || delayedDays == -1) {
-			singleScore = 100;
-		}
-		else if (delayedDays >= 1 && delayedDays <= 3 || delayedDays == -2) {
-			singleScore = 90;
-		}
-		else if (delayedDays >= 4 && delayedDays <= 7 || delayedDays == -3) {
-			singleScore = 80;
-		}
-		else if (delayedDays >= 8 && delayedDays <= 14 || delayedDays <= -4 && delayedDays >= -7) {
-			singleScore = 60;
-		}
-		else if (delayedDays >= 15 && delayedDays <= 38 || delayedDays <= -8 && delayedDays >= -10) {
-			singleScore = 40;
+		
+		// Get all thresholds from db
+		ArrayList<ScoreThresholdEntity> thresholds = DatabaseDataStorage.getInstance().getScoreThresholds();
+		
+		for (ScoreThresholdEntity threshold: thresholds) {
+			
+			if (delayedDays >= threshold.getEarlyMin() && delayedDays <= threshold.getEarlyMax() ||
+				delayedDays >= threshold.getLateMin() && delayedDays <= threshold.getLateMax()) {
+				
+				// threshold found
+				singleScore = threshold.getScoreValue();
+				break;
+			}
 		}
 
 		return singleScore;
