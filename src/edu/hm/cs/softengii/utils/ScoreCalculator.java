@@ -28,12 +28,12 @@ public class ScoreCalculator {
 	private static final long SECS_PER_DAY = 86400;
 
 	// Fields ---------------------------------------------------------------------------
-	
+
 	/** For selecting deliveries after a certain date. */
 	private LocalDate rangeStart = LocalDate.MIN;
 	/** For selecting deliveries before a certain date. */
 	private LocalDate rangeEnd = LocalDate.now();
-	
+
 	// Ctor -----------------------------------------------------------------------------
 
 	/**
@@ -71,7 +71,7 @@ public class ScoreCalculator {
 				.collect(Collectors.toList());
 
 		for (Delivery delivery: filteredDels) {
-			
+
 			try {
 				// Calculate difference of actual and promised delivery date in days
 				int diffInDays = delivery.getDelay();

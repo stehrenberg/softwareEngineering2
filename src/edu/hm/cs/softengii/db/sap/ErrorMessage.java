@@ -17,16 +17,7 @@ public class ErrorMessage extends Application {
 
     @Override
     public void start(Stage stage) {
-    	//First implementation
-    	
-//    	Alert alert = new Alert(AlertType.ERROR);
-//    	alert.setTitle("Error");
-//    	alert.setHeaderText("Database error occoured");
-//    	alert.setContentText("Database connection failed!");
-//
-//    	alert.showAndWait(); 
 
-    	//Second implementation
     	Alert alert = new Alert(AlertType.ERROR);
     	alert.setTitle("Error");
     	alert.setHeaderText("Database error occourred");
