@@ -171,10 +171,10 @@ public class Database implements IDatabase {
                     supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
                     suppliers.add(supplier);
                 }
+
                 LocalDate actual = set.getDate("BUDAT").toLocalDate();
                 LocalDate promised = set.getDate("SLFDT").toLocalDate();
                 String delID = set.getString("eket.EBELN");
-                System.out.println("budat / slfdt: " + actual + "/" + promised);
 
                 Delivery delivery = new Delivery(delID, promised, actual);
                 delivery.setDelay(set.getInt("DIFF"));
@@ -189,6 +189,18 @@ public class Database implements IDatabase {
         supplierData = suppliers;
 
         closeConnection();
+
+        // assign class based on suppliers' total delivery count
+        suppliers.stream().forEach(supplier -> {
+            int deliveryCount = supplier.getDeliveries().size();
+            SupplierClass suppClass = SupplierClass.NORMAL;
+
+            if(deliveryCount < 3)
+                suppClass = SupplierClass.ONE_OFF;
+            else if(deliveryCount > 19)
+                suppClass = SupplierClass.TOP;
+            supplier.setSupplierClass(suppClass);
+        });
     }
 
     private static Supplier findSupplierInList(List<Supplier> suppliers, String id) {

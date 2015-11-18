@@ -14,6 +14,9 @@ public class Supplier {
     /**Name of the supplier.*/
     private final String name;
 
+    /** Classification based on the total amout of deliveries. */
+    private SupplierClass supplierClass;
+
     /**Deliveries from this supplier.*/
     private final List<Delivery> deliveries = new ArrayList<>();
 
@@ -30,7 +33,11 @@ public class Supplier {
 	    return name;
 	}
 
+    public SupplierClass getSupplierClass() { return supplierClass; }
+
     public List<Delivery> getDeliveries() {
     	return deliveries;
     }
+
+    public void setSupplierClass(SupplierClass suppClass) { supplierClass = suppClass; }
 }

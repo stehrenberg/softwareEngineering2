@@ -2,11 +2,13 @@ package edu.hm.cs.softengii.cntrl;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+import edu.hm.cs.softengii.db.sap.SupplierClass;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -44,21 +46,22 @@ public class AverageSuppliersCtrl implements Initializable {
 
 	@FXML
 	private CheckBox topCheckBox;
-	
+
 	@FXML
 	private CheckBox normalCheckBox;
 
 	@FXML
 	private CheckBox oneOffCheckBox;
-	
-	private ScoreCalculator scoreCalculator = new ScoreCalculator();
-	
+
 	@FXML
 	private DatePicker startDatePicker;
 
 	@FXML
 	private DatePicker endDatePicker;
-	
+
+	private ScoreCalculator scoreCalculator = new ScoreCalculator();
+	private List<SupplierClass> classesToDisplay = new ArrayList<>();
+
 	@FXML
 	void gotoCreateNewUser(ActionEvent event) {
 
@@ -185,8 +188,10 @@ public class AverageSuppliersCtrl implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+		topCheckBox.setSelected(false);
+		normalCheckBox.setSelected(false);
+		oneOffCheckBox.setSelected(false);
 		updateChart();
-
 	}
 
     private void setAdminMenusVisible(boolean isAdmin) {
@@ -200,7 +205,7 @@ public class AverageSuppliersCtrl implements Initializable {
             userMenuSeperator.setVisible(false);
         }
     }
-	
+
 	@FXML
 	void startDatePickerAction(ActionEvent event) {
 		LocalDate dateRangeStart = startDatePicker.getValue();
@@ -217,19 +222,34 @@ public class AverageSuppliersCtrl implements Initializable {
 
 	@FXML
 	void checkBoxAction(ActionEvent event) {
-		System.out.println("CheckBox");
+
+		classesToDisplay.clear();
+		if(topCheckBox.isSelected()) {
+			classesToDisplay.add(SupplierClass.TOP);
+		}
+		if(normalCheckBox.isSelected()) {
+			classesToDisplay.add(SupplierClass.NORMAL);
+		}
+		if(oneOffCheckBox.isSelected()) {
+			classesToDisplay.add(SupplierClass.ONE_OFF);
+		}
+		updateChart();
 	}
 
 	public void setStage(Stage stage) {
 		this.stage = stage;
 	}
 
-	private void updateChart() {		
-		
+	private void updateChart() {
+
 		XYChart.Series<Number, String> serie = new XYChart.Series<>();
 
-		ArrayList<Supplier> suppliers = Database.getInstance().getSupplierData();
-		for (Supplier supplier: suppliers) {
+		List<Supplier> suppliers = Database.getInstance().getSupplierData();
+		List<Supplier> filteredSupps = suppliers.stream()
+				.filter(supplier -> classesToDisplay.contains(supplier.getSupplierClass()))
+				.collect(Collectors.toList());
+
+		for (Supplier supplier: filteredSupps) {
     		serie.getData().add(new XYChart.Data<Number, String>(scoreCalculator.calculateScore(supplier), supplier.getName()));
     	}
 
@@ -248,7 +268,7 @@ public class AverageSuppliersCtrl implements Initializable {
 		final Node node = data.getNode();
 		final Text dataText = new Text(data.getXValue() + " %");
 		((Group)node.getParent()).getChildren().add(dataText);
-		
+
 		node.boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
 			@Override
 			public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {

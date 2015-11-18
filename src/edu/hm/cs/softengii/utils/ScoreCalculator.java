@@ -48,10 +48,20 @@ public class ScoreCalculator {
 
 	// Public methods -------------------------------------------------------------------
 
+	/**
+	 * Determines from which date on deliveries are to be taken into account for
+	 * calculating a supplier's score.
+	 * @param start
+	 */
 	public void setRangeStart(LocalDate start) {
 		rangeStart = start;
 	}
 
+	/**
+	 * Determines until which date deliveries are to be taken into account for
+	 * calculating a supplier's score.
+	 * @param end
+	 */
 	public void setRangeEnd(LocalDate end) {
 		rangeEnd = end;
 	}
@@ -109,15 +119,15 @@ public class ScoreCalculator {
 
 		// Default score is 0%
 		int singleScore = 0;
-		
+
 		// Get all thresholds from db
 		ArrayList<ScoreThresholdEntity> thresholds = DatabaseDataStorage.getInstance().getScoreThresholds();
-		
+
 		for (ScoreThresholdEntity threshold: thresholds) {
-			
+
 			if (delayedDays >= threshold.getEarlyMin() && delayedDays <= threshold.getEarlyMax() ||
 				delayedDays >= threshold.getLateMin() && delayedDays <= threshold.getLateMax()) {
-				
+
 				// threshold found
 				singleScore = threshold.getScoreValue();
 				break;
