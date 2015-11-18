@@ -41,7 +41,7 @@
                 </Menu>
             </menus>
         </MenuBar>
-	  
+
    </top>
    <right>
       <HBox minWidth="100.0" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -71,15 +71,15 @@
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font></Label>
-                  <CheckBox fx:id="topCheckBox" mnemonicParsing="false" onAction="#checkBoxAction" selected="true" text="Top" GridPane.halignment="LEFT" GridPane.rowIndex="7">
+                  <CheckBox fx:id="topCheckBox" mnemonicParsing="false" onAction="#checkBoxAction" selected="false" text="Top" GridPane.halignment="LEFT" GridPane.rowIndex="7">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin></CheckBox>
-                  <CheckBox fx:id="normalCheckBox" mnemonicParsing="false" onAction="#checkBoxAction" selected="true" text="Normal" GridPane.halignment="LEFT" GridPane.rowIndex="8">
+                  <CheckBox fx:id="normalCheckBox" mnemonicParsing="false" onAction="#checkBoxAction" selected="false" text="Normal" GridPane.halignment="LEFT" GridPane.rowIndex="8">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin></CheckBox>
-                  <CheckBox fx:id="oneOffCheckBox" mnemonicParsing="false" onAction="#checkBoxAction" selected="true" text="One-Off" GridPane.halignment="LEFT" GridPane.rowIndex="9">
+                  <CheckBox fx:id="oneOffCheckBox" mnemonicParsing="false" onAction="#checkBoxAction" selected="false" text="One-Off" GridPane.halignment="LEFT" GridPane.rowIndex="9">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin></CheckBox>

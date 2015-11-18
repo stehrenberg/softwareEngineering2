@@ -188,9 +188,6 @@ public class AverageSuppliersCtrl implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
-		topCheckBox.setSelected(false);
-		normalCheckBox.setSelected(false);
-		oneOffCheckBox.setSelected(false);
 		updateChart();
 	}
 
