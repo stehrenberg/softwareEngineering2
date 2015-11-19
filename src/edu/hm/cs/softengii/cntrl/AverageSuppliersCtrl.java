@@ -283,30 +283,7 @@ public class AverageSuppliersCtrl implements Initializable {
 		compareChart.getData().clear();		
 		compareChart.getData().add(serie);
 		
-//		for (XYChart.Data<Number, String> data : serie.getData()) {
-//			displayLabelForData(data);
-//		}
-		
 		compareChart.setMinHeight(filteredSupps.size() * 50);
-	}
-
-	/**
-	 * places a text label with a bar's value in a bar node for a given
-	 * XYChart.Data
-	 */
-	private void displayLabelForData(XYChart.Data<Number, String> data) {
-		final Node node = data.getNode();
-		final Text dataText = new Text(data.getXValue() + " %");
-		((Group)node.getParent()).getChildren().add(dataText);
-
-		
-		node.boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
-			@Override
-			public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {
-				dataText.setLayoutX(Math.round(bounds.getMinX() + bounds.getWidth() / 2 - dataText.prefWidth(-1) / 2));
-				dataText.setLayoutY(Math.round(bounds.getMaxY() - bounds.getHeight() / 2 +  dataText.prefHeight(-1) / 2));
-			}
-		});
 	}
 
 	private Parent replaceSceneContent(Parent page) throws Exception {
