@@ -7,6 +7,7 @@ Date: 16-11-2015
 package edu.hm.cs.softengii.db.dataStorage;
 
 import edu.hm.cs.softengii.utils.SettingsPropertiesHelper;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -122,12 +123,48 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
 		
 		return thresholds;
     }
+
+
+    /**
+     * Get all default score thresholds from the database
+     */
+    @Override
+    public ArrayList<ScoreThresholdEntity> getScoreDefaults() {
+
+    	ArrayList<ScoreThresholdEntity> thresholds = new ArrayList<>();
+
+    	establishConnection();
+
+		try {
+		    String query = "SELECT * FROM ScoreDefaults;";
+		    Statement statement = this.connection.createStatement();
+		    ResultSet set = statement.executeQuery(query);
+
+		    while (set.next()) {
+
+		    	int scoreValue = set.getInt(1);
+		    	int earlyMin = set.getInt(2);
+		    	int earlyMax = set.getInt(3);
+		    	int lateMin = set.getInt(4);
+		    	int lateMax = set.getInt(5);
+
+		    	thresholds.add(new ScoreThresholdEntity(scoreValue, earlyMin, earlyMax, lateMin, lateMax));
+		    }
+
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+
+		closeConnection();
+
+		return thresholds;
+    }
     
     /**
      * Set new score thresholds to the database. Old thresholds are removed.
      * @param thresholds New thresholds
      */
-    public void setScoreThresholds(ArrayList<ScoreThresholdEntity> thresholds) {
+    public void setScoreThresholds(ObservableList<ScoreThresholdEntity> thresholds) {
     	
     	establishConnection();
     	

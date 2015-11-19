@@ -6,6 +6,8 @@ Date: 16-11-2015
 */
 package edu.hm.cs.softengii.db.dataStorage;
 
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 
 /**
@@ -28,10 +30,15 @@ public interface IDatabaseDataStorage {
      * Get all score thresholds from the database
      */
     ArrayList<ScoreThresholdEntity> getScoreThresholds();
+
+    /**
+     * Get all default score thresholds from the database
+     */
+    ArrayList<ScoreThresholdEntity> getScoreDefaults();
     
     /**
      * Set new score thresholds to the database. Old thresholds are removed.
      * @param thresholds New thresholds
      */
-    void setScoreThresholds(ArrayList<ScoreThresholdEntity> thresholds);
+    void setScoreThresholds(ObservableList<ScoreThresholdEntity> thresholds);
 }

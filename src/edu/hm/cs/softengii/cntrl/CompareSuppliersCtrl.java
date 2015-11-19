@@ -20,7 +20,6 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.stage.Stage;
@@ -38,7 +37,9 @@ public class CompareSuppliersCtrl implements Initializable {
     @FXML private MenuItem newUserMenuItem;
     @FXML private MenuItem manageAllUsersMenuItem;
     @FXML private SeparatorMenuItem userMenuSeperator;
-    @FXML private ListView<String> suppliersListView;
+
+	@FXML private MenuItem preferencesMenuItem;
+    @FXML private SeparatorMenuItem preferencesMenuSeperator;
 
 	@FXML
 	private BarChart<String, Number> compareChart;
@@ -181,14 +182,32 @@ public class CompareSuppliersCtrl implements Initializable {
 
 			String fxmlPath = "../view/login.fxml";
 			FXMLLoader loader = new FXMLLoader(
-					UserSettingsCtrl.class.getResource(fxmlPath));
+					CompareSuppliersCtrl.class.getResource(fxmlPath));
 
 			Parent page = (Parent) loader.load();
 			((LoginCtrl) loader.getController()).setStage(stage);
 
 			replaceSceneContent(page);
 		} catch (Exception ex) {
-			Logger.getLogger(UserSettingsCtrl.class.getName()).log(
+			Logger.getLogger(LoginCtrl.class.getName()).log(
+					Level.SEVERE, null, ex);
+		}
+	}
+
+	@FXML
+	void gotoPreferences(ActionEvent event) {
+		try {
+
+			String fxmlPath = "../view/preferences.fxml";
+			FXMLLoader loader = new FXMLLoader(
+					CompareSuppliersCtrl.class.getResource(fxmlPath));
+
+			Parent page = (Parent) loader.load();
+			((PreferencesCtrl) loader.getController()).setStage(stage);
+
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(PreferencesCtrl.class.getName()).log(
 					Level.SEVERE, null, ex);
 		}
 	}
@@ -209,9 +228,6 @@ public class CompareSuppliersCtrl implements Initializable {
 		compareChart.getData().add(serie4);
 
 		 ObservableList<Supplier> list = FXCollections.observableArrayList();
-
-//		 // Add null for nothing to select
-//		 list.add(null);
 
 		 ArrayList<Supplier> suppliers = Database.getInstance().getSupplierData();
 
@@ -250,13 +266,17 @@ public class CompareSuppliersCtrl implements Initializable {
             newUserMenuItem.setVisible(true);
             manageAllUsersMenuItem.setVisible(true);
             userMenuSeperator.setVisible(true);
+			preferencesMenuItem.setVisible(true);
+			preferencesMenuSeperator.setVisible(true);
         } else {
             newUserMenuItem.setVisible(false);
             manageAllUsersMenuItem.setVisible(false);
             userMenuSeperator.setVisible(false);
+			preferencesMenuItem.setVisible(false);
+			preferencesMenuSeperator.setVisible(false);
         }
-
     }
+
 	@FXML
 	void supplier1ComboAction(ActionEvent event) {
 
