@@ -311,39 +311,34 @@ public class PreferencesCtrl implements Initializable {
         scoreTable.setItems(scoreData);
 
 
-        //Modifying the secondary email property
         earlyMinCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setScoreValue((int) t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setEarlyMin((int) t.getNewValue());
             }
         });
 
-        //Modifying the secondary email property
         earlyMaxCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setScoreValue((int)t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setEarlyMax((int)t.getNewValue());
             }
         });
 
-        //Modifying the secondary email property
         lateMinCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setScoreValue((int)t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLateMin((int)t.getNewValue());
             }
         });
 
-        //Modifying the secondary email property
         lateMaxCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setScoreValue((int)t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLateMax((int)t.getNewValue());
             }
         });
 
-        //Modifying the secondary email property
         scoreCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
