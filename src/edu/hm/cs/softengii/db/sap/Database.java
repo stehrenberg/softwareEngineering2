@@ -10,8 +10,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.web.PromptData;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -68,8 +73,8 @@ public class Database implements IDatabase {
                 System.out.println("user: " + USER);
                 System.out.println("pswd: " + PASSWORD);
             }
-        } catch (SQLException e) {
-            Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
+        } catch (Exception e) {
+        	ErrorMessage.show(e);
         }
     }
 
@@ -77,8 +82,8 @@ public class Database implements IDatabase {
     public void closeConnection() {
         try {
             connection.close();
-        } catch (SQLException e) {
-            Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
+        } catch (Exception e) {
+        	ErrorMessage.show(e);
         }
     }
 
@@ -99,8 +104,8 @@ public class Database implements IDatabase {
                 suppliers.add(set.getString("name1"));
             }
 
-        } catch (SQLException e) {
-            Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
+        } catch (Exception e) {
+        	ErrorMessage.show(e);
         }
 
         closeConnection();
@@ -131,8 +136,8 @@ public class Database implements IDatabase {
                 suppliers.put(supplierID, name);
             }
 
-        } catch (SQLException e) {
-            Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
+        } catch (Exception e) {
+        	ErrorMessage.show(e);
         }
 
         closeConnection();
@@ -159,30 +164,35 @@ public class Database implements IDatabase {
                     + "WHERE ekko.EBELN = ekbe.EBELN "
                     + "AND eket.ebeln = ekbe.ebeln "
                     + "AND lfa1.lifnr = ekko.lifnr "
-                    + "AND VGABE = 1 LIMIT 1000";
+                    + "AND VGABE = 1";
 
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
 
             while(set.next()) {
 
-                Supplier supplier = findSupplierInList(suppliers, set.getString("lfa1.LIFNR"));
-                if (supplier == null) {
-                    supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
-                    suppliers.add(supplier);
-                }
-
-                LocalDate actual = set.getDate("BUDAT").toLocalDate();
-                LocalDate promised = set.getDate("SLFDT").toLocalDate();
-                String delID = set.getString("eket.EBELN");
-
-                Delivery delivery = new Delivery(delID, promised, actual);
-                delivery.setDelay(set.getInt("DIFF"));
-                supplier.getDeliveries().add(delivery);
+            	try {
+	                Supplier supplier = findSupplierInList(suppliers, set.getString("lfa1.LIFNR"));
+	                if (supplier == null) {
+	                    supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
+	                    suppliers.add(supplier);
+	                }
+	
+	                LocalDate actual = set.getDate("BUDAT").toLocalDate();
+	                LocalDate promised = set.getDate("SLFDT").toLocalDate();
+	                String delID = set.getString("eket.EBELN");
+	
+	                Delivery delivery = new Delivery(delID, promised, actual);
+	                delivery.setDelay(set.getInt("DIFF"));
+	                supplier.getDeliveries().add(delivery);
+	                
+            	} catch (NullPointerException e) {
+            		// scheiﬂe gloffen...
+            	}
             }
 
         } catch (Exception e) {
-            javafx.application.Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
+        	ErrorMessage.show(e);
         }
 
         this.suppliers = suppliers;
