@@ -83,6 +83,9 @@ public class ScoreCalculator {
 				})
 				.collect(Collectors.toList());
 
+		// Get all thresholds from db
+		ArrayList<ScoreThresholdEntity> thresholds = DatabaseDataStorage.getInstance().getScoreThresholds();
+		
 		for (Delivery delivery: filteredDels) {
 
 			try {
@@ -90,7 +93,7 @@ public class ScoreCalculator {
 				int diffInDays = delivery.getDelay();
 
 				// Calculate single score
-				int singleScore = calculateSingleScore(diffInDays);
+				int singleScore = calculateSingleScore(diffInDays, thresholds);
 
 				scoreSum += singleScore;
 			}
@@ -115,13 +118,12 @@ public class ScoreCalculator {
 	 * @param delayedDays
 	 * @return Single score value
 	 */
-	private int calculateSingleScore(int delayedDays) {
+	private int calculateSingleScore(int delayedDays, ArrayList<ScoreThresholdEntity> thresholds) {
 
 		// Default score is 0%
 		int singleScore = 0;
 
-		// Get all thresholds from db
-		ArrayList<ScoreThresholdEntity> thresholds = DatabaseDataStorage.getInstance().getScoreThresholds();
+		
 
 		for (ScoreThresholdEntity threshold: thresholds) {
 
