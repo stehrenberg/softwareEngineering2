@@ -2,13 +2,13 @@ package edu.hm.cs.softengii.cntrl;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import edu.hm.cs.softengii.db.sap.SupplierClass;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -30,6 +30,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import edu.hm.cs.softengii.db.sap.Database;
 import edu.hm.cs.softengii.db.sap.Supplier;
+import edu.hm.cs.softengii.db.sap.SupplierClass;
 import edu.hm.cs.softengii.utils.ScoreCalculator;
 import edu.hm.cs.softengii.utils.Session;
 
@@ -272,14 +273,21 @@ public class AverageSuppliersCtrl implements Initializable {
 				.collect(Collectors.toList());
 
 		for (Supplier supplier: filteredSupps) {
-    		serie.getData().add(new XYChart.Data<Number, String>(scoreCalculator.calculateScore(supplier), supplier.getName()));
+			
+			double score = scoreCalculator.calculateScore(supplier);
+			double rounded = ((int)(score*100)) /100.0;
+			
+    		serie.getData().add(new XYChart.Data<Number, String>(score, supplier.getName() + " " + rounded + "%"));
     	}
 
-		compareChart.getData().clear();
+		compareChart.getData().clear();		
 		compareChart.getData().add(serie);
-		for (XYChart.Data<Number, String> data : serie.getData()) {
-			displayLabelForData(data);
-		}
+		
+//		for (XYChart.Data<Number, String> data : serie.getData()) {
+//			displayLabelForData(data);
+//		}
+		
+		compareChart.setMinHeight(filteredSupps.size() * 50);
 	}
 
 	/**
@@ -291,6 +299,7 @@ public class AverageSuppliersCtrl implements Initializable {
 		final Text dataText = new Text(data.getXValue() + " %");
 		((Group)node.getParent()).getChildren().add(dataText);
 
+		
 		node.boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
 			@Override
 			public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {
