@@ -278,7 +278,8 @@ public class AverageSuppliersCtrl implements Initializable {
 			double score = scoreCalculator.calculateScore(supplier);
 			double rounded = ((int)(score*100)) /100.0;
 			
-    		serie.getData().add(new XYChart.Data<Number, String>(score, supplier.getName() + " " + rounded + "%"));
+    		serie.getData().add(new XYChart.Data<Number, String>(score, supplier.getName() + " "
+    		+ rounded + "%\n" + supplier.getSupplierClass()));
     	}
 
 		compareChart.getData().clear();		
