@@ -1,6 +1,7 @@
 package edu.hm.cs.softengii.db.sap;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -171,24 +172,24 @@ public class Database implements IDatabase {
 
             while(set.next()) {
 
-            	try {
-	                Supplier supplier = findSupplierInList(suppliers, set.getString("lfa1.LIFNR"));
-	                if (supplier == null) {
-	                    supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
-	                    suppliers.add(supplier);
-	                }
+	            Supplier supplier = findSupplierInList(suppliers, set.getString("lfa1.LIFNR"));
+	            if (supplier == null) {
+	                supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
+	                suppliers.add(supplier);
+	            }
 	
-	                LocalDate actual = set.getDate("BUDAT").toLocalDate();
-	                LocalDate promised = set.getDate("SLFDT").toLocalDate();
-	                String delID = set.getString("eket.EBELN");
-	
-	                Delivery delivery = new Delivery(delID, promised, actual);
-	                delivery.setDelay(set.getInt("DIFF"));
-	                supplier.getDeliveries().add(delivery);
-	                
-            	} catch (NullPointerException e) {
-            		// scheiﬂe gloffen...
-            	}
+	            Date actualDate = set.getDate("BUDAT");
+	            Date promisedDate = set.getDate("SLFDT");
+	            String delID = set.getString("eket.EBELN");
+	            
+	            if (actualDate != null && promisedDate != null) {
+		            LocalDate actual = actualDate.toLocalDate();
+		            LocalDate promised = promisedDate.toLocalDate();
+		
+		            Delivery delivery = new Delivery(delID, promised, actual);
+		            delivery.setDelay(set.getInt("DIFF"));
+		            supplier.getDeliveries().add(delivery);
+	            }
             }
 
         } catch (Exception e) {
