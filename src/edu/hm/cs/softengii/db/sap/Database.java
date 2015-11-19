@@ -181,7 +181,7 @@ public class Database implements IDatabase {
                 supplier.getDeliveries().add(delivery);
             }
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             javafx.application.Application.launch(ErrorMessage.class, ErrorMessage.convertExceptionToString(e));
         }
 
