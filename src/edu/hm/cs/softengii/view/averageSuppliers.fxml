@@ -110,7 +110,7 @@
    <center>
       <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <content>
-            <BarChart fx:id="compareChart" animated="false" legendVisible="false" minHeight="700.0" minWidth="400.0" title="Average Suppliers">
+            <BarChart fx:id="compareChart" animated="false" legendVisible="false" minWidth="400.0" title="Average Suppliers">
               <xAxis>
                 <NumberAxis autoRanging="false" />
               </xAxis>

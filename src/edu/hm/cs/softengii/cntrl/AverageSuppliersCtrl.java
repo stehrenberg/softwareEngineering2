@@ -2,22 +2,17 @@ package edu.hm.cs.softengii.cntrl;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import edu.hm.cs.softengii.db.sap.SupplierClass;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -26,10 +21,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import edu.hm.cs.softengii.db.sap.Database;
 import edu.hm.cs.softengii.db.sap.Supplier;
+import edu.hm.cs.softengii.db.sap.SupplierClass;
 import edu.hm.cs.softengii.utils.ScoreCalculator;
 import edu.hm.cs.softengii.utils.Session;
 
@@ -212,6 +207,10 @@ public class AverageSuppliersCtrl implements Initializable {
 		updateChart();
 	}
 
+	/**
+	 * Decide whether admin menu items should be shown.
+	 * @param isAdmin
+	 */
     private void setAdminMenusVisible(boolean isAdmin) {
         if(isAdmin) {
             newUserMenuItem.setVisible(true);
@@ -262,6 +261,9 @@ public class AverageSuppliersCtrl implements Initializable {
 		this.stage = stage;
 	}
 
+	/**
+	 * Clear chart and insert new data.
+	 */
 	private void updateChart() {
 
 		XYChart.Series<Number, String> serie = new XYChart.Series<>();
@@ -272,34 +274,25 @@ public class AverageSuppliersCtrl implements Initializable {
 				.collect(Collectors.toList());
 
 		for (Supplier supplier: filteredSupps) {
-    		serie.getData().add(new XYChart.Data<Number, String>(scoreCalculator.calculateScore(supplier), supplier.getName()));
+			
+			double score = scoreCalculator.calculateScore(supplier);
+			double rounded = ((int)(score*100)) /100.0;
+			
+    		serie.getData().add(new XYChart.Data<Number, String>(score, supplier.getName() + " " + rounded + "%"));
     	}
 
-		compareChart.getData().clear();
+		compareChart.getData().clear();		
 		compareChart.getData().add(serie);
-		for (XYChart.Data<Number, String> data : serie.getData()) {
-			displayLabelForData(data);
-		}
+		
+		compareChart.setMinHeight(filteredSupps.size() * 50);
 	}
 
 	/**
-	 * places a text label with a bar's value in a bar node for a given
-	 * XYChart.Data
+	 * Insert new content to scene.
+	 * @param page
+	 * @return
+	 * @throws Exception
 	 */
-	private void displayLabelForData(XYChart.Data<Number, String> data) {
-		final Node node = data.getNode();
-		final Text dataText = new Text(data.getXValue() + " %");
-		((Group)node.getParent()).getChildren().add(dataText);
-
-		node.boundsInParentProperty().addListener(new ChangeListener<Bounds>() {
-			@Override
-			public void changed(ObservableValue<? extends Bounds> ov, Bounds oldBounds, Bounds bounds) {
-				dataText.setLayoutX(Math.round(bounds.getMinX() + bounds.getWidth() / 2 - dataText.prefWidth(-1) / 2));
-				dataText.setLayoutY(Math.round(bounds.getMaxY() - bounds.getHeight() / 2 +  dataText.prefHeight(-1) / 2));
-			}
-		});
-	}
-
 	private Parent replaceSceneContent(Parent page) throws Exception {
 
 		Scene scene = stage.getScene();
