@@ -1,4 +1,5 @@
 .idea
 bin/
 TestMain.java
-*.db
+userAuth.db
+*.iml
