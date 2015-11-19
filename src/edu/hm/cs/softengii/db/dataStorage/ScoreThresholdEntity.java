@@ -90,4 +90,25 @@ public class ScoreThresholdEntity {
     public int getLateMax() {
         return this.lateMax;
     }
+
+
+    public void setScoreValue(int scoreValue) {
+        this.scoreValue = scoreValue;
+    }
+
+    public void setEarlyMin(int earlyMin) {
+        this.earlyMin = earlyMin;
+    }
+
+    public void setEarlyMax(int earlyMax) {
+        this.earlyMax = earlyMax;
+    }
+
+    public void setLateMin(int lateMin) {
+        this.lateMin = lateMin;
+    }
+
+    public void setLateMax(int lateMax) {
+        this.lateMax = lateMax;
+    }
 }

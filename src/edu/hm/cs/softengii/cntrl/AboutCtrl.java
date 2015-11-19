@@ -30,6 +30,9 @@ public class AboutCtrl implements Initializable{
     @FXML private MenuItem manageAllUsersMenuItem;
     @FXML private SeparatorMenuItem userMenuSeperator;
 
+    @FXML private MenuItem preferencesMenuItem;
+    @FXML private SeparatorMenuItem preferencesMenuSeperator;
+
     @FXML
     void gotoCreateNewUser(ActionEvent event) {
 
@@ -141,6 +144,24 @@ public class AboutCtrl implements Initializable{
     }
 
     @FXML
+    void gotoPreferences(ActionEvent event) {
+        try {
+
+            String fxmlPath = "../view/preferences.fxml";
+            FXMLLoader loader = new FXMLLoader(
+                    AboutCtrl.class.getResource(fxmlPath));
+
+            Parent page = (Parent) loader.load();
+            ((PreferencesCtrl) loader.getController()).setStage(stage);
+
+            replaceSceneContent(page);
+        } catch (Exception ex) {
+            Logger.getLogger(AboutCtrl.class.getName()).log(
+                    Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
     void quitApplication(ActionEvent event) {
         stage.close();
     }
@@ -151,17 +172,19 @@ public class AboutCtrl implements Initializable{
     }
 
     private void setAdminMenusVisible(boolean isAdmin) {
-
         if(isAdmin) {
             newUserMenuItem.setVisible(true);
             manageAllUsersMenuItem.setVisible(true);
             userMenuSeperator.setVisible(true);
+            preferencesMenuItem.setVisible(true);
+            preferencesMenuSeperator.setVisible(true);
         } else {
             newUserMenuItem.setVisible(false);
             manageAllUsersMenuItem.setVisible(false);
             userMenuSeperator.setVisible(false);
+            preferencesMenuItem.setVisible(false);
+            preferencesMenuSeperator.setVisible(false);
         }
-
     }
 
     public void setStage(Stage stage) {

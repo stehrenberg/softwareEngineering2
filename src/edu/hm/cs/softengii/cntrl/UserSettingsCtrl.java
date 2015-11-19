@@ -30,6 +30,9 @@ public class UserSettingsCtrl implements Initializable{
     @FXML private MenuItem manageAllUsersMenuItem;
     @FXML private SeparatorMenuItem userMenuSeperator;
 
+    @FXML private MenuItem preferencesMenuItem;
+    @FXML private SeparatorMenuItem preferencesMenuSeperator;
+
     @FXML private Text forenameLabel;
     @FXML private TextField forename;
     @FXML private Text surnameLabel;
@@ -188,6 +191,24 @@ public class UserSettingsCtrl implements Initializable{
     }
 
     @FXML
+    void gotoPreferences(ActionEvent event) {
+        try {
+
+            String fxmlPath = "../view/preferences.fxml";
+            FXMLLoader loader = new FXMLLoader(
+                    UserSettingsCtrl.class.getResource(fxmlPath));
+
+            Parent page = (Parent) loader.load();
+            ((PreferencesCtrl) loader.getController()).setStage(stage);
+
+            replaceSceneContent(page);
+        } catch (Exception ex) {
+            Logger.getLogger(UserSettingsCtrl.class.getName()).log(
+                    Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
     void quitApplication(ActionEvent event) {
         stage.close();
     }
@@ -205,12 +226,16 @@ public class UserSettingsCtrl implements Initializable{
             newUserMenuItem.setVisible(true);
             manageAllUsersMenuItem.setVisible(true);
             userMenuSeperator.setVisible(true);
+            preferencesMenuItem.setVisible(true);
+            preferencesMenuSeperator.setVisible(true);
         } else {
             isAdminLabel.setVisible(false);
             this.isAdmin.setVisible(false);
             newUserMenuItem.setVisible(false);
             manageAllUsersMenuItem.setVisible(false);
             userMenuSeperator.setVisible(false);
+            preferencesMenuItem.setVisible(false);
+            preferencesMenuSeperator.setVisible(false);
         }
     }
 
