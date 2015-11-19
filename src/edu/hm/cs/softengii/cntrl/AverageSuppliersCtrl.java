@@ -9,15 +9,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
-import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -26,7 +21,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import edu.hm.cs.softengii.db.sap.Database;
 import edu.hm.cs.softengii.db.sap.Supplier;
@@ -213,6 +207,10 @@ public class AverageSuppliersCtrl implements Initializable {
 		updateChart();
 	}
 
+	/**
+	 * Decide whether admin menu items should be shown.
+	 * @param isAdmin
+	 */
     private void setAdminMenusVisible(boolean isAdmin) {
         if(isAdmin) {
             newUserMenuItem.setVisible(true);
@@ -263,6 +261,9 @@ public class AverageSuppliersCtrl implements Initializable {
 		this.stage = stage;
 	}
 
+	/**
+	 * Clear chart and insert new data.
+	 */
 	private void updateChart() {
 
 		XYChart.Series<Number, String> serie = new XYChart.Series<>();
@@ -286,6 +287,12 @@ public class AverageSuppliersCtrl implements Initializable {
 		compareChart.setMinHeight(filteredSupps.size() * 50);
 	}
 
+	/**
+	 * Insert new content to scene.
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
 	private Parent replaceSceneContent(Parent page) throws Exception {
 
 		Scene scene = stage.getScene();
