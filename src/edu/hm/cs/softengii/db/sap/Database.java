@@ -7,9 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -30,7 +28,7 @@ public class Database implements IDatabase {
     /**Connection to the database.*/
     private Connection connection;
 
-    private ArrayList<Supplier> supplierData = new ArrayList<>();
+    private List<Supplier> supplierData = new ArrayList<>();
     private List<Supplier> suppliers;
 
     /** Loading supplier data upon creation of database instance. */
@@ -106,38 +104,6 @@ public class Database implements IDatabase {
         return suppliers;
     }
 
-    /**
-     * Idea for a function getting a list of suppliers with their respective ID (== lifnr from DB)
-     * to show within application when a supplier is to be picted.
-     * @return
-     */
-    public Map<String, String> getSupplierList() {
-
-        Map<String, String> suppliers = new HashMap<>();
-        establishConnection();
-
-        try {
-            String query = "SELECT * FROM lfa1";
-
-            Statement statement = connection.createStatement();
-            ResultSet set = statement.executeQuery(query);
-
-            while(set.next()) {
-                String supplierID = set.getString("lifnr");
-                String name = set.getString("name1");
-                System.out.println(supplierID + "/" + name);
-                suppliers.put(supplierID, name);
-            }
-
-        } catch (Exception e) {
-        	ErrorMessage.show(e);
-        }
-
-        closeConnection();
-
-        return suppliers;
-    }
-
     @Override
     public List<Supplier> getSupplierData() {
         return supplierData;
@@ -146,8 +112,7 @@ public class Database implements IDatabase {
     private void loadSupplierData() {
 
         establishConnection();
-
-        ArrayList<Supplier> suppliers = new ArrayList<>();
+        List<Supplier> suppliers = new ArrayList<>();
 
         try {
 
@@ -228,7 +193,9 @@ public class Database implements IDatabase {
 
             byte[] decryptedPwd = cipher.doFinal(cryptedPassword.getBytes());
             password = new String(decryptedPwd);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            //TODO Sinnvollen Catchblock schreiben
+        }
         return password;
     }
 }

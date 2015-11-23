@@ -3,6 +3,7 @@ package edu.hm.cs.softengii.cntrl;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -229,7 +230,7 @@ public class CompareSuppliersCtrl implements Initializable {
 
 		 ObservableList<Supplier> list = FXCollections.observableArrayList();
 
-		 ArrayList<Supplier> suppliers = Database.getInstance().getSupplierData();
+		 List<Supplier> suppliers = Database.getInstance().getSupplierData();
 
 		 for (int i = 0; i < suppliers.size(); i++) {
 			 list.add(suppliers.get(i));
@@ -326,19 +327,19 @@ public class CompareSuppliersCtrl implements Initializable {
 
 	private void updateChartForAllSuppliers() {
 		compareChart.getData().clear();
-		
+
 		serie1 = new XYChart.Series<>();
 		serie2 = new XYChart.Series<>();
 		serie3 = new XYChart.Series<>();
 		serie4 = new XYChart.Series<>();
-		
+
 		updateChartForSupplier(supplier1Combo.getValue(), serie1);
 		updateChartForSupplier(supplier2Combo.getValue(), serie2);
 		updateChartForSupplier(supplier3Combo.getValue(), serie3);
 		updateChartForSupplier(supplier4Combo.getValue(), serie4);
-		
+
 		compareChart.getData().addAll(serie1, serie2, serie3, serie4);
-		
+
 	}
 
 	private void updateChartForSupplier(Supplier supplier, XYChart.Series<String, Number> serie) {

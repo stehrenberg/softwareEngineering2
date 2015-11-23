@@ -32,7 +32,7 @@ public class DemoDatabase implements IDatabase {
     @Override
     public List<String> getSuppliersList() {
 
-        ArrayList<String> supplierNames = new ArrayList<>();
+        List<String> supplierNames = new ArrayList<>();
 
         for (Supplier supplier: getSupplierData()) {
         	supplierNames.add(supplier.getName());
@@ -42,8 +42,8 @@ public class DemoDatabase implements IDatabase {
     }
 
     @Override
-    public ArrayList<Supplier> getSupplierData() {
-    	ArrayList<Supplier> suppliers = new ArrayList<>();
+    public List<Supplier> getSupplierData() {
+    	List<Supplier> suppliers = new ArrayList<>();
 
     	// Supplier 1
     	Supplier supplier1 = new Supplier("001", "MagicStuff GmbH");
