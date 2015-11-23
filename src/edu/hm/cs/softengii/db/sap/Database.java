@@ -4,20 +4,12 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.web.PromptData;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -147,7 +139,7 @@ public class Database implements IDatabase {
     }
 
     @Override
-    public ArrayList<Supplier> getSupplierData() {
+    public List<Supplier> getSupplierData() {
         return supplierData;
     }
 
@@ -177,15 +169,15 @@ public class Database implements IDatabase {
 	                supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
 	                suppliers.add(supplier);
 	            }
-	
+
 	            Date actualDate = set.getDate("BUDAT");
 	            Date promisedDate = set.getDate("SLFDT");
 	            String delID = set.getString("eket.EBELN");
-	            
+
 	            if (actualDate != null && promisedDate != null) {
 		            LocalDate actual = actualDate.toLocalDate();
 		            LocalDate promised = promisedDate.toLocalDate();
-		
+
 		            Delivery delivery = new Delivery(delID, promised, actual);
 		            delivery.setDelay(set.getInt("DIFF"));
 		            supplier.getDeliveries().add(delivery);
