@@ -1,13 +1,10 @@
 package edu.hm.cs.softengii.cntrl;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import edu.hm.cs.softengii.db.sap.Database;
+import edu.hm.cs.softengii.db.sap.Supplier;
+import edu.hm.cs.softengii.db.sap.SupplierClass;
+import edu.hm.cs.softengii.utils.ScoreCalculator;
+import edu.hm.cs.softengii.utils.Session;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,11 +19,15 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.stage.Stage;
-import edu.hm.cs.softengii.db.sap.Database;
-import edu.hm.cs.softengii.db.sap.Supplier;
-import edu.hm.cs.softengii.db.sap.SupplierClass;
-import edu.hm.cs.softengii.utils.ScoreCalculator;
-import edu.hm.cs.softengii.utils.Session;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class AverageSuppliersCtrl implements Initializable {
 

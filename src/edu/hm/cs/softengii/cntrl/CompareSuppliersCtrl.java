@@ -1,13 +1,10 @@
 package edu.hm.cs.softengii.cntrl;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import edu.hm.cs.softengii.db.sap.Database;
+import edu.hm.cs.softengii.db.sap.Supplier;
+import edu.hm.cs.softengii.utils.DeliveryRangeCalculator;
+import edu.hm.cs.softengii.utils.DeliveryRangeCalculator.Range;
+import edu.hm.cs.softengii.utils.Session;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,11 +22,14 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-import edu.hm.cs.softengii.db.sap.Database;
-import edu.hm.cs.softengii.db.sap.Supplier;
-import edu.hm.cs.softengii.utils.DeliveryRangeCalculator;
-import edu.hm.cs.softengii.utils.DeliveryRangeCalculator.Range;
-import edu.hm.cs.softengii.utils.Session;
+
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CompareSuppliersCtrl implements Initializable {
 
