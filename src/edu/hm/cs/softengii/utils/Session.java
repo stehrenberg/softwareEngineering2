@@ -2,24 +2,19 @@ package edu.hm.cs.softengii.utils;
 
 import edu.hm.cs.softengii.db.userAuth.UserEntity;
 
-/**
- * Created by cmon on 25.05.2014.
- */
 public class Session {
 
     private static Session instance = null;
-
     private UserEntity authenticatedUser;
 
     /**
-     * Default-Konstruktor, der nicht außerhalb dieser Klasse
-     * aufgerufen werden kann
+     * Private Default-Constructor, can not be used outside of this class.
      */
     private Session() {}
 
     /**
-     * Statische Methode, liefert die einzige Instanz dieser
-     * Klasse zurück
+     * Static helper method, that returns the single instance of this class.
+     * @return instance
      */
     public static Session getInstance() {
         if (instance == null) {
@@ -27,7 +22,6 @@ public class Session {
         }
         return instance;
     }
-
 
     public UserEntity getAuthenticatedUser() {
         return authenticatedUser;

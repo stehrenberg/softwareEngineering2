@@ -1,15 +1,10 @@
-/*
-Organisation: Apachen Pub Team
-Project: SupplyAlyticsApp
-Author: Kevin Beck
-Date: 30-10-2015
-*/
-
 package edu.hm.cs.softengii.utils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import edu.hm.cs.softengii.db.dataStorage.DatabaseDataStorage;
@@ -18,62 +13,45 @@ import edu.hm.cs.softengii.db.sap.Delivery;
 import edu.hm.cs.softengii.db.sap.Supplier;
 
 /**
- * Class to calculate the score of a supplier
- * @author Kevin Beck
+ * Class to calculate the score for a supplier.
  */
 public class ScoreCalculator {
 
-	// Consts ---------------------------------------------------------------------------
+	private static final long SECS_PER_DAY = 86400; // Number of seconds per day (24 * 60 * 60)
 
-	/**
-	 * Number of seconds per day (24 * 60 * 60)
-	 */
-	private static final long SECS_PER_DAY = 86400;
-
-	// Fields ---------------------------------------------------------------------------
-
-	/** For selecting deliveries after a certain date. */
 	private LocalDate rangeStart = LocalDate.MIN;
-	/** For selecting deliveries before a certain date. */
 	private LocalDate rangeEnd = LocalDate.now();
 
-	// Ctor -----------------------------------------------------------------------------
+	public ScoreCalculator() {}
 
 	/**
-	 * Default constructor to create a new instance
-	 */
-	public ScoreCalculator() {
-
-	}
-
-	// Public methods -------------------------------------------------------------------
-
-	/**
-	 * Determines from which date on deliveries are to be taken into account for
-	 * calculating a supplier's score.
-	 * @param start
+	 * Determines from which date on deliveries should be taken to calculate a supplier's score.
+	 *
+	 * @param start The start date for the score calculation
 	 */
 	public void setRangeStart(LocalDate start) {
 		rangeStart = start;
 	}
 
 	/**
-	 * Determines until which date deliveries are to be taken into account for
-	 * calculating a supplier's score.
-	 * @param end
+	 * Determines until which date deliveries should taken to calculate a supplier's score.
+	 *
+	 * @param end The end date for the score calculation
 	 */
 	public void setRangeEnd(LocalDate end) {
 		rangeEnd = end;
 	}
 
 	/**
-	 * Calculate a score to rate this supplier
-	 * @param supplier
-	 * @return Score calculated over all deliveries of this supplier
+	 * Calculates a score to rate a given supplier.
+	 * Returns the score calculated over all deliveries of a given supplier.
+	 *
+	 * @param supplier The supplier to calculate the score for
 	 */
 	public double calculateScore(Supplier supplier) {
 
 		double scoreSum = 0;
+        double score = 0;
 
 		List<Delivery> filteredDels = supplier.getDeliveries().stream()
 				.filter(delivery -> {
@@ -83,55 +61,52 @@ public class ScoreCalculator {
 				})
 				.collect(Collectors.toList());
 
-		// Get all thresholds from db
+		// get all thresholds from db
 		ArrayList<ScoreThresholdEntity> thresholds = DatabaseDataStorage.getInstance().getScoreThresholds();
 		
 		for (Delivery delivery: filteredDels) {
 
 			try {
-				// Calculate difference of actual and promised delivery date in days
+
+				// calculate difference of actual and promised delivery date in days
 				int diffInDays = delivery.getDelay();
 
-				// Calculate single score
+				// calculate single score
 				int singleScore = calculateSingleScore(diffInDays, thresholds);
 
 				scoreSum += singleScore;
-			}
-			catch (Exception e) {
+
+			} catch (Exception ex) {
+
 				// couldn't calculate score for this delivery
-			}
+                Logger.getLogger(ScoreCalculator.class.getName()).log(Level.WARNING, null, ex);
+            }
 		}
 
-		// Calculate averange
-		double score = 0;
 		if (filteredDels.size() > 0) {
-			score = scoreSum / filteredDels.size();
+			score = scoreSum / filteredDels.size(); // calculate average score
 		}
 
 		return score;
 	}
 
-	// Private methods ------------------------------------------------------------------
-
 	/**
 	 * Calculate score for a single delivery by a specific algorithm
-	 * @param delayedDays
-	 * @return Single score value
+     * Returns a single score value.
+     *
+	 * @param delayedDays The umber of delayed days
+     * @param thresholds A list containing the thresholds
 	 */
 	private int calculateSingleScore(int delayedDays, ArrayList<ScoreThresholdEntity> thresholds) {
 
-		// Default score is 0%
-		int singleScore = 0;
-
-		
+		int singleScore = 0; // default score is 0%
 
 		for (ScoreThresholdEntity threshold: thresholds) {
 
-			if (delayedDays >= threshold.getEarlyMin() && delayedDays <= threshold.getEarlyMax() ||
-				delayedDays >= threshold.getLateMin() && delayedDays <= threshold.getLateMax()) {
+			if (delayedDays >= threshold.getEarlyMin() && delayedDays <= threshold.getEarlyMax()
+                    || delayedDays >= threshold.getLateMin() && delayedDays <= threshold.getLateMax()) {
 
-				// threshold found
-				singleScore = threshold.getScoreValue();
+				singleScore = threshold.getScoreValue(); // threshold found
 				break;
 			}
 		}
