@@ -30,7 +30,6 @@ import java.util.regex.Pattern;
 public class CreateNewUserCtrl implements Initializable{
 
     private Stage stage;
-    private ArrayList<String> errors = new ArrayList<>();
 
     @FXML private AnchorPane rootPane;
 
@@ -55,6 +54,8 @@ public class CreateNewUserCtrl implements Initializable{
     @FXML private Text paswdHintText;
     @FXML private PasswordField pswd;
     @FXML private PasswordField pswdConfirm;
+
+    private ArrayList<String> errors = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

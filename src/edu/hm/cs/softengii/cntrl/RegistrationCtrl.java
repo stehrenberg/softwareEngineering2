@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 public class RegistrationCtrl implements Initializable{
 
     private Stage stage;
-    private ArrayList<String> errors = new ArrayList<>();
 
     @FXML private Text welcomeHeadline;
     @FXML private Text welcomeText;
@@ -52,6 +51,8 @@ public class RegistrationCtrl implements Initializable{
     @FXML private Button registerButton;
     @FXML private Button germanButton;
     @FXML private Button englishButton;
+
+    private ArrayList<String> errors = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

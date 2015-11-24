@@ -24,7 +24,6 @@ import edu.hm.cs.softengii.utils.Session;
 public class LoginCtrl implements Initializable{
 
     private Stage stage;
-    private ArrayList<String> errors = new ArrayList<>();
 
     @FXML private Text welcomeHeadline;
     @FXML private Text welcomeText;
@@ -37,6 +36,7 @@ public class LoginCtrl implements Initializable{
     @FXML private Button germanButton;
     @FXML private Button englishButton;
 
+    private ArrayList<String> errors = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

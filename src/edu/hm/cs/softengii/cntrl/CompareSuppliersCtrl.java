@@ -42,36 +42,29 @@ public class CompareSuppliersCtrl implements Initializable {
 	@FXML private MenuItem preferencesMenuItem;
     @FXML private SeparatorMenuItem preferencesMenuSeperator;
 
-	@FXML
-	private BarChart<String, Number> compareChart;
+	@FXML private BarChart<String, Number> compareChart;
 
-	@FXML
-	private ComboBox<Supplier> supplier1Combo;
+	@FXML private ComboBox<Supplier> supplier1Combo;
 
-	@FXML
-	private ComboBox<Supplier> supplier2Combo;
+	@FXML private ComboBox<Supplier> supplier2Combo;
 
-	@FXML
-	private ComboBox<Supplier> supplier3Combo;
+	@FXML private ComboBox<Supplier> supplier3Combo;
 
-	@FXML
-	private ComboBox<Supplier> supplier4Combo;
+	@FXML private ComboBox<Supplier> supplier4Combo;
+	
+	@FXML private DatePicker startDatePicker;
+	
+	@FXML private DatePicker endDatePicker;
 
-	XYChart.Series<String, Number> serie1 = new XYChart.Series<>();
+	private XYChart.Series<String, Number> serie1 = new XYChart.Series<>();
 
-	XYChart.Series<String, Number> serie2 = new XYChart.Series<>();
+	private XYChart.Series<String, Number> serie2 = new XYChart.Series<>();
 
-	XYChart.Series<String, Number> serie3 = new XYChart.Series<>();
+	private XYChart.Series<String, Number> serie3 = new XYChart.Series<>();
 
-	XYChart.Series<String, Number> serie4 = new XYChart.Series<>();
+	private XYChart.Series<String, Number> serie4 = new XYChart.Series<>();
 
-	DeliveryRangeCalculator rangeCalculator = new DeliveryRangeCalculator();
-
-	@FXML
-	private DatePicker startDatePicker;
-
-	@FXML
-	private DatePicker endDatePicker;
+	private DeliveryRangeCalculator rangeCalculator = new DeliveryRangeCalculator();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {

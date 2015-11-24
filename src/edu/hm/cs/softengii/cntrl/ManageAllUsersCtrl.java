@@ -28,8 +28,6 @@ import java.util.logging.Logger;
 public class ManageAllUsersCtrl implements Initializable{
 
     private Stage stage;
-    private UserEntity selectedUser;
-    ObservableList<UserEntity> usersObservableList;
 
     @FXML private AnchorPane rootPane;
 
@@ -56,6 +54,9 @@ public class ManageAllUsersCtrl implements Initializable{
 
     @FXML private Button updateButton;
     @FXML private Button deleteButton;
+
+    private UserEntity selectedUser;
+    ObservableList<UserEntity> usersObservableList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

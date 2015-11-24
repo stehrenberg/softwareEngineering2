@@ -40,23 +40,17 @@ public class AverageSuppliersCtrl implements Initializable {
 	@FXML private MenuItem preferencesMenuItem;
 	@FXML private SeparatorMenuItem preferencesMenuSeperator;
 
-	@FXML
-	private BarChart<Number, String> compareChart;
+	@FXML private BarChart<Number, String> compareChart;
 
-	@FXML
-	private CheckBox topCheckBox;
+	@FXML private CheckBox topCheckBox;
 
-	@FXML
-	private CheckBox normalCheckBox;
+	@FXML private CheckBox normalCheckBox;
 
-	@FXML
-	private CheckBox oneOffCheckBox;
+	@FXML private CheckBox oneOffCheckBox;
 
-	@FXML
-	private DatePicker startDatePicker;
+	@FXML private DatePicker startDatePicker;
 
-	@FXML
-	private DatePicker endDatePicker;
+	@FXML private DatePicker endDatePicker;
 
 	private ScoreCalculator scoreCalculator = new ScoreCalculator();
 	private List<SupplierClass> classesToDisplay = new ArrayList<>();
