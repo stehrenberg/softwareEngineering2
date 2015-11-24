@@ -37,6 +37,13 @@ public class LoginCtrl implements Initializable{
     @FXML private Button germanButton;
     @FXML private Button englishButton;
 
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        errorMessage.setText("");
+        loadAllTexts();
+    }
+
     @FXML
     void loginToMainMenu(ActionEvent event) {
 
@@ -45,7 +52,7 @@ public class LoginCtrl implements Initializable{
         if(errors.isEmpty()) {
 
             Session.getInstance().setAuthenticatedUser(
-                    DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()));
+                DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()));
             gotoMainMenu();
         }
     }
@@ -61,12 +68,6 @@ public class LoginCtrl implements Initializable{
     void switchToEnglish(ActionEvent event) {
 
         LanguagePropertiesHelper.getInstance().setLanguage("en");
-        loadAllTexts();
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        errorMessage.setText("");
         loadAllTexts();
     }
 

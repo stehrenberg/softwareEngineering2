@@ -59,6 +59,31 @@ public class PreferencesCtrl implements Initializable {
 
     final ObservableList<ScoreThresholdEntity> scoreData = FXCollections.observableArrayList();
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        errorMessage.setText("");
+        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+
+        scoreData.addAll(DatabaseDataStorage.getInstance().getScoreThresholds());
+        populateScoreTable();
+    }
+
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if(isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+            preferencesMenuItem.setVisible(true);
+            preferencesMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+            preferencesMenuItem.setVisible(false);
+            preferencesMenuSeperator.setVisible(false);
+        }
+    }
+
     @FXML
     void updateScoreSetttings(ActionEvent event) {
 
@@ -237,30 +262,8 @@ public class PreferencesCtrl implements Initializable {
         // Do nothing, we are already here
     }
 
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        errorMessage.setText("");
-        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
-
-        scoreData.addAll(DatabaseDataStorage.getInstance().getScoreThresholds());
-        populateScoreTable();
-    }
-
-    private void setAdminMenusVisible(boolean isAdmin) {
-        if(isAdmin) {
-            newUserMenuItem.setVisible(true);
-            manageAllUsersMenuItem.setVisible(true);
-            userMenuSeperator.setVisible(true);
-            preferencesMenuItem.setVisible(true);
-            preferencesMenuSeperator.setVisible(true);
-        } else {
-            newUserMenuItem.setVisible(false);
-            manageAllUsersMenuItem.setVisible(false);
-            userMenuSeperator.setVisible(false);
-            preferencesMenuItem.setVisible(false);
-            preferencesMenuSeperator.setVisible(false);
-        }
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     private void populateScoreTableWithDefaults() {
@@ -314,45 +317,46 @@ public class PreferencesCtrl implements Initializable {
         earlyMinCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setEarlyMin((int) t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
+                    setEarlyMin((int) t.getNewValue());
             }
         });
 
         earlyMaxCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setEarlyMax((int)t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+                    .setEarlyMax((int)t.getNewValue());
             }
         });
 
         lateMinCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLateMin((int)t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
+                    setLateMin((int)t.getNewValue());
             }
         });
 
         lateMaxCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLateMax((int)t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
+                    setLateMax((int)t.getNewValue());
             }
         });
 
         scoreCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).setScoreValue((int)t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
+                    setScoreValue((int)t.getNewValue());
             }
         });
 
 
     }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
+    
     private Parent replaceSceneContent(Parent page) throws Exception {
 
         Scene scene = stage.getScene();

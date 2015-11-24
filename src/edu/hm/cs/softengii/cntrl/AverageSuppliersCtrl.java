@@ -67,16 +67,14 @@ public class AverageSuppliersCtrl implements Initializable {
 		try {
 
 			String fxmlPath = "../view/createNewUser.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					AverageSuppliersCtrl.class.getResource(fxmlPath));
+			FXMLLoader loader = new FXMLLoader(AverageSuppliersCtrl.class.getResource(fxmlPath));
 
 			Parent page = (Parent) loader.load();
 			((CreateNewUserCtrl) loader.getController()).setStage(stage);
 
 			replaceSceneContent(page);
 		} catch (Exception ex) {
-			Logger.getLogger(AverageSuppliersCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
+			Logger.getLogger(AverageSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -86,16 +84,14 @@ public class AverageSuppliersCtrl implements Initializable {
 		try {
 
 			String fxmlPath = "../view/manageAllUsers.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					AverageSuppliersCtrl.class.getResource(fxmlPath));
+			FXMLLoader loader = new FXMLLoader(AverageSuppliersCtrl.class.getResource(fxmlPath));
 
 			Parent page = (Parent) loader.load();
 			((ManageAllUsersCtrl) loader.getController()).setStage(stage);
 
 			replaceSceneContent(page);
 		} catch (Exception ex) {
-			Logger.getLogger(AverageSuppliersCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
+			Logger.getLogger(AverageSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -126,16 +122,14 @@ public class AverageSuppliersCtrl implements Initializable {
 		try {
 
 			String fxmlPath = "../view/userSettings.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					AverageSuppliersCtrl.class.getResource(fxmlPath));
+			FXMLLoader loader = new FXMLLoader(AverageSuppliersCtrl.class.getResource(fxmlPath));
 
 			Parent page = (Parent) loader.load();
 			((UserSettingsCtrl) loader.getController()).setStage(stage);
 
 			replaceSceneContent(page);
 		} catch (Exception ex) {
-			Logger.getLogger(AverageSuppliersCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
+			Logger.getLogger(AverageSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -145,16 +139,14 @@ public class AverageSuppliersCtrl implements Initializable {
 		try {
 
 			String fxmlPath = "../view/about.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					AverageSuppliersCtrl.class.getResource(fxmlPath));
+			FXMLLoader loader = new FXMLLoader(AverageSuppliersCtrl.class.getResource(fxmlPath));
 
 			Parent page = (Parent) loader.load();
 			((AboutCtrl) loader.getController()).setStage(stage);
 
 			replaceSceneContent(page);
 		} catch (Exception ex) {
-			Logger.getLogger(AverageSuppliersCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
+			Logger.getLogger(AverageSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -166,16 +158,14 @@ public class AverageSuppliersCtrl implements Initializable {
 		try {
 
 			String fxmlPath = "../view/login.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					UserSettingsCtrl.class.getResource(fxmlPath));
+			FXMLLoader loader = new FXMLLoader(UserSettingsCtrl.class.getResource(fxmlPath));
 
 			Parent page = (Parent) loader.load();
 			((LoginCtrl) loader.getController()).setStage(stage);
 
 			replaceSceneContent(page);
 		} catch (Exception ex) {
-			Logger.getLogger(UserSettingsCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
+			Logger.getLogger(UserSettingsCtrl.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -184,16 +174,14 @@ public class AverageSuppliersCtrl implements Initializable {
 		try {
 
 			String fxmlPath = "../view/preferences.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					AverageSuppliersCtrl.class.getResource(fxmlPath));
+			FXMLLoader loader = new FXMLLoader(AverageSuppliersCtrl.class.getResource(fxmlPath));
 
 			Parent page = (Parent) loader.load();
 			((PreferencesCtrl) loader.getController()).setStage(stage);
 
 			replaceSceneContent(page);
 		} catch (Exception ex) {
-			Logger.getLogger(AverageSuppliersCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
+			Logger.getLogger(AverageSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -271,8 +259,8 @@ public class AverageSuppliersCtrl implements Initializable {
 
 		List<Supplier> suppliers = Database.getInstance().getSupplierData();
 		List<Supplier> filteredSupps = suppliers.stream()
-				.filter(supplier -> classesToDisplay.contains(supplier.getSupplierClass()))
-				.collect(Collectors.toList());
+		    .filter(supplier -> classesToDisplay.contains(supplier.getSupplierClass()))
+		    .collect(Collectors.toList());
 
 		for (Supplier supplier: filteredSupps) {
 			
@@ -280,7 +268,7 @@ public class AverageSuppliersCtrl implements Initializable {
 			double rounded = ((int)(score*100)) /100.0;
 			
     		serie.getData().add(new XYChart.Data<Number, String>(score, supplier.getName() + " "
-    		+ rounded + "%\n" + supplier.getSupplierClass()));
+    		    + rounded + "%\n" + supplier.getSupplierClass()));
     	}
 
 		compareChart.getData().clear();		

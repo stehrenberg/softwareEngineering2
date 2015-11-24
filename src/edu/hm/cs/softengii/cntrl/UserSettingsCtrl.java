@@ -50,6 +50,32 @@ public class UserSettingsCtrl implements Initializable{
 
     @FXML private Button updateButton;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        populateInputs();
+        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+    }
+
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if(isAdmin) {
+            isAdminLabel.setVisible(true);
+            this.isAdmin.setVisible(true);
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+            preferencesMenuItem.setVisible(true);
+            preferencesMenuSeperator.setVisible(true);
+        } else {
+            isAdminLabel.setVisible(false);
+            this.isAdmin.setVisible(false);
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+            preferencesMenuItem.setVisible(false);
+            preferencesMenuSeperator.setVisible(false);
+        }
+    }
+
     @FXML
     void updateUser(ActionEvent event) {
 
@@ -64,12 +90,12 @@ public class UserSettingsCtrl implements Initializable{
         if (result.get() == ButtonType.OK){
 
             UserEntity updatedUser = DatabaseUserAuth.getInstance().updateUser(
-                    Session.getInstance().getAuthenticatedUser().getLoginName(),
-                    userName.getText(),
-                    pswd.getText(),
-                    forename.getText(),
-                    surname.getText(),
-                    userMail.getText());
+                Session.getInstance().getAuthenticatedUser().getLoginName(),
+                userName.getText(),
+                pswd.getText(),
+                forename.getText(),
+                surname.getText(),
+                userMail.getText());
 
             Session.getInstance().setAuthenticatedUser(updatedUser);
             populateInputs();
@@ -195,8 +221,7 @@ public class UserSettingsCtrl implements Initializable{
         try {
 
             String fxmlPath = "../view/preferences.fxml";
-            FXMLLoader loader = new FXMLLoader(
-                    UserSettingsCtrl.class.getResource(fxmlPath));
+            FXMLLoader loader = new FXMLLoader(UserSettingsCtrl.class.getResource(fxmlPath));
 
             Parent page = (Parent) loader.load();
             ((PreferencesCtrl) loader.getController()).setStage(stage);
@@ -208,35 +233,13 @@ public class UserSettingsCtrl implements Initializable{
         }
     }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
     @FXML
     void quitApplication(ActionEvent event) {
         stage.close();
-    }
-    
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        populateInputs();
-        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
-    }
-
-    private void setAdminMenusVisible(boolean isAdmin) {
-        if(isAdmin) {
-            isAdminLabel.setVisible(true);
-            this.isAdmin.setVisible(true);
-            newUserMenuItem.setVisible(true);
-            manageAllUsersMenuItem.setVisible(true);
-            userMenuSeperator.setVisible(true);
-            preferencesMenuItem.setVisible(true);
-            preferencesMenuSeperator.setVisible(true);
-        } else {
-            isAdminLabel.setVisible(false);
-            this.isAdmin.setVisible(false);
-            newUserMenuItem.setVisible(false);
-            manageAllUsersMenuItem.setVisible(false);
-            userMenuSeperator.setVisible(false);
-            preferencesMenuItem.setVisible(false);
-            preferencesMenuSeperator.setVisible(false);
-        }
     }
 
     private void populateInputs() {
@@ -245,11 +248,6 @@ public class UserSettingsCtrl implements Initializable{
         userMail.setText(Session.getInstance().getAuthenticatedUser().getEmail());
         userName.setText(Session.getInstance().getAuthenticatedUser().getLoginName());
         isAdmin.setSelected(Session.getInstance().getAuthenticatedUser().isAdmin());
-    }
-
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 
     private Parent replaceSceneContent(Parent page) throws Exception {

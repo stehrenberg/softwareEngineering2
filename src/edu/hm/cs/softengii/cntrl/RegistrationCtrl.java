@@ -53,6 +53,12 @@ public class RegistrationCtrl implements Initializable{
     @FXML private Button germanButton;
     @FXML private Button englishButton;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        clearErrorMessage();
+        loadAllTexts();
+    }
+
     @FXML
     void register(ActionEvent event) {
 
@@ -61,11 +67,11 @@ public class RegistrationCtrl implements Initializable{
         if (errors.isEmpty()) {
 
             UserEntity newUser = DatabaseUserAuth.getInstance().createNewAdminUser(
-                    userName.getText(),
-                    pswd.getText(),
-                    forename.getText(),
-                    surname.getText(),
-                    userMail.getText());
+                userName.getText(),
+                pswd.getText(),
+                forename.getText(),
+                surname.getText(),
+                userMail.getText());
 
             Session.getInstance().setAuthenticatedUser(newUser);
             gotoMainMenu();
@@ -86,13 +92,9 @@ public class RegistrationCtrl implements Initializable{
         loadAllTexts();
     }
 
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        clearErrorMessage();
-        loadAllTexts();
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
-
 
     private void clearErrorMessage() {
         errorMessageLeft.setText("");
@@ -194,12 +196,6 @@ public class RegistrationCtrl implements Initializable{
             }
         }
     }
-
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
 
     private Parent replaceSceneContent(Parent page) throws Exception {
 

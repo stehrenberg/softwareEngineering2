@@ -73,151 +73,6 @@ public class CompareSuppliersCtrl implements Initializable {
 	@FXML
 	private DatePicker endDatePicker;
 
-	@FXML
-	void gotoCreateNewUser(ActionEvent event) {
-
-		try {
-
-			String fxmlPath = "../view/createNewUser.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((CreateNewUserCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void gotoManageAllUsers(ActionEvent event) {
-
-		try {
-
-			String fxmlPath = "../view/manageAllUsers.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((ManageAllUsersCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void gotoCompareSuppliers(ActionEvent event) {
-
-		// Do nothing, we are already here
-	}
-
-	@FXML
-	void gotoAverageSuppliers(ActionEvent event) {
-
-		try {
-
-			String fxmlPath = "../view/averageSuppliers.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((AverageSuppliersCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void gotoUserSettings(ActionEvent event) {
-
-		try {
-
-			String fxmlPath = "../view/userSettings.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((UserSettingsCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void gotoAbout(ActionEvent event) {
-
-		try {
-
-			String fxmlPath = "../view/about.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((AboutCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void gotoLogin(ActionEvent event) {
-
-		Session.getInstance().close();
-
-		try {
-
-			String fxmlPath = "../view/login.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((LoginCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(LoginCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void gotoPreferences(ActionEvent event) {
-		try {
-
-			String fxmlPath = "../view/preferences.fxml";
-			FXMLLoader loader = new FXMLLoader(
-					CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((PreferencesCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(PreferencesCtrl.class.getName()).log(
-					Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void quitApplication(ActionEvent event) {
-		stage.close();
-	}
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -277,6 +132,137 @@ public class CompareSuppliersCtrl implements Initializable {
 			preferencesMenuSeperator.setVisible(false);
         }
     }
+
+	@FXML
+	void gotoCreateNewUser(ActionEvent event) {
+
+		try {
+
+			String fxmlPath = "../view/createNewUser.fxml";
+			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
+
+			Parent page = (Parent) loader.load();
+			((CreateNewUserCtrl) loader.getController()).setStage(stage);
+
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	@FXML
+	void gotoManageAllUsers(ActionEvent event) {
+
+		try {
+
+			String fxmlPath = "../view/manageAllUsers.fxml";
+			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
+
+			Parent page = (Parent) loader.load();
+			((ManageAllUsersCtrl) loader.getController()).setStage(stage);
+
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	@FXML
+	void gotoCompareSuppliers(ActionEvent event) {
+
+		// Do nothing, we are already here
+	}
+
+	@FXML
+	void gotoAverageSuppliers(ActionEvent event) {
+
+		try {
+
+			String fxmlPath = "../view/averageSuppliers.fxml";
+			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
+
+			Parent page = (Parent) loader.load();
+			((AverageSuppliersCtrl) loader.getController()).setStage(stage);
+
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	@FXML
+	void gotoUserSettings(ActionEvent event) {
+
+		try {
+
+			String fxmlPath = "../view/userSettings.fxml";
+			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
+
+			Parent page = (Parent) loader.load();
+			((UserSettingsCtrl) loader.getController()).setStage(stage);
+
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	@FXML
+	void gotoAbout(ActionEvent event) {
+
+		try {
+
+			String fxmlPath = "../view/about.fxml";
+			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
+
+			Parent page = (Parent) loader.load();
+			((AboutCtrl) loader.getController()).setStage(stage);
+
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	@FXML
+	void gotoLogin(ActionEvent event) {
+
+		Session.getInstance().close();
+
+		try {
+
+			String fxmlPath = "../view/login.fxml";
+			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
+
+			Parent page = (Parent) loader.load();
+			((LoginCtrl) loader.getController()).setStage(stage);
+
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(LoginCtrl.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	@FXML
+	void gotoPreferences(ActionEvent event) {
+		try {
+
+			String fxmlPath = "../view/preferences.fxml";
+			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
+
+			Parent page = (Parent) loader.load();
+			((PreferencesCtrl) loader.getController()).setStage(stage);
+
+			replaceSceneContent(page);
+		} catch (Exception ex) {
+			Logger.getLogger(PreferencesCtrl.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	@FXML
+	void quitApplication(ActionEvent event) {
+		stage.close();
+	}
 
 	@FXML
 	void supplier1ComboAction(ActionEvent event) {
@@ -343,9 +329,6 @@ public class CompareSuppliersCtrl implements Initializable {
 	}
 
 	private void updateChartForSupplier(Supplier supplier, XYChart.Series<String, Number> serie) {
-
-		// First remove all data from this serie
-//		serie.getData().clear();
 
 		if (supplier != null) {
 

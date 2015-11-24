@@ -56,6 +56,28 @@ public class CreateNewUserCtrl implements Initializable{
     @FXML private PasswordField pswd;
     @FXML private PasswordField pswdConfirm;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+        errorMessage.setText("");
+    }
+
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if(isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+            preferencesMenuItem.setVisible(true);
+            preferencesMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+            preferencesMenuItem.setVisible(false);
+            preferencesMenuSeperator.setVisible(false);
+        }
+    }
+
     @FXML
     void createUser(ActionEvent event) {
 
@@ -64,16 +86,16 @@ public class CreateNewUserCtrl implements Initializable{
         if(errors.isEmpty()) {
 
             UserEntity newUser = DatabaseUserAuth.getInstance().createNewUser(
-                    userName.getText(),
-                    pswd.getText(),
-                    forename.getText(),
-                    surname.getText(),
-                    userMail.getText());
+                userName.getText(),
+                pswd.getText(),
+                forename.getText(),
+                surname.getText(),
+                userMail.getText());
 
 
             errorMessage.setFill(Color.GREEN);
             errorMessage.setText(String.format("Created new user: %s %s (%s)",
-                    newUser.getForename(), newUser.getSurname(), newUser.getLoginName()));
+                newUser.getForename(), newUser.getSurname(), newUser.getLoginName()));
 
             clearAllInputs();
         }
@@ -213,27 +235,8 @@ public class CreateNewUserCtrl implements Initializable{
         stage.close();
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
-        errorMessage.setText("");
-    }
-
-
-    private void setAdminMenusVisible(boolean isAdmin) {
-        if(isAdmin) {
-            newUserMenuItem.setVisible(true);
-            manageAllUsersMenuItem.setVisible(true);
-            userMenuSeperator.setVisible(true);
-            preferencesMenuItem.setVisible(true);
-            preferencesMenuSeperator.setVisible(true);
-        } else {
-            newUserMenuItem.setVisible(false);
-            manageAllUsersMenuItem.setVisible(false);
-            userMenuSeperator.setVisible(false);
-            preferencesMenuItem.setVisible(false);
-            preferencesMenuSeperator.setVisible(false);
-        }
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     private void clearAllInputs() {
@@ -245,11 +248,10 @@ public class CreateNewUserCtrl implements Initializable{
         pswdConfirm.setText("");
     }
 
-
     private void clearErrorMessage() {
         errorMessage.setText("");
         errorMessage.setFill(Color.RED);
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             errors.clear();
         }
     }
@@ -258,15 +260,15 @@ public class CreateNewUserCtrl implements Initializable{
 
         clearErrorMessage();
 
-        if(forename.getText().isEmpty()) {
+        if (forename.getText().isEmpty()) {
             errors.add(LanguagePropertiesHelper.getInstance().getForenameError());
         }
 
-        if(surname.getText().isEmpty()) {
+        if (surname.getText().isEmpty()) {
             errors.add(LanguagePropertiesHelper.getInstance().getSurnameError());
         }
 
-        if(userMail.getText().isEmpty()) {
+        if (userMail.getText().isEmpty()) {
             errors.add(LanguagePropertiesHelper.getInstance().getUserMailEmptyError());
         } else {
 
@@ -278,13 +280,13 @@ public class CreateNewUserCtrl implements Initializable{
             }
         }
 
-        if(userName.getText().isEmpty()) {
+        if (userName.getText().isEmpty()) {
             errors.add(LanguagePropertiesHelper.getInstance().getUserNameError());
         } else if(DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()) != null) {
             errors.add(LanguagePropertiesHelper.getInstance().getUserNameExistsError());
         }
 
-        if(pswd.getText().isEmpty()){
+        if (pswd.getText().isEmpty()){
             errors.add(LanguagePropertiesHelper.getInstance().getPswdError());
         } else if (pswdConfirm.getText().isEmpty()) {
             errors.add(LanguagePropertiesHelper.getInstance().getPswdConfirmError());
@@ -292,7 +294,7 @@ public class CreateNewUserCtrl implements Initializable{
             errors.add(LanguagePropertiesHelper.getInstance().getPswdNoMatchError());
         }
 
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             populateErrorMessage();
         }
     }
@@ -304,10 +306,6 @@ public class CreateNewUserCtrl implements Initializable{
                 errorMessage.setText(errorMessage.getText() + error);
             }
         }
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 
     private Parent replaceSceneContent(Parent page) throws Exception {

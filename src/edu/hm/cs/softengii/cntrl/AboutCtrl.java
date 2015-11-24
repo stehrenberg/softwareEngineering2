@@ -32,6 +32,12 @@ public class AboutCtrl implements Initializable{
     @FXML private MenuItem preferencesMenuItem;
     @FXML private SeparatorMenuItem preferencesMenuSeperator;
 
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+    }
+
     @FXML
     void gotoCreateNewUser(ActionEvent event) {
 
@@ -164,10 +170,9 @@ public class AboutCtrl implements Initializable{
     void quitApplication(ActionEvent event) {
         stage.close();
     }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+    
+    public void setStage(Stage stage) {
+    	this.stage = stage;
     }
 
     private void setAdminMenusVisible(boolean isAdmin) {
@@ -186,15 +191,12 @@ public class AboutCtrl implements Initializable{
         }
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
     private Parent replaceSceneContent(Parent page) throws Exception {
 
         Scene scene = stage.getScene();
         if (scene == null) {
-            scene = new Scene(page, SettingsPropertiesHelper.getInstance().getWindowWidth(), SettingsPropertiesHelper.getInstance().getWindowHeight());
+            scene = new Scene(page, SettingsPropertiesHelper.getInstance().getWindowWidth(),
+                SettingsPropertiesHelper.getInstance().getWindowHeight());
 
             // TODO no CSS yet
             //scene.getStylesheets().add(App.class.getResource("demo.css").toExternalForm());

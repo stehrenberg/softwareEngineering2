@@ -57,6 +57,62 @@ public class ManageAllUsersCtrl implements Initializable{
     @FXML private Button updateButton;
     @FXML private Button deleteButton;
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        populateUsersList();
+        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+
+        usersListView.setCellFactory(new Callback<ListView<UserEntity>, ListCell<UserEntity>>() {
+
+            @Override
+            public ListCell<UserEntity> call(ListView<UserEntity> p) {
+
+                ListCell<UserEntity> cell = new ListCell<UserEntity>() {
+
+                    @Override
+                    protected void updateItem(UserEntity user, boolean empty) {
+                        super.updateItem(user, empty);
+
+                        if(empty) {
+                            setText(null);
+                            setGraphic(null);
+                        } else if (user != null) {
+                            setText(user.getForename() + " " + user.getSurname() + " (" + user.getLoginName() + ")");
+                        }
+                    }
+
+                };
+
+                return cell;
+            }
+        });
+
+        usersListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserEntity>() {
+            @Override
+            public void changed(ObservableValue<? extends UserEntity> observable, UserEntity oldValue, UserEntity newValue) {
+                selectedUser = newValue;
+                populateInputsFromSelection();
+            }
+        });
+    }
+
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if(isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+            preferencesMenuItem.setVisible(true);
+            preferencesMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+            preferencesMenuItem.setVisible(false);
+            preferencesMenuSeperator.setVisible(false);
+        }
+    }
+
     @FXML
     void deleteSelectedUser(ActionEvent event) {
 
@@ -70,9 +126,9 @@ public class ManageAllUsersCtrl implements Initializable{
             alert.setTitle("Delete User");
 
             alert.setHeaderText(String.format("Delete selected user:%n\t%s %s (%s)",
-                    selectedUser.getForename(),
-                    selectedUser.getSurname(),
-                    selectedUser.getLoginName()));
+                selectedUser.getForename(),
+                selectedUser.getSurname(),
+                selectedUser.getLoginName()));
 
             alert.setContentText("Do you want to delete the selected user?");
 
@@ -96,9 +152,9 @@ public class ManageAllUsersCtrl implements Initializable{
             alert.setTitle("Update User");
 
             alert.setHeaderText(String.format("Update selected user:%n\t%s %s (%s)",
-                    selectedUser.getForename(),
-                    selectedUser.getSurname(),
-                    selectedUser.getLoginName()));
+                selectedUser.getForename(),
+                selectedUser.getSurname(),
+                selectedUser.getLoginName()));
 
             alert.setContentText("Do you want to update the selected user?");
 
@@ -106,12 +162,12 @@ public class ManageAllUsersCtrl implements Initializable{
             if (result.get() == ButtonType.OK) {
 
                 UserEntity updatedUser = DatabaseUserAuth.getInstance().updateUser(
-                        selectedUser.getLoginName(),
-                        userName.getText(),
-                        pswd.getText(),
-                        forename.getText(),
-                        surname.getText(),
-                        userMail.getText());
+                    selectedUser.getLoginName(),
+                    userName.getText(),
+                    pswd.getText(),
+                    forename.getText(),
+                    surname.getText(),
+                    userMail.getText());
 
                 usersObservableList.remove(selectedUser);
                 usersObservableList.add(updatedUser);
@@ -255,60 +311,9 @@ public class ManageAllUsersCtrl implements Initializable{
         stage.close();
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
 
-        populateUsersList();
-        setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
-
-        usersListView.setCellFactory(new Callback<ListView<UserEntity>, ListCell<UserEntity>>() {
-
-            @Override
-            public ListCell<UserEntity> call(ListView<UserEntity> p) {
-
-                ListCell<UserEntity> cell = new ListCell<UserEntity>() {
-
-                    @Override
-                    protected void updateItem(UserEntity user, boolean empty) {
-                        super.updateItem(user, empty);
-
-                        if(empty) {
-                            setText(null);
-                            setGraphic(null);
-                        }else if (user != null) {
-                            setText(user.getForename() + " " + user.getSurname() + " (" + user.getLoginName() + ")");
-                        }
-                    }
-
-                };
-
-                return cell;
-            }
-        });
-
-        usersListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserEntity>() {
-            @Override
-            public void changed(ObservableValue<? extends UserEntity> observable, UserEntity oldValue, UserEntity newValue) {
-                selectedUser = newValue;
-                populateInputsFromSelection();
-            }
-        });
-    }
-
-    private void setAdminMenusVisible(boolean isAdmin) {
-        if(isAdmin) {
-            newUserMenuItem.setVisible(true);
-            manageAllUsersMenuItem.setVisible(true);
-            userMenuSeperator.setVisible(true);
-            preferencesMenuItem.setVisible(true);
-            preferencesMenuSeperator.setVisible(true);
-        } else {
-            newUserMenuItem.setVisible(false);
-            manageAllUsersMenuItem.setVisible(false);
-            userMenuSeperator.setVisible(false);
-            preferencesMenuItem.setVisible(false);
-            preferencesMenuSeperator.setVisible(false);
-        }
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     private void noUserSelectedWaring(){
@@ -336,11 +341,6 @@ public class ManageAllUsersCtrl implements Initializable{
             userMail.setText(usersListView.getSelectionModel().getSelectedItem().getEmail());
             userName.setText(usersListView.getSelectionModel().getSelectedItem().getLoginName());
         }
-    }
-
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 
     private Parent replaceSceneContent(Parent page) throws Exception {
