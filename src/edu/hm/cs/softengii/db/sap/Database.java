@@ -1,10 +1,10 @@
+/*
+Organisation: Apachen Pub Team
+Project: SupplyAlyticsApp
+*/
 package edu.hm.cs.softengii.db.sap;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,24 +14,37 @@ import javax.crypto.spec.SecretKeySpec;
 
 import edu.hm.cs.softengii.utils.SettingsPropertiesHelper;
 
+/**
+ * Represents the connection to NoKlooBoutIT's SAP database.
+ */
 public class Database implements IDatabase {
 
     private static Database instance = null;
 
-    /** Database URL */
+    /**
+     * Database URL
+     */
     private final static String DB_URL = SettingsPropertiesHelper.getInstance().getSapDbUrl();
 
-    /**Credentials for connection to the database*/
+    /**
+     * Credentials for connection to the database
+     */
     private final static String USER = SettingsPropertiesHelper.getInstance().getSapDbUser();
     private final static String PASSWORD = SettingsPropertiesHelper.getInstance().getSapDbPswd();
 
-    /**Connection to the database.*/
+    /**
+     * Connection to the database.
+     */
     private Connection connection;
 
+    /**
+     * Contains the supplier along with their deliveries during runtime.
+     */
     private List<Supplier> supplierData = new ArrayList<>();
-    private List<Supplier> suppliers;
 
-    /** Loading supplier data upon creation of database instance. */
+    /**
+     * Loading supplier data upon creation of database instance.
+     */
     private Database() {
         Runnable dataLoader = () -> loadSupplierData();
         new Thread(dataLoader).start();
@@ -56,16 +69,11 @@ public class Database implements IDatabase {
     @Override
     public void establishConnection() {
         try {
-            if(connection == null || connection.isClosed()) {
-                connection = DriverManager.getConnection(DB_URL, USER, "2N682Gsa");//decryptPassword(PASSWORD));
-
-                System.out.println("connection esstablished");
-                System.out.println("url: " + DB_URL);
-                System.out.println("user: " + USER);
-                System.out.println("pswd: " + PASSWORD);
+            if (connection == null || connection.isClosed()) {
+                connection = DriverManager.getConnection(DB_URL, USER, /*"2N682Gsa");//*/decryptPassword(PASSWORD));
             }
         } catch (Exception e) {
-        	ErrorMessage.show(e);
+            ErrorMessage.show(e);
         }
     }
 
@@ -74,7 +82,7 @@ public class Database implements IDatabase {
         try {
             connection.close();
         } catch (Exception e) {
-        	ErrorMessage.show(e);
+            ErrorMessage.show(e);
         }
     }
 
@@ -85,18 +93,17 @@ public class Database implements IDatabase {
         List<String> suppliers = new ArrayList<>();
 
         try {
-
             String query = "SELECT * FROM lfa1";
 
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
 
-            while(set.next()) {
+            while (set.next()) {
                 suppliers.add(set.getString("name1"));
             }
 
         } catch (Exception e) {
-        	ErrorMessage.show(e);
+            ErrorMessage.show(e);
         }
 
         closeConnection();
@@ -115,47 +122,32 @@ public class Database implements IDatabase {
         List<Supplier> suppliers = new ArrayList<>();
 
         try {
+            ResultSet set = getSupplierDataFromDB();
 
-            String query = "SELECT DISTINCT "
-                    + "eket.EBELN, SLFDT, BUDAT, lfa1.LIFNR, NAME1, DATEDIFF(BUDAT, SLFDT) AS DIFF "
-                    + "FROM eket, ekbe, ekko, lfa1 "
-                    + "WHERE ekko.EBELN = ekbe.EBELN "
-                    + "AND eket.ebeln = ekbe.ebeln "
-                    + "AND lfa1.lifnr = ekko.lifnr "
-                    + "AND VGABE = 1";
+            while (set.next()) {
 
-            Statement statement = connection.createStatement();
-            ResultSet set = statement.executeQuery(query);
+                Supplier supplier = findSupplierInList(suppliers, set.getString("lfa1.LIFNR"));
 
-            while(set.next()) {
+                if (supplier == null) {
+                    supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
+                    suppliers.add(supplier);
+                }
 
-	            Supplier supplier = findSupplierInList(suppliers, set.getString("lfa1.LIFNR"));
-	            if (supplier == null) {
-	                supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
-	                suppliers.add(supplier);
-	            }
+                // generate delivery entry
+                Date actualDate = set.getDate("BUDAT");
+                Date promisedDate = set.getDate("SLFDT");
+                boolean isRelevantDelivery = actualDate != null && promisedDate != null;
 
-	            Date actualDate = set.getDate("BUDAT");
-	            Date promisedDate = set.getDate("SLFDT");
-	            String delID = set.getString("eket.EBELN");
-
-	            if (actualDate != null && promisedDate != null) {
-		            LocalDate actual = actualDate.toLocalDate();
-		            LocalDate promised = promisedDate.toLocalDate();
-
-		            Delivery delivery = new Delivery(delID, promised, actual);
-		            delivery.setDelay(set.getInt("DIFF"));
-		            supplier.getDeliveries().add(delivery);
-	            }
+                if (isRelevantDelivery) {
+                    Delivery delivery = generateDelivery(set, actualDate, promisedDate);
+                    supplier.getDeliveries().add(delivery);
+                }
             }
-
         } catch (Exception e) {
-        	ErrorMessage.show(e);
+            ErrorMessage.show(e);
         }
 
-        this.suppliers = suppliers;
         supplierData = suppliers;
-
         closeConnection();
 
         // assign class based on suppliers' total delivery count
@@ -163,16 +155,42 @@ public class Database implements IDatabase {
             int deliveryCount = supplier.getDeliveries().size();
             SupplierClass suppClass = SupplierClass.NORMAL;
 
-            if(deliveryCount < 3)
+            if (deliveryCount < SupplierClass.NORMAL.getDeliveryCountLowerBorder()) {
                 suppClass = SupplierClass.ONE_OFF;
-            else if(deliveryCount > 19)
+            } else if (deliveryCount > SupplierClass.NORMAL.getDeliveryCountUpperBorder()) {
                 suppClass = SupplierClass.TOP;
+            }
             supplier.setSupplierClass(suppClass);
         });
     }
 
+    /**
+     * Loads all data from the database that is relevant for the analytics application.
+     * @return The result set as received from the database.
+     * @throws SQLException
+     */
+    private ResultSet getSupplierDataFromDB() throws SQLException {
+
+        String query = "SELECT DISTINCT "
+            + "eket.EBELN, SLFDT, BUDAT, lfa1.LIFNR, NAME1, DATEDIFF(BUDAT, SLFDT) AS DIFF "
+            + "FROM eket, ekbe, ekko, lfa1 "
+            + "WHERE ekko.EBELN = ekbe.EBELN "
+            + "AND eket.ebeln = ekbe.ebeln "
+            + "AND lfa1.lifnr = ekko.lifnr "
+            + "AND VGABE = 1";
+
+        Statement statement = connection.createStatement();
+        return statement.executeQuery(query);
+    }
+
+    /**
+     * Retrieves a supplier from the suppliers' list by his ID.
+     * @param suppliers The list containing all suppliers up to now as retrieved from the db.
+     * @param id Suppliers' id as in SAP db --> lfa1.lifnr
+     * @return The desired supplier.
+     */
     private static Supplier findSupplierInList(List<Supplier> suppliers, String id) {
-        for (Supplier supplier: suppliers) {
+        for (Supplier supplier : suppliers) {
             if (supplier.getId().equals(id)) {
                 return supplier;
             }
@@ -181,8 +199,35 @@ public class Database implements IDatabase {
         return null;
     }
 
+    /**
+     * Generates a new delivery with the given data from the database.
+     * @param set The result set from the database query.
+     * @param actualDate The actual goods receipt date for a delivery.
+     * @param promisedDate The delivery date as initially promised by the supplier.
+     * @return A delivery object.
+     * @throws SQLException
+     */
+    private Delivery generateDelivery(ResultSet set, Date actualDate, Date promisedDate) throws SQLException {
+
+        String deliveryID = set.getString("eket.EBELN");
+        LocalDate actual = actualDate.toLocalDate();
+        LocalDate promised = promisedDate.toLocalDate();
+
+        Delivery delivery = new Delivery(deliveryID, promised, actual);
+
+        delivery.setDelay(set.getInt("DIFF"));
+
+        return delivery;
+    }
+
+    /**
+     * Decrypts the password for the SAP database connection.
+     * @param cryptedPassword The encrypted password retrieved from the application's settings
+     * @return The password.
+     */
     private String decryptPassword(final String cryptedPassword) {
-        byte[] keyBytes = new byte[] { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31,37, 41, 43, 47, 53 };
+
+        byte[] keyBytes = new byte[]{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53};
         SecretKeySpec key = new SecretKeySpec(keyBytes, "AES");
 
         String password = "";
@@ -194,8 +239,9 @@ public class Database implements IDatabase {
             byte[] decryptedPwd = cipher.doFinal(cryptedPassword.getBytes());
             password = new String(decryptedPwd);
         } catch (Exception e) {
-            //TODO Sinnvollen Catchblock schreiben
+            throw new RuntimeException("Could not decypher password. Could not load data.");
         }
+
         return password;
     }
 }
