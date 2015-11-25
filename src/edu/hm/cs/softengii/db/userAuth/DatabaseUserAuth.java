@@ -1,3 +1,9 @@
+/*
+Organisation: Apachen Pub Team
+Project: SupplyAlyticsApp
+Author: Simon
+Date: 20-10-2015
+*/
 package edu.hm.cs.softengii.db.userAuth;
 
 import edu.hm.cs.softengii.utils.PasswordGen;
@@ -7,26 +13,44 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * Wrapper class to manage storing data in the database
+ * @author Simon
+ */
 public class DatabaseUserAuth implements IDatabaseUserAuth {
 
+	// Fields ---------------------------------------------------------------------------
+	
+	/** Singleton instance of this class */
     private static DatabaseUserAuth instance = null;
 
-    //Database URL
+    /** Database URL */
     private final static String DB_URL = SettingsPropertiesHelper.getInstance().getUserAuthDbUrl();
 
-    //Database credentials
+    /** Database username */
     private final static String USER = SettingsPropertiesHelper.getInstance().getUserAuthDbUser();
+    
+    /** Database password */
     private final static String PASSWORD = SettingsPropertiesHelper.getInstance().getUserAuthDbPswd();
 
-    /**Connection to the database.*/
+    /** Connection to the database */
     private Connection connection;
 
-    /**Empty constructor. Not needed here.*/
+    // Ctor -----------------------------------------------------------------------------
+    
+    /**
+     * Create a new instance
+     */
     private DatabaseUserAuth() {
-        establishConnection();
+        this.establishConnection();
     }
 
-
+    // Static methods -------------------------------------------------------------------
+    
+    /**
+     * Get the singleton instance of this class
+     * @return Instance of this class
+     */
     public static DatabaseUserAuth getInstance() {
         if (instance == null) {
             instance = new DatabaseUserAuth();
@@ -34,36 +58,49 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
         return instance;
     }
 
+    // Public methods -------------------------------------------------------------------
 
+    /**
+     * Establish a connection to the database
+     */
     @Override
     public void establishConnection() {
+    	
         try {
-            if(connection == null || connection.isClosed()) {
-                connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+            if (this.connection == null || this.connection.isClosed()) {
+                this.connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Close connection to the database
+     */
     @Override
     public void closeConnection() {
+    	
         try {
-            connection.close();
+            this.connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Get all users from the database
+     */
     @Override
     public ArrayList<UserEntity> getAllUsers() {
 
-        establishConnection();
+        this.establishConnection();
+        
         ArrayList<String> userLogins = new ArrayList<>();
         ArrayList<UserEntity> users = new ArrayList<>();
 
         try {
-            Statement statement = connection.createStatement();
+            Statement statement = this.connection.createStatement();
             ResultSet set = statement.executeQuery("SELECT * FROM Users");
 
             while(set.next()) {
@@ -74,7 +111,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
             e.printStackTrace();
         }
 
-        closeConnection();
+        this.closeConnection();
 
         for (String login : userLogins) {
             users.add(getUserFromLoginName(login));
@@ -83,15 +120,22 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
         return users;
     }
 
+    /**
+     * Check if there are users in the database
+     */
     @Override
     public boolean isEmpty() {
-        return getAllUsers().isEmpty();
+        return this.getAllUsers().isEmpty();
     }
 
+    /**
+     * Get a specific user by its username
+     */
     @Override
     public UserEntity getUserFromLoginName(String loginName) {
 
-        establishConnection();
+        this.establishConnection();
+        
         UserEntity tmpUser = null;
 
         try {
@@ -100,7 +144,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
             ResultSet set = statement.executeQuery(query);
 
             while(set.next()) {
-                if(loginName.equals(set.getString("loginName"))) {
+                if (loginName.equals(set.getString("loginName"))) {
                     String forenameTmp = set.getString("forename");
                     String surnameTmp = set.getString("surname");
                     String loginNameTmp = set.getString("loginName");
@@ -114,16 +158,19 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
             e.printStackTrace();
         }
 
-        closeConnection();
+        this.closeConnection();
 
         return tmpUser;
     }
 
-
+    /**
+     * Check if the login with this credentials is available
+     */
     @Override
     public boolean isLoginCorrect(String loginName, String password) {
 
-        establishConnection();
+        this.establishConnection();
+        
         ArrayList<String> users = new ArrayList<>();
 
         String generatedPass = "";
@@ -137,77 +184,48 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
 
 
         try {
-
             String query = String.format("SELECT * FROM Users WHERE loginName = '%s' AND pswd = '%s'",
                     loginName, generatedPass);
 
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
 
-            while(set.next()) {
+            while (set.next()) {
                 users.add(set.getString("loginName"));
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        closeConnection();
+        this.closeConnection();
 
         return (users.size() == 1);
     }
 
+    /**
+     * Create a new admin user
+     */
     @Override
-    public UserEntity createNewAdminUser(String loginName, String password, String forename, String surname, String email) {
-        return createUser(loginName, password, forename, surname, email, true);
+    public UserEntity createNewAdminUser(String loginName, String password,
+    		String forename, String surname, String email) {
+    	
+        return this.createUser(loginName, password, forename, surname, email, true);
     }
 
+    /**
+     * Create a new normal user
+     */
     @Override
-    public UserEntity createNewUser(String loginName, String password, String forename, String surname, String email) {
+    public UserEntity createNewUser(String loginName, String password,
+    		String forename, String surname, String email) {
+    	
         return createUser(loginName, password, forename, surname, email, false);
     }
 
-    private UserEntity createUser(String loginName, String password, String forename, String surname, String email, boolean isAdmin) {
-
-        establishConnection();
-
-        String generatedPswd = "";
-        UserEntity newUser = null;
-        try {
-
-            generatedPswd = PasswordGen.generatePassword(password);
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        try {
-
-            int admin = 0;
-            if(isAdmin){
-                admin = 1;
-            }
-
-            String query = String.format("INSERT INTO Users (forename, surname, loginName, pswd, email, isAdmin)" +
-                            "VALUES('%s','%s', '%s', '%s', '%s', '%d')",
-                    forename, surname, loginName, generatedPswd, email, admin);
-
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(query);
-
-            newUser = new UserEntity(isAdmin, forename, surname, loginName, email);
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        closeConnection();
-
-        return newUser;
-    }
-
+    /**
+     * Delete the user with this login name
+     * @param loginName Users login name
+     */
     @Override
     public void deleteUserFromLoginName(String loginName) {
         establishConnection();
@@ -222,10 +240,15 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
         closeConnection();
     }
 
-
+    /**
+     * Update the users properties
+     */
     @Override
-    public UserEntity updateUser(String loginName, String newLoginName, String password, String forename, String surname, String email) {
-        establishConnection();
+    public UserEntity updateUser(String loginName, String newLoginName, String password,
+    		String forename, String surname, String email) {
+    	
+        this.establishConnection();
+        
         String generatedPswd = "";
         UserEntity newUser = null;
 
@@ -257,7 +280,59 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        closeConnection();
-        return getUserFromLoginName(newLoginName);
+        
+        this.closeConnection();
+        
+        return this.getUserFromLoginName(newLoginName);
+    }
+    
+    // Private methods ------------------------------------------------------------------
+    
+    /**
+     * Create a new user in the database
+     * @param loginName USers login name
+     * @param password Users password
+     * @param forename Users forename
+     * @param surname Users surname
+     * @param email Users mail address
+     * @param isAdmin User is admin
+     * @return User entity object
+     */
+    private UserEntity createUser(String loginName, String password,
+    		String forename, String surname, String email, boolean isAdmin) {
+
+        this.establishConnection();
+
+        String generatedPswd = "";
+        UserEntity newUser = null;
+        
+        try {
+            generatedPswd = PasswordGen.generatePassword(password);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            int admin = 0;
+            if (isAdmin){
+                admin = 1;
+            }
+
+            String query = String.format("INSERT INTO Users (forename, surname, loginName, pswd, email, isAdmin)" +
+                            "VALUES('%s','%s', '%s', '%s', '%s', '%d')",
+                    forename, surname, loginName, generatedPswd, email, admin);
+
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
+
+            newUser = new UserEntity(isAdmin, forename, surname, loginName, email);
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        this.closeConnection();
+
+        return newUser;
     }
 }

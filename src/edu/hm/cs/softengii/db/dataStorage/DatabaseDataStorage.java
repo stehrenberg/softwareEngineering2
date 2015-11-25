@@ -13,7 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 /**
- * Class to manage storing data in the database
+ * Wrapper class to manage storing data in the database
  * @author Kevin Beck
  */
 public class DatabaseDataStorage implements IDatabaseDataStorage {
@@ -68,7 +68,7 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
     public void establishConnection() {
     	
         try {
-            if(this.connection == null || this.connection.isClosed()) {
+            if (this.connection == null || this.connection.isClosed()) {
                 this.connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
             }
         } catch (SQLException e) {

@@ -91,23 +91,44 @@ public class ScoreThresholdEntity {
         return this.lateMax;
     }
 
+    // Setter ---------------------------------------------------------------------------
 
+    /**
+     * Set the score value in percent of this threshold
+     * @param scoreValue Score value in percent
+     */
     public void setScoreValue(int scoreValue) {
         this.scoreValue = scoreValue;
     }
 
+    /**
+     * Set the minimum value for too early deliveries
+     * @param earlyMin Minimum value for too early deliveries
+     */
     public void setEarlyMin(int earlyMin) {
         this.earlyMin = earlyMin;
     }
 
+    /**
+     * Set the maximum value for too early deliveries
+     * @param earlyMax Maximum value for too early deliveries
+     */
     public void setEarlyMax(int earlyMax) {
         this.earlyMax = earlyMax;
     }
 
+    /**
+     * Set the minimum value for too late deliveries
+     * @param lateMin Minimum value for too late deliveries
+     */
     public void setLateMin(int lateMin) {
         this.lateMin = lateMin;
     }
 
+    /**
+     * Set the maximum value for too late deliveries
+     * @param lateMax Maximum value for too late deliveries
+     */
     public void setLateMax(int lateMax) {
         this.lateMax = lateMax;
     }
