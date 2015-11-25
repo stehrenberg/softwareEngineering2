@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class DatabaseUserAuth implements IDatabaseUserAuth {
 
 	// Fields ---------------------------------------------------------------------------
-	
+
 	/** Singleton instance of this class */
     private static DatabaseUserAuth instance = null;
 
@@ -29,7 +29,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
 
     /** Database username */
     private final static String USER = SettingsPropertiesHelper.getInstance().getUserAuthDbUser();
-    
+
     /** Database password */
     private final static String PASSWORD = SettingsPropertiesHelper.getInstance().getUserAuthDbPswd();
 
@@ -37,7 +37,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     private Connection connection;
 
     // Ctor -----------------------------------------------------------------------------
-    
+
     /**
      * Create a new instance
      */
@@ -46,7 +46,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     }
 
     // Static methods -------------------------------------------------------------------
-    
+
     /**
      * Get the singleton instance of this class
      * @return Instance of this class
@@ -65,7 +65,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
      */
     @Override
     public void establishConnection() {
-    	
+
         try {
             if (this.connection == null || this.connection.isClosed()) {
                 this.connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
@@ -80,7 +80,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
      */
     @Override
     public void closeConnection() {
-    	
+
         try {
             this.connection.close();
         } catch (SQLException e) {
@@ -95,7 +95,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     public ArrayList<UserEntity> getAllUsers() {
 
         this.establishConnection();
-        
+
         ArrayList<String> userLogins = new ArrayList<>();
         ArrayList<UserEntity> users = new ArrayList<>();
 
@@ -135,7 +135,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     public UserEntity getUserFromLoginName(String loginName) {
 
         this.establishConnection();
-        
+
         UserEntity tmpUser = null;
 
         try {
@@ -170,17 +170,10 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     public boolean isLoginCorrect(String loginName, String password) {
 
         this.establishConnection();
-        
+
         ArrayList<String> users = new ArrayList<>();
 
-        String generatedPass = "";
-        try {
-
-            generatedPass = PasswordGen.generatePassword(password);
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+        String generatedPass = PasswordGen.generatePassword(password);
 
 
         try {
@@ -208,7 +201,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     @Override
     public UserEntity createNewAdminUser(String loginName, String password,
     		String forename, String surname, String email) {
-    	
+
         return this.createUser(loginName, password, forename, surname, email, true);
     }
 
@@ -218,7 +211,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     @Override
     public UserEntity createNewUser(String loginName, String password,
     		String forename, String surname, String email) {
-    	
+
         return createUser(loginName, password, forename, surname, email, false);
     }
 
@@ -246,18 +239,14 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     @Override
     public UserEntity updateUser(String loginName, String newLoginName, String password,
     		String forename, String surname, String email) {
-    	
+
         this.establishConnection();
-        
+
         String generatedPswd = "";
         UserEntity newUser = null;
 
         if (!password.equals("")){
-            try {
-                generatedPswd = PasswordGen.generatePassword(password);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
+            generatedPswd = PasswordGen.generatePassword(password);
         }
 
         try {
@@ -280,14 +269,14 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         this.closeConnection();
-        
+
         return this.getUserFromLoginName(newLoginName);
     }
-    
+
     // Private methods ------------------------------------------------------------------
-    
+
     /**
      * Create a new user in the database
      * @param loginName USers login name
@@ -303,14 +292,8 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
 
         this.establishConnection();
 
-        String generatedPswd = "";
         UserEntity newUser = null;
-        
-        try {
-            generatedPswd = PasswordGen.generatePassword(password);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
+        String generatedPswd = PasswordGen.generatePassword(password);
 
         try {
             int admin = 0;
@@ -326,7 +309,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
             statement.executeUpdate(query);
 
             newUser = new UserEntity(isAdmin, forename, surname, loginName, email);
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
