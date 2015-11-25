@@ -124,7 +124,6 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
 		return thresholds;
     }
 
-
     /**
      * Get all default score thresholds from the database
      */
