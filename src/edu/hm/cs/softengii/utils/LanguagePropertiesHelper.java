@@ -73,6 +73,8 @@ public class LanguagePropertiesHelper {
         return properties.getProperty(language + ".userMailLabel");
     }
 
+    public String getPswdLabel() { return properties.getProperty(language + ".pswdLabel"); }
+
     public String getUserNameLabel() {
         return properties.getProperty(language + ".userNameLabel");
     }
