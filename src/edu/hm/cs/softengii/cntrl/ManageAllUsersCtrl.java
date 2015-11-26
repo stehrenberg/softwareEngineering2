@@ -2,6 +2,7 @@ package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
 import edu.hm.cs.softengii.db.userAuth.UserEntity;
+import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -9,21 +10,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * JavaFX Controller for 'manageAllUsers.fxml'.
@@ -34,7 +29,8 @@ import java.util.logging.Logger;
  */
 public class ManageAllUsersCtrl implements Initializable{
 
-    private Stage stage;
+    private UserEntity selectedUser;
+    private ObservableList<UserEntity> usersObservableList;
 
     @FXML private AnchorPane rootPane;
 
@@ -62,9 +58,6 @@ public class ManageAllUsersCtrl implements Initializable{
     @FXML private Button updateButton;
     @FXML private Button deleteButton;
 
-    private UserEntity selectedUser;
-    private ObservableList<UserEntity> usersObservableList;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -79,7 +72,7 @@ public class ManageAllUsersCtrl implements Initializable{
                 ListCell<UserEntity> cell = new ListCell<UserEntity>() {
 
                     @Override
-                    protected void updateItem(UserEntity user, boolean empty) {
+                    public void updateItem(UserEntity user, boolean empty) {
                         super.updateItem(user, empty);
 
                         if (empty) {
@@ -105,26 +98,6 @@ public class ManageAllUsersCtrl implements Initializable{
         });
     }
 
-	/**
-	 * Decide whether admin menu items should be shown.
-	 * @param isAdmin
-	 */
-    private void setAdminMenusVisible(boolean isAdmin) {
-        if (isAdmin) {
-            newUserMenuItem.setVisible(true);
-            manageAllUsersMenuItem.setVisible(true);
-            userMenuSeperator.setVisible(true);
-            preferencesMenuItem.setVisible(true);
-            preferencesMenuSeperator.setVisible(true);
-        } else {
-            newUserMenuItem.setVisible(false);
-            manageAllUsersMenuItem.setVisible(false);
-            userMenuSeperator.setVisible(false);
-            preferencesMenuItem.setVisible(false);
-            preferencesMenuSeperator.setVisible(false);
-        }
-    }
-
     @FXML
     void deleteSelectedUser(ActionEvent event) {
 
@@ -138,9 +111,9 @@ public class ManageAllUsersCtrl implements Initializable{
             alert.setTitle("Delete User");
 
             alert.setHeaderText(String.format("Delete selected user:%n\t%s %s (%s)",
-                selectedUser.getForename(),
-                selectedUser.getSurname(),
-                selectedUser.getLoginName()));
+                    selectedUser.getForename(),
+                    selectedUser.getSurname(),
+                    selectedUser.getLoginName()));
 
             alert.setContentText("Do you want to delete the selected user?");
 
@@ -165,9 +138,9 @@ public class ManageAllUsersCtrl implements Initializable{
             alert.setTitle("Update User");
 
             alert.setHeaderText(String.format("Update selected user:%n\t%s %s (%s)",
-                selectedUser.getForename(),
-                selectedUser.getSurname(),
-                selectedUser.getLoginName()));
+                    selectedUser.getForename(),
+                    selectedUser.getSurname(),
+                    selectedUser.getLoginName()));
 
             alert.setContentText("Do you want to update the selected user?");
 
@@ -190,142 +163,68 @@ public class ManageAllUsersCtrl implements Initializable{
     }
 
     @FXML
-    void gotoCreateNewUser(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/createNewUser.fxml";
-            FXMLLoader loader = new FXMLLoader(ManageAllUsersCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((CreateNewUserCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(ManageAllUsersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void gotoCreateNewUser() {
+       MenuHelper.getInstance().gotoCreateNewUser();
     }
 
     @FXML
-    void gotoManageAllUsers(ActionEvent event) {
-
+    public void gotoManageAllUsers() {
         //Do nothing, we are already here
     }
 
     @FXML
-    void gotoCompareSuppliers(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/compareSuppliers.fxml";
-            FXMLLoader loader = new FXMLLoader(ManageAllUsersCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((CompareSuppliersCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(ManageAllUsersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void gotoCompareSuppliers() {
+        MenuHelper.getInstance().gotoCompareSuppliers();
     }
 
     @FXML
-    void gotoAverageSuppliers(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/averageSuppliers.fxml";
-            FXMLLoader loader = new FXMLLoader(ManageAllUsersCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((AverageSuppliersCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(ManageAllUsersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    public void gotoAverageSuppliers() {
+        MenuHelper.getInstance().gotoAverageSuppliers();
     }
 
     @FXML
-    void gotoUserSettings(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/userSettings.fxml";
-            FXMLLoader loader = new FXMLLoader(ManageAllUsersCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((UserSettingsCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(ManageAllUsersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void gotoUserSettings() {
+        MenuHelper.getInstance().gotoUserSettings();
     }
 
     @FXML
-    void gotoAbout(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/about.fxml";
-            FXMLLoader loader = new FXMLLoader(ManageAllUsersCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((AboutCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(ManageAllUsersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void gotoAbout() {
+        MenuHelper.getInstance().gotoAbout();
     }
 
     @FXML
-    void gotoLogin(ActionEvent event) {
-
-        Session.getInstance().close();
-
-        try {
-
-            String fxmlPath = "../view/login.fxml";
-            FXMLLoader loader = new FXMLLoader(UserSettingsCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((LoginCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(UserSettingsCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void gotoLogin() {
+        MenuHelper.getInstance().gotoLogin();
     }
 
     @FXML
-    void gotoPreferences(ActionEvent event) {
-        try {
-
-            String fxmlPath = "../view/preferences.fxml";
-            FXMLLoader loader = new FXMLLoader(
-                    ManageAllUsersCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((PreferencesCtrl) loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(ManageAllUsersCtrl.class.getName()).log(
-                    Level.SEVERE, null, ex);
-        }
+    public void gotoPreferences() {
+        MenuHelper.getInstance().gotoPreferences();
     }
 
     @FXML
-    void quitApplication(ActionEvent event) {
-        stage.close();
+    public void quitApplication() {
+        MenuHelper.getInstance().quitApplication();
     }
 
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    /**
+     * Decide whether admin menu items should be shown.
+     * @param isAdmin
+     */
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if (isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+            preferencesMenuItem.setVisible(true);
+            preferencesMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+            preferencesMenuItem.setVisible(false);
+            preferencesMenuSeperator.setVisible(false);
+        }
     }
 
     private void noUserSelectedWaring(){
@@ -353,22 +252,5 @@ public class ManageAllUsersCtrl implements Initializable{
             userMail.setText(usersListView.getSelectionModel().getSelectedItem().getEmail());
             userName.setText(usersListView.getSelectionModel().getSelectedItem().getLoginName());
         }
-    }
-
-    private Parent replaceSceneContent(Parent page) throws Exception {
-
-        Scene scene = stage.getScene();
-        if (scene == null) {
-            scene = new Scene(page, 640, 480);
-
-            // TODO no CSS yet
-            //scene.getStylesheets().add(App.class.getResource("demo.css").toExternalForm());
-
-            stage.setScene(scene);
-        } else {
-            stage.getScene().setRoot(page);
-        }
-        stage.sizeToScene();
-        return page;
     }
 }
