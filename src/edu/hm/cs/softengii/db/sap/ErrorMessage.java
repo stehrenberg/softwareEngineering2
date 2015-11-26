@@ -1,3 +1,8 @@
+/*
+Organisation: Apachen Pub Team
+Project: SupplyAlyticsApp
+*/
+
 package edu.hm.cs.softengii.db.sap;
 
 import java.io.PrintWriter;
@@ -14,9 +19,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 
+/**
+ * Provides an Error Message Popup for the application.
+ */
 public class ErrorMessage {
 
-    public static void show(Exception e) {
+    /**
+     * Shows a popup with the respective error details within the appication.
+     * @param exception The thrown exception
+     */
+    public static void show(Exception exception) {
 
     	Platform.runLater(() ->
     	{
@@ -27,7 +39,7 @@ public class ErrorMessage {
 
 	    	Label label = new Label("The exception stacktrace was:");
 
-	    	TextArea textArea = new TextArea(convertExceptionToString(e));
+	    	TextArea textArea = new TextArea(convertExceptionToString(exception));
 	    	textArea.setEditable(false);
 
 	    	textArea.setMaxWidth(Double.MAX_VALUE);
