@@ -1,3 +1,8 @@
+/*
+Organisation: Apachen Pub Team
+Project: SupplyAlyticsApp
+*/
+
 package edu.hm.cs.softengii.db.sap;
 
 import java.time.LocalDate;
@@ -5,12 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Demo database object with demo data to use when you wanna test it in an offline environment
- * @author Kevin
+ * Demo database containing mock data for testing purposes.
  */
 public class DemoDatabase implements IDatabase {
 
     private static DemoDatabase instance = null;
+    /** Contains mock supplier data. */
+    List<Supplier> suppliers;
 
     public static DemoDatabase getInstance() {
         if (instance == null) {
@@ -21,12 +27,12 @@ public class DemoDatabase implements IDatabase {
 
     @Override
     public void establishConnection() {
-        // do nothing because that's just a demo database with offline data
+        suppliers = new ArrayList<>();
     }
 
     @Override
     public void closeConnection() {
-    	// do nothing because that's just a demo database with offline data
+    	suppliers.clear();
     }
 
     @Override
@@ -43,7 +49,6 @@ public class DemoDatabase implements IDatabase {
 
     @Override
     public List<Supplier> getSupplierData() {
-    	List<Supplier> suppliers = new ArrayList<>();
 
     	// Supplier 1
     	Supplier supplier1 = new Supplier("001", "MagicStuff GmbH");
