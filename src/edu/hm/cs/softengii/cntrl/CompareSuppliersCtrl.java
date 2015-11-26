@@ -4,23 +4,19 @@ import edu.hm.cs.softengii.db.sap.Database;
 import edu.hm.cs.softengii.db.sap.Supplier;
 import edu.hm.cs.softengii.utils.DeliveryRangeCalculator;
 import edu.hm.cs.softengii.utils.DeliveryRangeCalculator.Range;
+import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.net.URL;
@@ -28,8 +24,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * JavaFX Controller for 'compareSuppliers.fxml'.
@@ -40,38 +34,28 @@ import java.util.logging.Logger;
  */
 public class CompareSuppliersCtrl implements Initializable {
 
-	private Stage stage;
+    private XYChart.Series<String, Number> serie1 = new XYChart.Series<>();
+    private XYChart.Series<String, Number> serie2 = new XYChart.Series<>();
+    private XYChart.Series<String, Number> serie3 = new XYChart.Series<>();
+    private XYChart.Series<String, Number> serie4 = new XYChart.Series<>();
+    private DeliveryRangeCalculator rangeCalculator = new DeliveryRangeCalculator();
 
     @FXML private MenuItem newUserMenuItem;
     @FXML private MenuItem manageAllUsersMenuItem;
+
     @FXML private SeparatorMenuItem userMenuSeperator;
+    @FXML private MenuItem preferencesMenuItem;
 
-	@FXML private MenuItem preferencesMenuItem;
     @FXML private SeparatorMenuItem preferencesMenuSeperator;
-
-	@FXML private BarChart<String, Number> compareChart;
-
-	@FXML private ComboBox<Supplier> supplier1Combo;
-
-	@FXML private ComboBox<Supplier> supplier2Combo;
-
-	@FXML private ComboBox<Supplier> supplier3Combo;
+    @FXML private BarChart<String, Number> compareChart;
+    @FXML private ComboBox<Supplier> supplier1Combo;
+    @FXML private ComboBox<Supplier> supplier2Combo;
+    @FXML private ComboBox<Supplier> supplier3Combo;
 
 	@FXML private ComboBox<Supplier> supplier4Combo;
-	
-	@FXML private DatePicker startDatePicker;
-	
+    @FXML private DatePicker startDatePicker;
+
 	@FXML private DatePicker endDatePicker;
-
-	private XYChart.Series<String, Number> serie1 = new XYChart.Series<>();
-
-	private XYChart.Series<String, Number> serie2 = new XYChart.Series<>();
-
-	private XYChart.Series<String, Number> serie3 = new XYChart.Series<>();
-
-	private XYChart.Series<String, Number> serie4 = new XYChart.Series<>();
-
-	private DeliveryRangeCalculator rangeCalculator = new DeliveryRangeCalculator();
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -117,156 +101,50 @@ public class CompareSuppliersCtrl implements Initializable {
 		supplier4Combo.setConverter(converter);
 	}
 
-	/**
-	 * Decide whether admin menu items should be shown.
-	 * @param isAdmin
-	 */
-    private void setAdminMenusVisible(boolean isAdmin) {
-        if (isAdmin) {
-            newUserMenuItem.setVisible(true);
-            manageAllUsersMenuItem.setVisible(true);
-            userMenuSeperator.setVisible(true);
-			preferencesMenuItem.setVisible(true);
-			preferencesMenuSeperator.setVisible(true);
-        } else {
-            newUserMenuItem.setVisible(false);
-            manageAllUsersMenuItem.setVisible(false);
-            userMenuSeperator.setVisible(false);
-			preferencesMenuItem.setVisible(false);
-			preferencesMenuSeperator.setVisible(false);
-        }
+	@FXML
+    public void gotoCreateNewUser() {
+		MenuHelper.getInstance().gotoCreateNewUser();
+	}
+
+	@FXML
+    public void gotoManageAllUsers() {
+		MenuHelper.getInstance().gotoManageAllUsers();
+	}
+
+	@FXML
+    public void gotoCompareSuppliers() {
+        //Do nothing, we are already here
+	}
+
+	@FXML
+    public void gotoAverageSuppliers() {
+		MenuHelper.getInstance().gotoAverageSuppliers();
+	}
+
+	@FXML
+    public void gotoUserSettings() {
+		MenuHelper.getInstance().gotoUserSettings();
+	}
+
+	@FXML
+    public void gotoAbout() {
+		MenuHelper.getInstance().gotoAbout();
+	}
+
+	@FXML
+    public void gotoLogin() {
+		MenuHelper.getInstance().gotoLogin();
+	}
+
+    @FXML
+    public void gotoPreferences() {
+        MenuHelper.getInstance().gotoPreferences();
     }
 
-	@FXML
-	void gotoCreateNewUser(ActionEvent event) {
-
-		try {
-
-			String fxmlPath = "../view/createNewUser.fxml";
-			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((CreateNewUserCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void gotoManageAllUsers(ActionEvent event) {
-
-		try {
-
-			String fxmlPath = "../view/manageAllUsers.fxml";
-			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((ManageAllUsersCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void gotoCompareSuppliers(ActionEvent event) {
-
-		// Do nothing, we are already here
-	}
-
-	@FXML
-	void gotoAverageSuppliers(ActionEvent event) {
-
-		try {
-
-			String fxmlPath = "../view/averageSuppliers.fxml";
-			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((AverageSuppliersCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void gotoUserSettings(ActionEvent event) {
-
-		try {
-
-			String fxmlPath = "../view/userSettings.fxml";
-			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((UserSettingsCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void gotoAbout(ActionEvent event) {
-
-		try {
-
-			String fxmlPath = "../view/about.fxml";
-			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((AboutCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(CompareSuppliersCtrl.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void gotoLogin(ActionEvent event) {
-
-		Session.getInstance().close();
-
-		try {
-
-			String fxmlPath = "../view/login.fxml";
-			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((LoginCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(LoginCtrl.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void gotoPreferences(ActionEvent event) {
-		try {
-
-			String fxmlPath = "../view/preferences.fxml";
-			FXMLLoader loader = new FXMLLoader(CompareSuppliersCtrl.class.getResource(fxmlPath));
-
-			Parent page = (Parent) loader.load();
-			((PreferencesCtrl) loader.getController()).setStage(stage);
-
-			replaceSceneContent(page);
-		} catch (Exception ex) {
-			Logger.getLogger(PreferencesCtrl.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
-
-	@FXML
-	void quitApplication(ActionEvent event) {
-		stage.close();
-	}
+    @FXML
+    public void quitApplication() {
+        MenuHelper.getInstance().quitApplication();
+    }
 
 	@FXML
 	void supplier1ComboAction(ActionEvent event) {
@@ -302,9 +180,25 @@ public class CompareSuppliersCtrl implements Initializable {
 		updateChartForAllSuppliers();
 	}
 
-	public void setStage(Stage stage) {
-		this.stage = stage;
-	}
+    /**
+     * Decide whether admin menu items should be shown.
+     * @param isAdmin
+     */
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if (isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+            preferencesMenuItem.setVisible(true);
+            preferencesMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+            preferencesMenuItem.setVisible(false);
+            preferencesMenuSeperator.setVisible(false);
+        }
+    }
 
 	private void updateChartForAllSuppliers() {
 		compareChart.getData().clear();
@@ -320,7 +214,6 @@ public class CompareSuppliersCtrl implements Initializable {
 		updateChartForSupplier(supplier4Combo.getValue(), serie4);
 
 		compareChart.getData().addAll(serie1, serie2, serie3, serie4);
-
 	}
 
 	/**
@@ -342,23 +235,6 @@ public class CompareSuppliersCtrl implements Initializable {
 			serie.getData().add(new XYChart.Data<String, Number>("too late", 100 * ranges.get(Range.LATE)));
 			serie.getData().add(new XYChart.Data<String, Number>("much too late", 100 * ranges.get(Range.VERY_LATE)));
 		}
-	}
-
-	private Parent replaceSceneContent(Parent page) throws Exception {
-
-		Scene scene = stage.getScene();
-		if (scene == null) {
-			scene = new Scene(page, 640, 480);
-
-			// TODO no CSS yet
-			// scene.getStylesheets().add(App.class.getResource("demo.css").toExternalForm());
-
-			stage.setScene(scene);
-		} else {
-			stage.getScene().setRoot(page);
-		}
-		stage.sizeToScene();
-		return page;
 	}
 
 }
