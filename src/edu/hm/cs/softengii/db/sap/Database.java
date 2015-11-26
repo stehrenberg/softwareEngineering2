@@ -32,18 +32,14 @@ public class Database implements IDatabase {
     private final static String USER = SettingsPropertiesHelper.getInstance().getSapDbUser();
     private final static String PASSWORD = SettingsPropertiesHelper.getInstance().getSapDbPswd();
 
-    /**
-     * Connection to the database.
-     */
+    /** Connection to the database. */
     private Connection connection;
 
-    /**
-     * Contains the supplier along with their deliveries during runtime.
-     */
+    /** Contains the supplier along with their deliveries during runtime. */
     private List<Supplier> supplierData = new ArrayList<>();
 
     /**
-     * Loading supplier data upon creation of database instance.
+     * Ctor, loading supplier data upon creation of database instance.
      */
     private Database() {
         Runnable dataLoader = () -> loadSupplierData();
@@ -70,9 +66,10 @@ public class Database implements IDatabase {
     public void establishConnection() {
         try {
             if (connection == null || connection.isClosed()) {
-                connection = DriverManager.getConnection(DB_URL, USER, /*"2N682Gsa");//*/decryptPassword(PASSWORD));
+                //TODO PW vor finaler Abgabe aendern
+                connection = DriverManager.getConnection(DB_URL, USER, "2N682Gsa");//decryptPassword(PASSWORD));
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             ErrorMessage.show(e);
         }
     }
@@ -81,7 +78,7 @@ public class Database implements IDatabase {
     public void closeConnection() {
         try {
             connection.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             ErrorMessage.show(e);
         }
     }
@@ -102,7 +99,7 @@ public class Database implements IDatabase {
                 suppliers.add(set.getString("name1"));
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
             ErrorMessage.show(e);
         }
 
@@ -116,6 +113,10 @@ public class Database implements IDatabase {
         return supplierData;
     }
 
+    /**
+     * Loads all necessary data, i.e. all suppliers with their deliveries,
+     * and stores it in a local List.
+     */
     private void loadSupplierData() {
 
         establishConnection();
@@ -143,14 +144,22 @@ public class Database implements IDatabase {
                     supplier.getDeliveries().add(delivery);
                 }
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             ErrorMessage.show(e);
         }
 
         supplierData = suppliers;
         closeConnection();
+        assignSupplierClasses(suppliers);
 
-        // assign class based on suppliers' total delivery count
+    }
+
+    /**
+     * Assigns classes based on suppliers' total delivery count
+     * @param suppliers List of suppliers.
+     */
+    private void assignSupplierClasses(List<Supplier> suppliers) {
+
         suppliers.stream().forEach(supplier -> {
             int deliveryCount = supplier.getDeliveries().size();
             SupplierClass suppClass = SupplierClass.NORMAL;
@@ -180,6 +189,7 @@ public class Database implements IDatabase {
             + "AND VGABE = 1";
 
         Statement statement = connection.createStatement();
+
         return statement.executeQuery(query);
     }
 
@@ -195,7 +205,6 @@ public class Database implements IDatabase {
                 return supplier;
             }
         }
-
         return null;
     }
 
@@ -239,7 +248,7 @@ public class Database implements IDatabase {
             byte[] decryptedPwd = cipher.doFinal(cryptedPassword.getBytes());
             password = new String(decryptedPwd);
         } catch (Exception e) {
-            throw new RuntimeException("Could not decypher password. Could not load data.");
+            throw new RuntimeException("Could not decypher password. Unable to load data.");
         }
 
         return password;

@@ -22,29 +22,29 @@ public class ErrorMessage {
     	{
 	    	Alert alert = new Alert(AlertType.ERROR);
 	    	alert.setTitle("Error");
-	    	alert.setHeaderText("Database error occourred");
+	    	alert.setHeaderText("Database error occurred");
 	    	alert.setContentText("Database connection failed!");
-	
+
 	    	Label label = new Label("The exception stacktrace was:");
-	
+
 	    	TextArea textArea = new TextArea(convertExceptionToString(e));
 	    	textArea.setEditable(false);
-	
+
 	    	textArea.setMaxWidth(Double.MAX_VALUE);
 	    	textArea.setMaxHeight(Double.MAX_VALUE);
 	    	GridPane.setVgrow(textArea, Priority.ALWAYS);
 	    	GridPane.setHgrow(textArea, Priority.ALWAYS);
-	
+
 	    	GridPane expContent = new GridPane();
 	    	expContent.setMinWidth(700);
 	    	expContent.add(label, 0, 0);
 	    	expContent.add(textArea, 0, 1);
-	    	
+
 	    	alert.getDialogPane().setExpandableContent(expContent);
 	    	alert.showAndWait();
     	});
     }
-       
+
     private static String convertExceptionToString(final Exception e) {
     	StringWriter sw = new StringWriter();
     	PrintWriter pw = new PrintWriter(sw);
