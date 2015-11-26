@@ -33,6 +33,13 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * JavaFX Controller for 'preferences.fxml'.
+ * It handles the actions triggered in this view.
+ * 
+ * @author Apachen Pub Team
+ *
+ */
 public class PreferencesCtrl implements Initializable {
 
     private Stage stage;
@@ -40,11 +47,11 @@ public class PreferencesCtrl implements Initializable {
     @FXML private AnchorPane rootPane;
 
     @FXML private TableView<ScoreThresholdEntity> scoreTable;
-    @FXML private TableColumn earlyMinCol;
-    @FXML private TableColumn earlyMaxCol;
-    @FXML private TableColumn lateMinCol;
-    @FXML private TableColumn lateMaxCol;
-    @FXML private TableColumn scoreCol;
+    @FXML private TableColumn<ScoreThresholdEntity, Number> earlyMinCol;
+    @FXML private TableColumn<ScoreThresholdEntity, Number> earlyMaxCol;
+    @FXML private TableColumn<ScoreThresholdEntity, Number> lateMinCol;
+    @FXML private TableColumn<ScoreThresholdEntity, Number> lateMaxCol;
+    @FXML private TableColumn<ScoreThresholdEntity, Number> scoreCol;
 
     @FXML private MenuItem newUserMenuItem;
     @FXML private MenuItem manageAllUsersMenuItem;
@@ -57,7 +64,7 @@ public class PreferencesCtrl implements Initializable {
     @FXML private Button resetButton;
     @FXML private Text errorMessage;
 
-    final ObservableList<ScoreThresholdEntity> scoreData = FXCollections.observableArrayList();
+    private final ObservableList<ScoreThresholdEntity> scoreData = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,8 +75,12 @@ public class PreferencesCtrl implements Initializable {
         populateScoreTable();
     }
 
+	/**
+	 * Decide whether admin menu items should be shown.
+	 * @param isAdmin
+	 */
     private void setAdminMenusVisible(boolean isAdmin) {
-        if(isAdmin) {
+        if (isAdmin) {
             newUserMenuItem.setVisible(true);
             manageAllUsersMenuItem.setVisible(true);
             userMenuSeperator.setVisible(true);
@@ -277,37 +288,37 @@ public class PreferencesCtrl implements Initializable {
 
         scoreTable.setEditable(true);
 
-        Callback<TableColumn, TableCell> cellFactory =
-            new Callback<TableColumn, TableCell>() {
+        Callback<TableColumn<ScoreThresholdEntity, Number>, TableCell<ScoreThresholdEntity, Number>> cellFactory =
+            new Callback<TableColumn<ScoreThresholdEntity, Number>, TableCell<ScoreThresholdEntity, Number>>() {
 
                 @Override
-                public TableCell call(TableColumn p) {
+                public TableCell<ScoreThresholdEntity, Number> call(TableColumn<ScoreThresholdEntity, Number> p) {
                     return new EditingCell();
                 }
         };
 
         earlyMinCol.setCellValueFactory(
-                new PropertyValueFactory<ScoreThresholdEntity, Number>("earlyMin")
+            new PropertyValueFactory<ScoreThresholdEntity, Number>("earlyMin")
         );
         earlyMinCol.setCellFactory(cellFactory);
 
         earlyMaxCol.setCellValueFactory(
-                new PropertyValueFactory<ScoreThresholdEntity, Number>("earlyMax")
+            new PropertyValueFactory<ScoreThresholdEntity, Number>("earlyMax")
         );
         earlyMaxCol.setCellFactory(cellFactory);
 
         lateMinCol.setCellValueFactory(
-                new PropertyValueFactory<ScoreThresholdEntity, Number>("lateMin")
+            new PropertyValueFactory<ScoreThresholdEntity, Number>("lateMin")
         );
         lateMinCol.setCellFactory(cellFactory);
 
         lateMaxCol.setCellValueFactory(
-                new PropertyValueFactory<ScoreThresholdEntity, Number>("lateMax")
+            new PropertyValueFactory<ScoreThresholdEntity, Number>("lateMax")
         );
         lateMaxCol.setCellFactory(cellFactory);
 
         scoreCol.setCellValueFactory(
-                new PropertyValueFactory<ScoreThresholdEntity, Number>("scoreValue")
+            new PropertyValueFactory<ScoreThresholdEntity, Number>("scoreValue")
         );
         scoreCol.setCellFactory(cellFactory);
 
@@ -374,6 +385,11 @@ public class PreferencesCtrl implements Initializable {
         return page;
     }
 
+    /**
+     * A editable Cell in a TableView.
+     * @author Apachen Pub Team
+     *
+     */
     class EditingCell extends TableCell<ScoreThresholdEntity, Number> {
 
         private TextField textField;

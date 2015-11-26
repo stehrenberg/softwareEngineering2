@@ -31,6 +31,13 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * JavaFX Controller for 'compareSuppliers.fxml'.
+ * It handles the actions triggered in this view.
+ * 
+ * @author Apachen Pub Team
+ *
+ */
 public class CompareSuppliersCtrl implements Initializable {
 
 	private Stage stage;
@@ -76,15 +83,15 @@ public class CompareSuppliersCtrl implements Initializable {
 		compareChart.getData().add(serie3);
 		compareChart.getData().add(serie4);
 
-		 ObservableList<Supplier> list = FXCollections.observableArrayList();
+		ObservableList<Supplier> list = FXCollections.observableArrayList();
 
-		 List<Supplier> suppliers = Database.getInstance().getSupplierData();
+		List<Supplier> suppliers = Database.getInstance().getSupplierData();
 
-		 for (int i = 0; i < suppliers.size(); i++) {
-			 list.add(suppliers.get(i));
-		 }
+		for (int i = 0; i < suppliers.size(); i++) {
+			list.add(suppliers.get(i));
+		}
 
-		 StringConverter<Supplier> converter = new StringConverter<Supplier>() {
+		StringConverter<Supplier> converter = new StringConverter<Supplier>() {
 		    @Override
 		    public String toString(Supplier supplier) {
 		        if (supplier == null) {
@@ -100,18 +107,22 @@ public class CompareSuppliersCtrl implements Initializable {
 		    }
 		 };
 
-		 supplier1Combo.setItems(list);
-		 supplier1Combo.setConverter(converter);
-		 supplier2Combo.setItems(list);
-		 supplier2Combo.setConverter(converter);
-		 supplier3Combo.setItems(list);
-		 supplier3Combo.setConverter(converter);
-		 supplier4Combo.setItems(list);
-		 supplier4Combo.setConverter(converter);
+		supplier1Combo.setItems(list);
+		supplier1Combo.setConverter(converter);
+		supplier2Combo.setItems(list);
+		supplier2Combo.setConverter(converter);
+		supplier3Combo.setItems(list);
+		supplier3Combo.setConverter(converter);
+		supplier4Combo.setItems(list);
+		supplier4Combo.setConverter(converter);
 	}
 
+	/**
+	 * Decide whether admin menu items should be shown.
+	 * @param isAdmin
+	 */
     private void setAdminMenusVisible(boolean isAdmin) {
-        if(isAdmin) {
+        if (isAdmin) {
             newUserMenuItem.setVisible(true);
             manageAllUsersMenuItem.setVisible(true);
             userMenuSeperator.setVisible(true);
@@ -259,30 +270,21 @@ public class CompareSuppliersCtrl implements Initializable {
 
 	@FXML
 	void supplier1ComboAction(ActionEvent event) {
-
-		System.out.println("Supplier1Combo");
-//		updateChartForSupplier(supplier1Combo.getValue(), serie1);
 		updateChartForAllSuppliers();
 	}
 
 	@FXML
 	void supplier2ComboAction(ActionEvent event) {
-		System.out.println("Supplier2Combo");
-//		updateChartForSupplier(supplier2Combo.getValue(), serie2);
 		updateChartForAllSuppliers();
 	}
 
 	@FXML
 	void supplier3ComboAction(ActionEvent event) {
-		System.out.println("Supplier3Combo");
-//		updateChartForSupplier(supplier3Combo.getValue(), serie3);
 		updateChartForAllSuppliers();
 	}
 
 	@FXML
 	void supplier4ComboAction(ActionEvent event) {
-		System.out.println("Supplier4Combo");
-//		updateChartForSupplier(supplier4Combo.getValue(), serie4);
 		updateChartForAllSuppliers();
 	}
 
@@ -321,11 +323,15 @@ public class CompareSuppliersCtrl implements Initializable {
 
 	}
 
+	/**
+	 * Add the data of the supplier to the serie.
+	 * @param supplier
+	 * @param serie
+	 */
 	private void updateChartForSupplier(Supplier supplier, XYChart.Series<String, Number> serie) {
 
 		if (supplier != null) {
 
-			// Change serie data for this supplier
 			serie.setName(supplier.getName());
 
 			Map<Range, Double> ranges = rangeCalculator.calculateDeliveryRanges(supplier);

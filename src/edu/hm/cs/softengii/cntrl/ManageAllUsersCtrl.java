@@ -25,6 +25,13 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * JavaFX Controller for 'manageAllUsers.fxml'.
+ * It handles the actions triggered in this view.
+ * 
+ * @author Apachen Pub Team
+ *
+ */
 public class ManageAllUsersCtrl implements Initializable{
 
     private Stage stage;
@@ -56,7 +63,7 @@ public class ManageAllUsersCtrl implements Initializable{
     @FXML private Button deleteButton;
 
     private UserEntity selectedUser;
-    ObservableList<UserEntity> usersObservableList;
+    private ObservableList<UserEntity> usersObservableList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -75,7 +82,7 @@ public class ManageAllUsersCtrl implements Initializable{
                     protected void updateItem(UserEntity user, boolean empty) {
                         super.updateItem(user, empty);
 
-                        if(empty) {
+                        if (empty) {
                             setText(null);
                             setGraphic(null);
                         } else if (user != null) {
@@ -98,8 +105,12 @@ public class ManageAllUsersCtrl implements Initializable{
         });
     }
 
+	/**
+	 * Decide whether admin menu items should be shown.
+	 * @param isAdmin
+	 */
     private void setAdminMenusVisible(boolean isAdmin) {
-        if(isAdmin) {
+        if (isAdmin) {
             newUserMenuItem.setVisible(true);
             manageAllUsersMenuItem.setVisible(true);
             userMenuSeperator.setVisible(true);
@@ -117,7 +128,7 @@ public class ManageAllUsersCtrl implements Initializable{
     @FXML
     void deleteSelectedUser(ActionEvent event) {
 
-        if(selectedUser == null) {
+        if (selectedUser == null) {
 
             noUserSelectedWaring();
 
@@ -140,10 +151,11 @@ public class ManageAllUsersCtrl implements Initializable{
             }
         }
     }
+
     @FXML
     void updateSelectedUser(ActionEvent event) {
 
-        if(selectedUser == null) {
+        if (selectedUser == null) {
 
             noUserSelectedWaring();
 
@@ -176,7 +188,6 @@ public class ManageAllUsersCtrl implements Initializable{
         }
 
     }
-
 
     @FXML
     void gotoCreateNewUser(ActionEvent event) {
@@ -336,7 +347,7 @@ public class ManageAllUsersCtrl implements Initializable{
     }
 
     private void populateInputsFromSelection() {
-        if(usersListView.getSelectionModel().getSelectedItem() != null) {
+        if (usersListView.getSelectionModel().getSelectedItem() != null) {
             forename.setText(usersListView.getSelectionModel().getSelectedItem().getForename());
             surname.setText(usersListView.getSelectionModel().getSelectedItem().getSurname());
             userMail.setText(usersListView.getSelectionModel().getSelectedItem().getEmail());

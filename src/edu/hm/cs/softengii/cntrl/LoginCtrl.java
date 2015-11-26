@@ -1,10 +1,8 @@
 package edu.hm.cs.softengii.cntrl;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
+import edu.hm.cs.softengii.utils.LanguagePropertiesHelper;
+import edu.hm.cs.softengii.utils.Session;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,10 +15,20 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
-import edu.hm.cs.softengii.utils.LanguagePropertiesHelper;
-import edu.hm.cs.softengii.utils.Session;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * JavaFX Controller for 'login.fxml'.
+ * It handles the actions triggered in this view.
+ * 
+ * @author Apachen Pub Team
+ *
+ */
 public class LoginCtrl implements Initializable{
 
     private Stage stage;
@@ -49,7 +57,7 @@ public class LoginCtrl implements Initializable{
 
         validateInputs();
 
-        if(errors.isEmpty()) {
+        if (errors.isEmpty()) {
 
             Session.getInstance().setAuthenticatedUser(
                 DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()));
@@ -70,23 +78,22 @@ public class LoginCtrl implements Initializable{
         LanguagePropertiesHelper.getInstance().setLanguage("en");
         loadAllTexts();
     }
+    
+    public void setStage(Stage stage) {
+    	this.stage = stage;
+    }
 
     private void loadAllTexts() {
         welcomeHeadline.setText(LanguagePropertiesHelper.getInstance().getWelcomeHeadline());
         welcomeText.setText(LanguagePropertiesHelper.getInstance().getWelcomeTextLogin());
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             validateInputs();
         }
     }
 
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
     private void clearErrorMessage() {
         errorMessage.setText("");
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             errors.clear();
         }
     }
@@ -95,19 +102,19 @@ public class LoginCtrl implements Initializable{
 
         clearErrorMessage();
 
-        if(userName.getText().isEmpty()) {
+        if (userName.getText().isEmpty()) {
             errors.add(LanguagePropertiesHelper.getInstance().getUserNameError());
         }
 
-        if(pswd.getText().isEmpty()){
+        if (pswd.getText().isEmpty()){
             errors.add(LanguagePropertiesHelper.getInstance().getPswdError());
         }
 
-        if(!userName.getText().isEmpty() && !pswd.getText().isEmpty() && !isCorrectCredentials()) {
+        if (!userName.getText().isEmpty() && !pswd.getText().isEmpty() && !isCorrectCredentials()) {
             errors.add(LanguagePropertiesHelper.getInstance().getLoginError());
         }
 
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             populateErrorMessage();
         }
 

@@ -24,6 +24,13 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * JavaFX Controller for 'registration.fxml'.
+ * It handles the actions triggered in this view.
+ * 
+ * @author Apachen Pub Team
+ *
+ */
 public class RegistrationCtrl implements Initializable{
 
     private Stage stage;
@@ -100,11 +107,10 @@ public class RegistrationCtrl implements Initializable{
     private void clearErrorMessage() {
         errorMessageLeft.setText("");
         errorMessageRight.setText("");
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             errors.clear();
         }
     }
-
 
     private void loadAllTexts() {
         welcomeHeadline.setText(LanguagePropertiesHelper.getInstance().getWelcomeHeadline());
@@ -118,7 +124,7 @@ public class RegistrationCtrl implements Initializable{
         pswdLabel.setText(LanguagePropertiesHelper.getInstance().getPswdLabel());
         paswdHintText.setText(LanguagePropertiesHelper.getInstance().getPaswdHintText());
         registerButton.setText(LanguagePropertiesHelper.getInstance().getRegisterButton());
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             validateInputs();
         }
     }
@@ -142,33 +148,33 @@ public class RegistrationCtrl implements Initializable{
 
         clearErrorMessage();
 
-        if(forename.getText().isEmpty()) {
+        if (forename.getText().isEmpty()) {
             errors.add(LanguagePropertiesHelper.getInstance().getForenameError());
         }
 
-        if(surname.getText().isEmpty()) {
+        if (surname.getText().isEmpty()) {
             errors.add(LanguagePropertiesHelper.getInstance().getSurnameError());
         }
 
-        if(userMail.getText().isEmpty()) {
+        if (userMail.getText().isEmpty()) {
             errors.add(LanguagePropertiesHelper.getInstance().getUserMailEmptyError());
         } else {
 
             Pattern mailPattern = Pattern.compile("^.+@.+\\..+$");
             Matcher matcher = mailPattern.matcher(userMail.getText());
 
-            if(!matcher.matches()) {
+            if (!matcher.matches()) {
                 errors.add(LanguagePropertiesHelper.getInstance().getUserMailError());
             }
         }
 
-        if(userName.getText().isEmpty()) {
+        if (userName.getText().isEmpty()) {
             errors.add(LanguagePropertiesHelper.getInstance().getUserNameError());
-        } else if(DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()) != null) {
+        } else if (DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()) != null) {
                 errors.add(LanguagePropertiesHelper.getInstance().getUserNameExistsError());
         }
 
-        if(pswd.getText().isEmpty()){
+        if (pswd.getText().isEmpty()){
             errors.add(LanguagePropertiesHelper.getInstance().getPswdError());
         } else if (pswdConfirm.getText().isEmpty()) {
             errors.add(LanguagePropertiesHelper.getInstance().getPswdConfirmError());
@@ -176,16 +182,16 @@ public class RegistrationCtrl implements Initializable{
             errors.add(LanguagePropertiesHelper.getInstance().getPswdNoMatchError());
         }
 
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             populateErrorMessage();
         }
     }
 
     private void populateErrorMessage() {
 
-        if(!errors.isEmpty() && errors.size() > 3) {
+        if (!errors.isEmpty() && errors.size() > 3) {
             for (int i = 0; i < errors.size(); i++) {
-                if(i < 3) {
+                if (i < 3) {
                     errorMessageLeft.setText(errorMessageLeft.getText() + errors.get(i));
                 } else {
                     errorMessageRight.setText(errorMessageRight.getText() + errors.get(i));

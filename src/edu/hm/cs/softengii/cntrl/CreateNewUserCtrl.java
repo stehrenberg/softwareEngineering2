@@ -27,6 +27,13 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * JavaFX Controller for 'createNewUser.fxml'.
+ * It handles the actions triggered in this view.
+ * 
+ * @author Apachen Pub Team
+ *
+ */
 public class CreateNewUserCtrl implements Initializable{
 
     private Stage stage;
@@ -63,8 +70,12 @@ public class CreateNewUserCtrl implements Initializable{
         errorMessage.setText("");
     }
 
+	/**
+	 * Decide whether admin menu items should be shown.
+	 * @param isAdmin
+	 */
     private void setAdminMenusVisible(boolean isAdmin) {
-        if(isAdmin) {
+        if (isAdmin) {
             newUserMenuItem.setVisible(true);
             manageAllUsersMenuItem.setVisible(true);
             userMenuSeperator.setVisible(true);
@@ -84,7 +95,7 @@ public class CreateNewUserCtrl implements Initializable{
 
         validateInputs();
 
-        if(errors.isEmpty()) {
+        if (errors.isEmpty()) {
 
             UserEntity newUser = DatabaseUserAuth.getInstance().createNewUser(
                 userName.getText(),
@@ -276,14 +287,14 @@ public class CreateNewUserCtrl implements Initializable{
             Pattern mailPattern = Pattern.compile("^.+@.+\\..+$");
             Matcher matcher = mailPattern.matcher(userMail.getText());
 
-            if(!matcher.matches()) {
+            if (!matcher.matches()) {
                 errors.add(LanguagePropertiesHelper.getInstance().getUserMailError());
             }
         }
 
         if (userName.getText().isEmpty()) {
             errors.add(LanguagePropertiesHelper.getInstance().getUserNameError());
-        } else if(DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()) != null) {
+        } else if (DatabaseUserAuth.getInstance().getUserFromLoginName(userName.getText()) != null) {
             errors.add(LanguagePropertiesHelper.getInstance().getUserNameExistsError());
         }
 
@@ -299,7 +310,6 @@ public class CreateNewUserCtrl implements Initializable{
             populateErrorMessage();
         }
     }
-
 
     private void populateErrorMessage() {
         if (!errors.isEmpty()){

@@ -29,6 +29,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+/**
+ * JavaFX Controller for 'averageSuppliers.fxml'.
+ * It handles the actions triggered in this view.
+ * 
+ * @author Apachen Pub Team
+ *
+ */
 public class AverageSuppliersCtrl implements Initializable {
 
 	private Stage stage;
@@ -54,6 +61,32 @@ public class AverageSuppliersCtrl implements Initializable {
 
 	private ScoreCalculator scoreCalculator = new ScoreCalculator();
 	private List<SupplierClass> classesToDisplay = new ArrayList<>();
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+		updateChart();
+	}
+
+	/**
+	 * Decide whether admin menu items should be shown.
+	 * @param isAdmin
+	 */
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if (isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+            preferencesMenuItem.setVisible(true);
+            preferencesMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+            preferencesMenuItem.setVisible(false);
+            preferencesMenuSeperator.setVisible(false);
+        }
+    }
 
 	@FXML
 	void gotoCreateNewUser(ActionEvent event) {
@@ -184,32 +217,6 @@ public class AverageSuppliersCtrl implements Initializable {
 		stage.close();
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
-		updateChart();
-	}
-
-	/**
-	 * Decide whether admin menu items should be shown.
-	 * @param isAdmin
-	 */
-    private void setAdminMenusVisible(boolean isAdmin) {
-        if(isAdmin) {
-            newUserMenuItem.setVisible(true);
-            manageAllUsersMenuItem.setVisible(true);
-            userMenuSeperator.setVisible(true);
-            preferencesMenuItem.setVisible(true);
-            preferencesMenuSeperator.setVisible(true);
-        } else {
-            newUserMenuItem.setVisible(false);
-            manageAllUsersMenuItem.setVisible(false);
-            userMenuSeperator.setVisible(false);
-            preferencesMenuItem.setVisible(false);
-            preferencesMenuSeperator.setVisible(false);
-        }
-    }
-
 	@FXML
 	void startDatePickerAction(ActionEvent event) {
 		LocalDate dateRangeStart = startDatePicker.getValue();
@@ -228,13 +235,13 @@ public class AverageSuppliersCtrl implements Initializable {
 	void checkBoxAction(ActionEvent event) {
 
 		classesToDisplay.clear();
-		if(topCheckBox.isSelected()) {
+		if (topCheckBox.isSelected()) {
 			classesToDisplay.add(SupplierClass.TOP);
 		}
-		if(normalCheckBox.isSelected()) {
+		if (normalCheckBox.isSelected()) {
 			classesToDisplay.add(SupplierClass.NORMAL);
 		}
-		if(oneOffCheckBox.isSelected()) {
+		if (oneOffCheckBox.isSelected()) {
 			classesToDisplay.add(SupplierClass.ONE_OFF);
 		}
 		updateChart();
@@ -271,12 +278,6 @@ public class AverageSuppliersCtrl implements Initializable {
 		compareChart.setMinHeight(filteredSupps.size() * 50);
 	}
 
-	/**
-	 * Insert new content to scene.
-	 * @param page
-	 * @return
-	 * @throws Exception
-	 */
 	private Parent replaceSceneContent(Parent page) throws Exception {
 
 		Scene scene = stage.getScene();

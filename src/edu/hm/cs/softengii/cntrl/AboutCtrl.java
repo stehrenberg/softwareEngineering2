@@ -19,6 +19,13 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * JavaFX Controller for 'about.fxml'.
+ * It handles the actions triggered in this view.
+ * 
+ * @author Apachen Pub Team
+ *
+ */
 public class AboutCtrl implements Initializable{
 
     private Stage stage;
@@ -36,6 +43,26 @@ public class AboutCtrl implements Initializable{
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+    }
+
+	/**
+	 * Decide whether admin menu items should be shown.
+	 * @param isAdmin
+	 */
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if (isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+            preferencesMenuItem.setVisible(true);
+            preferencesMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+            preferencesMenuItem.setVisible(false);
+            preferencesMenuSeperator.setVisible(false);
+        }
     }
 
     @FXML
@@ -173,22 +200,6 @@ public class AboutCtrl implements Initializable{
     
     public void setStage(Stage stage) {
     	this.stage = stage;
-    }
-
-    private void setAdminMenusVisible(boolean isAdmin) {
-        if(isAdmin) {
-            newUserMenuItem.setVisible(true);
-            manageAllUsersMenuItem.setVisible(true);
-            userMenuSeperator.setVisible(true);
-            preferencesMenuItem.setVisible(true);
-            preferencesMenuSeperator.setVisible(true);
-        } else {
-            newUserMenuItem.setVisible(false);
-            manageAllUsersMenuItem.setVisible(false);
-            userMenuSeperator.setVisible(false);
-            preferencesMenuItem.setVisible(false);
-            preferencesMenuSeperator.setVisible(false);
-        }
     }
 
     private Parent replaceSceneContent(Parent page) throws Exception {

@@ -20,8 +20,12 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/*
+/**
+ * JavaFX Controller for 'userSettings.fxml'.
+ * It handles the actions triggered in this view.
  * 
+ * @author Apachen Pub Team
+ *
  */
 public class UserSettingsCtrl implements Initializable{
 
@@ -59,8 +63,12 @@ public class UserSettingsCtrl implements Initializable{
         setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
     }
 
+	/**
+	 * Decide whether admin menu items should be shown.
+	 * @param isAdmin
+	 */
     private void setAdminMenusVisible(boolean isAdmin) {
-        if(isAdmin) {
+        if (isAdmin) {
             isAdminLabel.setVisible(true);
             this.isAdmin.setVisible(true);
             newUserMenuItem.setVisible(true);
@@ -235,14 +243,14 @@ public class UserSettingsCtrl implements Initializable{
                     Level.SEVERE, null, ex);
         }
     }
+    
+    @FXML
+    void quitApplication(ActionEvent event) {
+    	stage.close();
+    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    @FXML
-    void quitApplication(ActionEvent event) {
-        stage.close();
     }
 
     private void populateInputs() {
