@@ -18,6 +18,7 @@ public class DemoDatabase implements IDatabase {
     /** Contains mock supplier data. */
     List<Supplier> suppliers;
 
+	/** Returns an instance of the mock db, if present - creates a new one otherwise. */
     public static DemoDatabase getInstance() {
         if (instance == null) {
         	instance = new DemoDatabase();

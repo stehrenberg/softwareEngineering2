@@ -57,6 +57,11 @@ public class ErrorMessage {
     	});
     }
 
+	/**
+	 * Creates a String from an Exception stack trace.
+	 * @param e Exception to be displayed as string
+	 * @return The exception stacktrace as string.
+	 */
     private static String convertExceptionToString(final Exception e) {
     	StringWriter sw = new StringWriter();
     	PrintWriter pw = new PrintWriter(sw);
