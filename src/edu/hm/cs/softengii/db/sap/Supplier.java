@@ -25,6 +25,11 @@ public class Supplier {
     /**Deliveries from this supplier.*/
     private final List<Delivery> deliveries = new ArrayList<>();
 
+    /**
+     * Ctor.
+     * @param id Supplier's ID as in db (lfa1.lifnr)
+     * @param name Supplier's name as provided by db.
+     */
     public Supplier(final String id, final String name) {
         this.id = id;
         this.name = name;

@@ -8,7 +8,7 @@ package edu.hm.cs.softengii.db.sap;
 import java.util.List;
 
 /**
- * Interface representing database access.
+ * Interface representing database access methods.
  */
 public interface IDatabase {
 
