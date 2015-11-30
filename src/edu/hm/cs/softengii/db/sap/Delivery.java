@@ -21,6 +21,12 @@ public class Delivery {
     /** Difference between promised and actual delivery date. */
     private int delayInDays;
 
+    /**
+     * Ctor
+     * @param deliveryID Unique delivery ID (EBELN from db)
+     * @param promisedDeliveryDate Initially promised delivery date (by supplier) from db.
+     * @param actualDeliveryDate Actual goods receipt date from db.
+     */
     public Delivery(String deliveryID, LocalDate promisedDeliveryDate, LocalDate actualDeliveryDate) {
     	this.deliveryID = deliveryID;
         this.promisedDeliveryDate = promisedDeliveryDate;

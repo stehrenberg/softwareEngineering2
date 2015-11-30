@@ -21,14 +21,10 @@ public class Database implements IDatabase {
 
     private static Database instance = null;
 
-    /**
-     * Database URL
-     */
+    /** Database URL */
     private final static String DB_URL = SettingsPropertiesHelper.getInstance().getSapDbUrl();
 
-    /**
-     * Credentials for connection to the database
-     */
+    /** Credentials for connection to the database */
     private final static String USER = SettingsPropertiesHelper.getInstance().getSapDbUser();
     private final static String PASSWORD = SettingsPropertiesHelper.getInstance().getSapDbPswd();
 
