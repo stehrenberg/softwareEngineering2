@@ -41,7 +41,7 @@ public class MenuHelper {
             replaceSceneContent(page);
 
         } catch (IOException ex) {
-            String msg = String.format("Could not load file: %s", fxmlPath);
+        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
             Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
         }
     }
@@ -57,7 +57,7 @@ public class MenuHelper {
             replaceSceneContent(page);
 
         } catch (IOException ex) {
-            String msg = String.format("Could not load file: %s", fxmlPath);
+            String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
             Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
         }
     }
@@ -73,7 +73,7 @@ public class MenuHelper {
             replaceSceneContent(page);
 
         } catch (IOException ex) {
-            String msg = String.format("Could not load file: %s", fxmlPath);
+        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
             Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
         }
     }
@@ -89,7 +89,7 @@ public class MenuHelper {
             replaceSceneContent(page);
 
         } catch (IOException ex) {
-            String msg = String.format("Could not load file: %s", fxmlPath);
+        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
             Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
         }
     }
@@ -105,7 +105,7 @@ public class MenuHelper {
             replaceSceneContent(page);
 
         } catch (IOException ex) {
-            String msg = String.format("Could not load file: %s", fxmlPath);
+        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
             Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
         }
     }
@@ -121,7 +121,7 @@ public class MenuHelper {
             replaceSceneContent(page);
 
         } catch (IOException ex) {
-            String msg = String.format("Could not load file: %s", fxmlPath);
+        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
             Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
         }
     }
@@ -139,7 +139,7 @@ public class MenuHelper {
             replaceSceneContent(page);
 
         } catch (IOException ex) {
-            String msg = String.format("Could not load file: %s", fxmlPath);
+        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
             Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
         }
     }
@@ -155,7 +155,7 @@ public class MenuHelper {
             replaceSceneContent(page);
 
         } catch (IOException ex) {
-            String msg = String.format("Could not load file: %s", fxmlPath);
+        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
             Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
         }
     }
@@ -171,7 +171,7 @@ public class MenuHelper {
             replaceSceneContent(page);
 
         } catch (IOException ex) {
-            String msg = String.format("Could not load file: %s", fxmlPath);
+        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
             Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
         }
     }
@@ -187,7 +187,7 @@ public class MenuHelper {
             replaceSceneContent(page);
 
         } catch (IOException ex) {
-            String msg = String.format("Could not load file: %s", fxmlPath);
+        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
             Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
         }
     }

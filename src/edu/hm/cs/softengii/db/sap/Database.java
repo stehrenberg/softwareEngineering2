@@ -4,12 +4,17 @@ Project: SupplyAlyticsApp
 */
 package edu.hm.cs.softengii.db.sap;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 import edu.hm.cs.softengii.utils.SettingsPropertiesHelper;
@@ -241,15 +246,23 @@ public class Database implements IDatabase {
 
         String password = "";
 
-        try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, key);
-
-            byte[] decryptedPwd = cipher.doFinal(cryptedPassword.getBytes());
-            password = new String(decryptedPwd);
-        } catch (Exception e) {
-            throw new RuntimeException("Could not decypher password. Unable to load data.");
-        }
+            Cipher cipher;
+			try {
+				cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+				cipher.init(Cipher.DECRYPT_MODE, key);
+				byte[] decryptedPwd = cipher.doFinal(cryptedPassword.getBytes());
+				password = new String(decryptedPwd);
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (NoSuchPaddingException e) {
+				e.printStackTrace();
+			} catch (InvalidKeyException e) {
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				e.printStackTrace();
+			}
 
         return password;
     }
