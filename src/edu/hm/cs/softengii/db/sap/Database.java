@@ -68,7 +68,7 @@ public class Database implements IDatabase {
     }
 
     @Override
-    public void establishConnection() {
+    public boolean establishConnection() {
         try {
             if (connection == null || connection.isClosed()) {
                 //TODO PW vor finaler Abgabe aendern
@@ -76,7 +76,9 @@ public class Database implements IDatabase {
             }
         } catch (SQLException e) {
             ErrorMessage.show(e);
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -91,24 +93,27 @@ public class Database implements IDatabase {
     @Override
     public List<String> getSuppliersList() {
 
-        establishConnection();
-        List<String> suppliers = new ArrayList<>();
-
-        try {
-            String query = "SELECT * FROM lfa1";
-
-            Statement statement = connection.createStatement();
-            ResultSet set = statement.executeQuery(query);
-
-            while (set.next()) {
-                suppliers.add(set.getString("name1"));
-            }
-
-        } catch (SQLException e) {
-            ErrorMessage.show(e);
+    	List<String> suppliers = new ArrayList<>();
+    	
+        if (establishConnection()) {
+        	
+        	try {
+        		String query = "SELECT * FROM lfa1";
+        		
+        		Statement statement = connection.createStatement();
+        		ResultSet set = statement.executeQuery(query);
+        		
+        		while (set.next()) {
+        			suppliers.add(set.getString("name1"));
+        		}
+        		
+        	} catch (SQLException e) {
+        		ErrorMessage.show(e);
+        	}
+        	
+        	closeConnection();
+        	
         }
-
-        closeConnection();
 
         return suppliers;
     }
@@ -124,37 +129,38 @@ public class Database implements IDatabase {
      */
     private void loadSupplierData() {
 
-        establishConnection();
         List<Supplier> suppliers = new ArrayList<>();
-
-        try {
-            ResultSet set = getSupplierDataFromDB();
-
-            while (set.next()) {
-
-                Supplier supplier = findSupplierInList(suppliers, set.getString("lfa1.LIFNR"));
-
-                if (supplier == null) {
-                    supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
-                    suppliers.add(supplier);
-                }
-
-                // generate delivery entry
-                Date actualDate = set.getDate("BUDAT");
-                Date promisedDate = set.getDate("SLFDT");
-                boolean isRelevantDelivery = actualDate != null && promisedDate != null;
-
-                if (isRelevantDelivery) {
-                    Delivery delivery = generateDelivery(set, actualDate, promisedDate);
-                    supplier.getDeliveries().add(delivery);
-                }
-            }
-        } catch (SQLException e) {
-            ErrorMessage.show(e);
+        if (establishConnection()) {
+        	try {
+        		ResultSet set = getSupplierDataFromDB();
+        		
+        		while (set.next()) {
+        			
+        			Supplier supplier = findSupplierInList(suppliers, set.getString("lfa1.LIFNR"));
+        			
+        			if (supplier == null) {
+        				supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
+        				suppliers.add(supplier);
+        			}
+        			
+        			// generate delivery entry
+        			Date actualDate = set.getDate("BUDAT");
+        			Date promisedDate = set.getDate("SLFDT");
+        			boolean isRelevantDelivery = actualDate != null && promisedDate != null;
+        			
+        			if (isRelevantDelivery) {
+        				Delivery delivery = generateDelivery(set, actualDate, promisedDate);
+        				supplier.getDeliveries().add(delivery);
+        			}
+        		}
+        	} catch (SQLException e) {
+        		ErrorMessage.show(e);
+        	}
+        	
+        	supplierData = suppliers;
+        	closeConnection();
         }
 
-        supplierData = suppliers;
-        closeConnection();
         assignSupplierClasses(suppliers);
 
     }

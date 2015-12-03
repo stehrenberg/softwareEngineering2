@@ -26,8 +26,9 @@ public class DemoDatabase implements IDatabase {
     }
 
     @Override
-    public void establishConnection() {
+    public boolean establishConnection() {
         suppliers = new ArrayList<>();
+        return true;
     }
 
     @Override

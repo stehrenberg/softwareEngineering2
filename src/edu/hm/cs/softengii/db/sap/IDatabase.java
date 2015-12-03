@@ -12,8 +12,9 @@ import java.util.List;
  */
 public interface IDatabase {
 
-    /** Open the connection to the database.*/
-    void establishConnection();
+    /** Open the connection to the database.
+     * @return */
+    boolean establishConnection();
 
     /** Close the connection to the database.*/
     void closeConnection();
