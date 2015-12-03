@@ -1,3 +1,8 @@
+/*
+Organisation: Apachen Pub Team
+Project: SupplyAlyticsApp
+*/
+
 package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.sap.Database;
@@ -32,7 +37,7 @@ import java.util.stream.Collectors;
 /**
  * JavaFX Controller for 'averageSuppliers.fxml'.
  * It handles the actions triggered in this view.
- * 
+ *
  * @author Apachen Pub Team
  *
  */
@@ -60,6 +65,7 @@ public class AverageSuppliersCtrl implements Initializable {
 	@FXML private DatePicker endDatePicker;
 
 	private ScoreCalculator scoreCalculator = new ScoreCalculator();
+	/** Contains all supplier classes that are selected via checkbox to be displayed. */
 	private List<SupplierClass> classesToDisplay = new ArrayList<>();
 
 	@Override
@@ -264,20 +270,26 @@ public class AverageSuppliersCtrl implements Initializable {
 		    .collect(Collectors.toList());
 
 		for (Supplier supplier: filteredSupps) {
-			
+
 			double score = scoreCalculator.calculateScore(supplier);
 			double rounded = ((int)(score*100)) /100.0;
-			
+
     		serie.getData().add(new XYChart.Data<Number, String>(score, supplier.getName() + " "
     		    + rounded + "%\n" + supplier.getSupplierClass()));
     	}
 
-		compareChart.getData().clear();		
+		compareChart.getData().clear();
 		compareChart.getData().add(serie);
-		
+
 		compareChart.setMinHeight(filteredSupps.size() * 50);
 	}
 
+	/**
+	 * Draws new content and replaces the old one.
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
 	private Parent replaceSceneContent(Parent page) throws Exception {
 
 		Scene scene = stage.getScene();

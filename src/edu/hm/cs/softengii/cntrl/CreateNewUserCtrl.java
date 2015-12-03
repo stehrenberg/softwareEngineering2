@@ -1,3 +1,8 @@
+/*
+Organisation: Apachen Pub Team
+Project: SupplyAlyticsApp
+*/
+
 package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
@@ -30,7 +35,7 @@ import java.util.regex.Pattern;
 /**
  * JavaFX Controller for 'createNewUser.fxml'.
  * It handles the actions triggered in this view.
- * 
+ *
  * @author Apachen Pub Team
  *
  */
@@ -62,6 +67,8 @@ public class CreateNewUserCtrl implements Initializable{
     @FXML private PasswordField pswd;
     @FXML private PasswordField pswdConfirm;
 
+    /** For validating user input upon hitting the submit button. All invalid entries
+     * will result in an error that is put into this collection. */
     private ArrayList<String> errors = new ArrayList<>();
 
     @Override
@@ -268,6 +275,10 @@ public class CreateNewUserCtrl implements Initializable{
         }
     }
 
+    /**
+     * Checks all user input for errors, p.e. invalid email addresses or empty
+     * input fields.
+     */
     private void validateInputs(){
 
         clearErrorMessage();

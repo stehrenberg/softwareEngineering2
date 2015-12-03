@@ -1,3 +1,8 @@
+/*
+Organisation: Apachen Pub Team
+Project: SupplyAlyticsApp
+*/
+
 package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
@@ -25,7 +30,7 @@ import java.util.logging.Logger;
 /**
  * JavaFX Controller for 'login.fxml'.
  * It handles the actions triggered in this view.
- * 
+ *
  * @author Apachen Pub Team
  *
  */
@@ -78,7 +83,7 @@ public class LoginCtrl implements Initializable{
         LanguagePropertiesHelper.getInstance().setLanguage("en");
         loadAllTexts();
     }
-    
+
     public void setStage(Stage stage) {
     	this.stage = stage;
     }

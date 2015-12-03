@@ -1,3 +1,8 @@
+/*
+Organisation: Apachen Pub Team
+Project: SupplyAlyticsApp
+*/
+
 package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.utils.Session;
@@ -22,9 +27,7 @@ import java.util.logging.Logger;
 /**
  * JavaFX Controller for 'about.fxml'.
  * It handles the actions triggered in this view.
- * 
  * @author Apachen Pub Team
- *
  */
 public class AboutCtrl implements Initializable{
 
@@ -197,11 +200,17 @@ public class AboutCtrl implements Initializable{
     void quitApplication(ActionEvent event) {
         stage.close();
     }
-    
+
     public void setStage(Stage stage) {
     	this.stage = stage;
     }
 
+    /**
+     * Draws new content and replaces the old one.
+     * @param page
+     * @return
+     * @throws Exception
+     */
     private Parent replaceSceneContent(Parent page) throws Exception {
 
         Scene scene = stage.getScene();

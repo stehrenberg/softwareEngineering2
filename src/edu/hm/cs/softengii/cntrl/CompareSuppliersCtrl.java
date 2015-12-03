@@ -1,3 +1,8 @@
+/*
+Organisation: Apachen Pub Team
+Project: SupplyAlyticsApp
+*/
+
 package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.sap.Database;
@@ -34,7 +39,7 @@ import java.util.logging.Logger;
 /**
  * JavaFX Controller for 'compareSuppliers.fxml'.
  * It handles the actions triggered in this view.
- * 
+ *
  * @author Apachen Pub Team
  *
  */
@@ -58,9 +63,9 @@ public class CompareSuppliersCtrl implements Initializable {
 	@FXML private ComboBox<Supplier> supplier3Combo;
 
 	@FXML private ComboBox<Supplier> supplier4Combo;
-	
+
 	@FXML private DatePicker startDatePicker;
-	
+
 	@FXML private DatePicker endDatePicker;
 
 	private XYChart.Series<String, Number> serie1 = new XYChart.Series<>();
@@ -306,6 +311,9 @@ public class CompareSuppliersCtrl implements Initializable {
 		this.stage = stage;
 	}
 
+	/**
+	 * Replaces old data for all suppliers with the new data.
+	 */
 	private void updateChartForAllSuppliers() {
 		compareChart.getData().clear();
 
@@ -344,6 +352,12 @@ public class CompareSuppliersCtrl implements Initializable {
 		}
 	}
 
+	/**
+	 * Draws new content and replaces the old one.
+	 * @param page
+	 * @return
+	 * @throws Exception
+	 */
 	private Parent replaceSceneContent(Parent page) throws Exception {
 
 		Scene scene = stage.getScene();
