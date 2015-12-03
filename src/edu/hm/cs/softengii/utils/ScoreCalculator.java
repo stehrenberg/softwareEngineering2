@@ -3,8 +3,6 @@ package edu.hm.cs.softengii.utils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import edu.hm.cs.softengii.db.dataStorage.DatabaseDataStorage;
@@ -71,21 +69,13 @@ public class ScoreCalculator {
 		
 		for (Delivery delivery: filteredDels) {
 
-			try {
+			// calculate difference of actual and promised delivery date in days
+			int diffInDays = delivery.getDelay();
 
-				// calculate difference of actual and promised delivery date in days
-				int diffInDays = delivery.getDelay();
+			// calculate single score
+			int singleScore = calculateSingleScore(diffInDays, thresholds);
 
-				// calculate single score
-				int singleScore = calculateSingleScore(diffInDays, thresholds);
-
-				scoreSum += singleScore;
-
-			} catch (Exception ex) {
-
-				// couldn't calculate score for this delivery
-                Logger.getLogger(ScoreCalculator.class.getName()).log(Level.WARNING, null, ex);
-            }
+			scoreSum += singleScore;
 		}
 
 		if (filteredDels.size() > 0) {

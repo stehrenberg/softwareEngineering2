@@ -8,13 +8,11 @@ package edu.hm.cs.softengii.cntrl;
 import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
 import edu.hm.cs.softengii.db.userAuth.UserEntity;
 import edu.hm.cs.softengii.utils.LanguagePropertiesHelper;
+import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.SeparatorMenuItem;
@@ -22,13 +20,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,19 +36,14 @@ import java.util.regex.Pattern;
  */
 public class CreateNewUserCtrl implements Initializable{
 
-    private Stage stage;
-
     @FXML private AnchorPane rootPane;
-
     @FXML private MenuItem newUserMenuItem;
     @FXML private MenuItem manageAllUsersMenuItem;
     @FXML private SeparatorMenuItem userMenuSeperator;
-
     @FXML private MenuItem preferencesMenuItem;
     @FXML private SeparatorMenuItem preferencesMenuSeperator;
 
     @FXML private Text errorMessage;
-
     @FXML private Text forenameLabel;
     @FXML private TextField forename;
     @FXML private Text surnameLabel;
@@ -65,36 +55,17 @@ public class CreateNewUserCtrl implements Initializable{
     @FXML private Text pswdLabel;
     @FXML private Text paswdHintText;
     @FXML private PasswordField pswd;
-    @FXML private PasswordField pswdConfirm;
 
     /** For validating user input upon hitting the submit button. All invalid entries
      * will result in an error that is put into this collection. */
     private ArrayList<String> errors = new ArrayList<>();
 
+    @FXML private PasswordField pswdConfirm;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
         errorMessage.setText("");
-    }
-
-	/**
-	 * Decide whether admin menu items should be shown.
-	 * @param isAdmin
-	 */
-    private void setAdminMenusVisible(boolean isAdmin) {
-        if (isAdmin) {
-            newUserMenuItem.setVisible(true);
-            manageAllUsersMenuItem.setVisible(true);
-            userMenuSeperator.setVisible(true);
-            preferencesMenuItem.setVisible(true);
-            preferencesMenuSeperator.setVisible(true);
-        } else {
-            newUserMenuItem.setVisible(false);
-            manageAllUsersMenuItem.setVisible(false);
-            userMenuSeperator.setVisible(false);
-            preferencesMenuItem.setVisible(false);
-            preferencesMenuSeperator.setVisible(false);
-        }
     }
 
     @FXML
@@ -121,141 +92,68 @@ public class CreateNewUserCtrl implements Initializable{
     }
 
     @FXML
-    void gotoCreateNewUser(ActionEvent event) {
-
+    public void gotoCreateNewUser() {
         //Do nothing, we are already here
     }
 
     @FXML
-    void gotoManageAllUsers(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/manageAllUsers.fxml";
-            FXMLLoader loader = new FXMLLoader(CreateNewUserCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((ManageAllUsersCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(CreateNewUserCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void gotoManageAllUsers() {
+        MenuHelper.getInstance().gotoManageAllUsers();
     }
 
     @FXML
-    void gotoCompareSuppliers(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/compareSuppliers.fxml";
-            FXMLLoader loader = new FXMLLoader(CreateNewUserCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((CompareSuppliersCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(CreateNewUserCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void gotoCompareSuppliers() {
+        MenuHelper.getInstance().gotoCompareSuppliers();
     }
 
     @FXML
-    void gotoAverageSuppliers(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/averageSuppliers.fxml";
-            FXMLLoader loader = new FXMLLoader(CreateNewUserCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((AverageSuppliersCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(CreateNewUserCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+    public void gotoAverageSuppliers() {
+        MenuHelper.getInstance().gotoAverageSuppliers();
     }
 
     @FXML
-    void gotoUserSettings(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/userSettings.fxml";
-            FXMLLoader loader = new FXMLLoader(CreateNewUserCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((UserSettingsCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(CreateNewUserCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void gotoUserSettings() {
+        MenuHelper.getInstance().gotoUserSettings();
     }
 
     @FXML
-    void gotoAbout(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/about.fxml";
-            FXMLLoader loader = new FXMLLoader(CreateNewUserCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((AboutCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(CreateNewUserCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void gotoAbout() {
+        MenuHelper.getInstance().gotoAbout();
     }
 
     @FXML
-    void gotoLogin(ActionEvent event) {
-
-        Session.getInstance().close();
-
-        try {
-
-            String fxmlPath = "../view/login.fxml";
-            FXMLLoader loader = new FXMLLoader(UserSettingsCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((LoginCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(UserSettingsCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void gotoLogin() {
+        MenuHelper.getInstance().gotoLogin();
     }
 
     @FXML
-    void gotoPreferences(ActionEvent event) {
-        try {
-
-            String fxmlPath = "../view/preferences.fxml";
-            FXMLLoader loader = new FXMLLoader(
-                    CreateNewUserCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((PreferencesCtrl) loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(CreateNewUserCtrl.class.getName()).log(
-                    Level.SEVERE, null, ex);
-        }
+    public void gotoPreferences() {
+        MenuHelper.getInstance().gotoPreferences();
     }
 
     @FXML
-    void quitApplication(ActionEvent event) {
-        stage.close();
+    public void quitApplication() {
+        MenuHelper.getInstance().quitApplication();
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
+    /**
+     * Decide whether admin menu items should be shown.
+     * @param isAdmin
+     */
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if (isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+            preferencesMenuItem.setVisible(true);
+            preferencesMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+            preferencesMenuItem.setVisible(false);
+            preferencesMenuSeperator.setVisible(false);
+        }
     }
 
     private void clearAllInputs() {
@@ -328,22 +226,5 @@ public class CreateNewUserCtrl implements Initializable{
                 errorMessage.setText(errorMessage.getText() + error);
             }
         }
-    }
-
-    private Parent replaceSceneContent(Parent page) throws Exception {
-
-        Scene scene = stage.getScene();
-        if (scene == null) {
-            scene = new Scene(page, 640, 480);
-
-            // TODO no CSS yet
-            //scene.getStylesheets().add(App.class.getResource("demo.css").toExternalForm());
-
-            stage.setScene(scene);
-        } else {
-            stage.getScene().setRoot(page);
-        }
-        stage.sizeToScene();
-        return page;
     }
 }

@@ -30,7 +30,8 @@ public class PasswordGen {
             }
 
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-            Logger.getLogger(ScoreCalculator.class.getName()).log(Level.SEVERE, null, ex);
+        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotGeneratePassword();
+            Logger.getLogger(ScoreCalculator.class.getName()).log(Level.SEVERE, msg, ex);
         }
 
         return  sb.toString();

@@ -4,12 +4,17 @@ Project: SupplyAlyticsApp
 */
 package edu.hm.cs.softengii.db.sap;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 import edu.hm.cs.softengii.utils.SettingsPropertiesHelper;
@@ -59,7 +64,7 @@ public class Database implements IDatabase {
     }
 
     @Override
-    public void establishConnection() {
+    public boolean establishConnection() {
         try {
             if (connection == null || connection.isClosed()) {
                 //TODO PW vor finaler Abgabe aendern
@@ -67,7 +72,9 @@ public class Database implements IDatabase {
             }
         } catch (SQLException e) {
             ErrorMessage.show(e);
+            return false;
         }
+        return true;
     }
 
     @Override
@@ -82,24 +89,27 @@ public class Database implements IDatabase {
     @Override
     public List<String> getSuppliersList() {
 
-        establishConnection();
-        List<String> suppliers = new ArrayList<>();
-
-        try {
-            String query = "SELECT * FROM lfa1";
-
-            Statement statement = connection.createStatement();
-            ResultSet set = statement.executeQuery(query);
-
-            while (set.next()) {
-                suppliers.add(set.getString("name1"));
-            }
-
-        } catch (SQLException e) {
-            ErrorMessage.show(e);
+    	List<String> suppliers = new ArrayList<>();
+    	
+        if (establishConnection()) {
+        	
+        	try {
+        		String query = "SELECT * FROM lfa1";
+        		
+        		Statement statement = connection.createStatement();
+        		ResultSet set = statement.executeQuery(query);
+        		
+        		while (set.next()) {
+        			suppliers.add(set.getString("name1"));
+        		}
+        		
+        	} catch (SQLException e) {
+        		ErrorMessage.show(e);
+        	}
+        	
+        	closeConnection();
+        	
         }
-
-        closeConnection();
 
         return suppliers;
     }
@@ -115,37 +125,38 @@ public class Database implements IDatabase {
      */
     private void loadSupplierData() {
 
-        establishConnection();
         List<Supplier> suppliers = new ArrayList<>();
-
-        try {
-            ResultSet set = getSupplierDataFromDB();
-
-            while (set.next()) {
-
-                Supplier supplier = findSupplierInList(suppliers, set.getString("lfa1.LIFNR"));
-
-                if (supplier == null) {
-                    supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
-                    suppliers.add(supplier);
-                }
-
-                // generate delivery entry
-                Date actualDate = set.getDate("BUDAT");
-                Date promisedDate = set.getDate("SLFDT");
-                boolean isRelevantDelivery = actualDate != null && promisedDate != null;
-
-                if (isRelevantDelivery) {
-                    Delivery delivery = generateDelivery(set, actualDate, promisedDate);
-                    supplier.getDeliveries().add(delivery);
-                }
-            }
-        } catch (SQLException e) {
-            ErrorMessage.show(e);
+        if (establishConnection()) {
+        	try {
+        		ResultSet set = getSupplierDataFromDB();
+        		
+        		while (set.next()) {
+        			
+        			Supplier supplier = findSupplierInList(suppliers, set.getString("lfa1.LIFNR"));
+        			
+        			if (supplier == null) {
+        				supplier = new Supplier(set.getString("lfa1.LIFNR"), set.getString("NAME1"));
+        				suppliers.add(supplier);
+        			}
+        			
+        			// generate delivery entry
+        			Date actualDate = set.getDate("BUDAT");
+        			Date promisedDate = set.getDate("SLFDT");
+        			boolean isRelevantDelivery = actualDate != null && promisedDate != null;
+        			
+        			if (isRelevantDelivery) {
+        				Delivery delivery = generateDelivery(set, actualDate, promisedDate);
+        				supplier.getDeliveries().add(delivery);
+        			}
+        		}
+        	} catch (SQLException e) {
+        		ErrorMessage.show(e);
+        	}
+        	
+        	supplierData = suppliers;
+        	closeConnection();
         }
 
-        supplierData = suppliers;
-        closeConnection();
         assignSupplierClasses(suppliers);
 
     }
@@ -237,15 +248,23 @@ public class Database implements IDatabase {
 
         String password = "";
 
-        try {
-            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, key);
-
-            byte[] decryptedPwd = cipher.doFinal(cryptedPassword.getBytes());
-            password = new String(decryptedPwd);
-        } catch (Exception e) {
-            throw new RuntimeException("Could not decypher password. Unable to load data.");
-        }
+            Cipher cipher;
+			try {
+				cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+				cipher.init(Cipher.DECRYPT_MODE, key);
+				byte[] decryptedPwd = cipher.doFinal(cryptedPassword.getBytes());
+				password = new String(decryptedPwd);
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			} catch (NoSuchPaddingException e) {
+				e.printStackTrace();
+			} catch (InvalidKeyException e) {
+				e.printStackTrace();
+			} catch (IllegalBlockSizeException e) {
+				e.printStackTrace();
+			} catch (BadPaddingException e) {
+				e.printStackTrace();
+			}
 
         return password;
     }

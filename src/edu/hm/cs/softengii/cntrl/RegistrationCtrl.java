@@ -3,24 +3,19 @@ package edu.hm.cs.softengii.cntrl;
 import edu.hm.cs.softengii.db.userAuth.DatabaseUserAuth;
 import edu.hm.cs.softengii.db.userAuth.UserEntity;
 import edu.hm.cs.softengii.utils.LanguagePropertiesHelper;
+import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +28,7 @@ import java.util.regex.Pattern;
  */
 public class RegistrationCtrl implements Initializable{
 
-    private Stage stage;
+    private ArrayList<String> errors = new ArrayList<>();
 
     @FXML private Text welcomeHeadline;
     @FXML private Text welcomeText;
@@ -58,8 +53,6 @@ public class RegistrationCtrl implements Initializable{
     @FXML private Button registerButton;
     @FXML private Button germanButton;
     @FXML private Button englishButton;
-
-    private ArrayList<String> errors = new ArrayList<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -100,10 +93,6 @@ public class RegistrationCtrl implements Initializable{
         loadAllTexts();
     }
 
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
     private void clearErrorMessage() {
         errorMessageLeft.setText("");
         errorMessageRight.setText("");
@@ -130,18 +119,7 @@ public class RegistrationCtrl implements Initializable{
     }
 
     private void gotoMainMenu() {
-        try {
-
-            String fxmlPath = "../view/compareSuppliers.fxml";
-            FXMLLoader loader = new FXMLLoader(RegistrationCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((CompareSuppliersCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(RegistrationCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        MenuHelper.getInstance().gotoMainMenu();
     }
 
     private void validateInputs(){
@@ -203,22 +181,4 @@ public class RegistrationCtrl implements Initializable{
             }
         }
     }
-
-    private Parent replaceSceneContent(Parent page) throws Exception {
-
-        Scene scene = stage.getScene();
-        if (scene == null) {
-            scene = new Scene(page, 1024, 768);
-
-            // TODO no CSS yet
-            //scene.getStylesheets().add(App.class.getResource("demo.css").toExternalForm());
-
-            stage.setScene(scene);
-        } else {
-            stage.getScene().setRoot(page);
-        }
-        stage.sizeToScene();
-        return page;
-    }
-
 }

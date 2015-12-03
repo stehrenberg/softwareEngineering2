@@ -2,6 +2,7 @@ package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.dataStorage.DatabaseDataStorage;
 import edu.hm.cs.softengii.db.dataStorage.ScoreThresholdEntity;
+import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -11,10 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
@@ -22,7 +20,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.net.URL;
@@ -30,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * JavaFX Controller for 'preferences.fxml'.
@@ -42,7 +37,7 @@ import java.util.logging.Logger;
  */
 public class PreferencesCtrl implements Initializable {
 
-    private Stage stage;
+    private final ObservableList<ScoreThresholdEntity> scoreData = FXCollections.observableArrayList();
 
     @FXML private AnchorPane rootPane;
 
@@ -64,8 +59,6 @@ public class PreferencesCtrl implements Initializable {
     @FXML private Button resetButton;
     @FXML private Text errorMessage;
 
-    private final ObservableList<ScoreThresholdEntity> scoreData = FXCollections.observableArrayList();
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         errorMessage.setText("");
@@ -73,26 +66,6 @@ public class PreferencesCtrl implements Initializable {
 
         scoreData.addAll(DatabaseDataStorage.getInstance().getScoreThresholds());
         populateScoreTable();
-    }
-
-	/**
-	 * Decide whether admin menu items should be shown.
-	 * @param isAdmin
-	 */
-    private void setAdminMenusVisible(boolean isAdmin) {
-        if (isAdmin) {
-            newUserMenuItem.setVisible(true);
-            manageAllUsersMenuItem.setVisible(true);
-            userMenuSeperator.setVisible(true);
-            preferencesMenuItem.setVisible(true);
-            preferencesMenuSeperator.setVisible(true);
-        } else {
-            newUserMenuItem.setVisible(false);
-            manageAllUsersMenuItem.setVisible(false);
-            userMenuSeperator.setVisible(false);
-            preferencesMenuItem.setVisible(false);
-            preferencesMenuSeperator.setVisible(false);
-        }
     }
 
     @FXML
@@ -115,7 +88,6 @@ public class PreferencesCtrl implements Initializable {
         }
     }
 
-
     @FXML
     void resetScoreSetttings(ActionEvent event) {
 
@@ -137,144 +109,70 @@ public class PreferencesCtrl implements Initializable {
         }
     }
 
+
     @FXML
-    void gotoCreateNewUser(ActionEvent event) {
+    public void gotoCreateNewUser() {
+        MenuHelper.getInstance().gotoCreateNewUser();
+    }
 
-        try {
+    @FXML
+    public void gotoManageAllUsers() {
+        MenuHelper.getInstance().gotoManageAllUsers();
+    }
 
-            String fxmlPath = "../view/createNewUser.fxml";
-            FXMLLoader loader = new FXMLLoader(PreferencesCtrl.class.getResource(fxmlPath));
+    @FXML
+    public void gotoCompareSuppliers() {
+        MenuHelper.getInstance().gotoCompareSuppliers();
+    }
 
-            Parent page = (Parent) loader.load();
-            ((CreateNewUserCtrl)loader.getController()).setStage(stage);
+    @FXML
+    public void gotoAverageSuppliers() {
+        MenuHelper.getInstance().gotoAverageSuppliers();
+    }
 
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(PreferencesCtrl.class.getName()).log(Level.SEVERE, null, ex);
+    @FXML
+    public void gotoUserSettings() {
+        MenuHelper.getInstance().gotoUserSettings();
+    }
+
+    @FXML
+    public void gotoAbout() {
+        MenuHelper.getInstance().gotoAbout();
+    }
+
+    @FXML
+    public void gotoLogin() {
+        MenuHelper.getInstance().gotoLogin();
+    }
+
+    @FXML
+    public void gotoPreferences() {
+        //Do nothing, we are already here
+    }
+
+    @FXML
+    public void quitApplication() {
+        MenuHelper.getInstance().quitApplication();
+    }
+
+    /**
+     * Decide whether admin menu items should be shown.
+     * @param isAdmin
+     */
+    private void setAdminMenusVisible(boolean isAdmin) {
+        if (isAdmin) {
+            newUserMenuItem.setVisible(true);
+            manageAllUsersMenuItem.setVisible(true);
+            userMenuSeperator.setVisible(true);
+            preferencesMenuItem.setVisible(true);
+            preferencesMenuSeperator.setVisible(true);
+        } else {
+            newUserMenuItem.setVisible(false);
+            manageAllUsersMenuItem.setVisible(false);
+            userMenuSeperator.setVisible(false);
+            preferencesMenuItem.setVisible(false);
+            preferencesMenuSeperator.setVisible(false);
         }
-    }
-
-    @FXML
-    void gotoManageAllUsers(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/manageAllUsers.fxml";
-            FXMLLoader loader = new FXMLLoader(PreferencesCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((ManageAllUsersCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(PreferencesCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    @FXML
-    void gotoCompareSuppliers(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/compareSuppliers.fxml";
-            FXMLLoader loader = new FXMLLoader(PreferencesCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((CompareSuppliersCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(PreferencesCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @FXML
-    void gotoAverageSuppliers(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/averageSuppliers.fxml";
-            FXMLLoader loader = new FXMLLoader(PreferencesCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((AverageSuppliersCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(PreferencesCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    @FXML
-    void gotoUserSettings(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/userSettings.fxml";
-            FXMLLoader loader = new FXMLLoader(
-                    PreferencesCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((UserSettingsCtrl) loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(PreferencesCtrl.class.getName()).log(
-                    Level.SEVERE, null, ex);
-        }
-    }
-
-    @FXML
-    void gotoAbout(ActionEvent event) {
-
-        try {
-
-            String fxmlPath = "../view/about.fxml";
-            FXMLLoader loader = new FXMLLoader(PreferencesCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((AboutCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(PreferencesCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @FXML
-    void gotoLogin(ActionEvent event) {
-
-        Session.getInstance().close();
-
-        try {
-
-            String fxmlPath = "../view/login.fxml";
-            FXMLLoader loader = new FXMLLoader(PreferencesCtrl.class.getResource(fxmlPath));
-
-            Parent page = (Parent) loader.load();
-            ((LoginCtrl)loader.getController()).setStage(stage);
-
-            replaceSceneContent(page);
-        } catch (Exception ex) {
-            Logger.getLogger(PreferencesCtrl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @FXML
-    void quitApplication(ActionEvent event) {
-        stage.close();
-    }
-
-    @FXML
-    void gotoPreferences(ActionEvent event) {
-
-        // Do nothing, we are already here
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
     }
 
     private void populateScoreTableWithDefaults() {
@@ -368,23 +266,6 @@ public class PreferencesCtrl implements Initializable {
 
     }
     
-    private Parent replaceSceneContent(Parent page) throws Exception {
-
-        Scene scene = stage.getScene();
-        if (scene == null) {
-            scene = new Scene(page, 640, 480);
-
-            // TODO no CSS yet
-            //scene.getStylesheets().add(App.class.getResource("demo.css").toExternalForm());
-
-            stage.setScene(scene);
-        } else {
-            stage.getScene().setRoot(page);
-        }
-        stage.sizeToScene();
-        return page;
-    }
-
     /**
      * A editable Cell in a TableView.
      * @author Apachen Pub Team
