@@ -4,7 +4,14 @@ import edu.hm.cs.softengii.db.userAuth.UserEntity;
 
 public class Session {
 
+	/**
+	 * Singleton instance of this class
+	 */
     private static Session instance = null;
+    
+    /**
+     * User that is authenticated
+     */
     private UserEntity authenticatedUser;
 
     /**
@@ -31,6 +38,9 @@ public class Session {
         this.authenticatedUser = authenticatedUser;
     }
 
+    /**
+     * Close this session
+     */
     public void close() {
         this.authenticatedUser = null;
     }

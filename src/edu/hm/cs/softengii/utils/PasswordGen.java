@@ -13,7 +13,6 @@ public class PasswordGen {
 
     /**
      * Returns a hashed string representation of the given argument by using SHA-265.
-     *
      * @param pw - the password to be hased
      */
     public static String generatePassword(String pw) {

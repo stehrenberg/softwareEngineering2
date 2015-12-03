@@ -13,19 +13,41 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Class to represent the main class of this program
+ * @author Simon
+ */
 public class SupplyAlyticsApp extends Application {
 
+	/**
+	 * Current JavaFX stage
+	 */
     private Stage stage;
+    
+    /**
+     * Singleton instance of this class
+     */
     private static SupplyAlyticsApp instance;
 
+    /**
+     * Create a new instance 
+     */
     public SupplyAlyticsApp() {
         instance = this;
     }
 
+    /**
+     * Get singleton instance of this class
+     * @return
+     */
     public static SupplyAlyticsApp getInstance() {
         return instance;
     }
 
+    /**
+     * Main methods to start the pogram
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
@@ -47,7 +69,9 @@ public class SupplyAlyticsApp extends Application {
         primaryStage.show();
     }
 
-
+    /**
+     * Show registration page
+     */
     private void gotoRegistration() {
         try {
 
@@ -64,6 +88,9 @@ public class SupplyAlyticsApp extends Application {
         }
     }
 
+    /**
+     * Show login page
+     */
     private void gotoLogin() {
         try {
 
@@ -80,6 +107,10 @@ public class SupplyAlyticsApp extends Application {
         }
     }
 
+    /**
+     * Replace the current scene content by another page
+     * @param page New page to replace
+     */
     private Parent replaceSceneContent(Parent page) throws Exception {
 
         Scene scene = stage.getScene();

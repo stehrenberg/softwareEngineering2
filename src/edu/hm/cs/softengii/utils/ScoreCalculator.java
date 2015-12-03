@@ -17,16 +17,23 @@ import edu.hm.cs.softengii.db.sap.Supplier;
  */
 public class ScoreCalculator {
 
-	private static final long SECS_PER_DAY = 86400; // Number of seconds per day (24 * 60 * 60)
-
+	/**
+	 * Date pickers range start date
+	 */
 	private LocalDate rangeStart = LocalDate.MIN;
+	
+	/**
+	 * Date pickers range end date
+	 */
 	private LocalDate rangeEnd = LocalDate.now();
 
+	/**
+	 * Create a new empty instance
+	 */
 	public ScoreCalculator() {}
 
 	/**
 	 * Determines from which date on deliveries should be taken to calculate a supplier's score.
-	 *
 	 * @param start The start date for the score calculation
 	 */
 	public void setRangeStart(LocalDate start) {
@@ -35,7 +42,6 @@ public class ScoreCalculator {
 
 	/**
 	 * Determines until which date deliveries should taken to calculate a supplier's score.
-	 *
 	 * @param end The end date for the score calculation
 	 */
 	public void setRangeEnd(LocalDate end) {
@@ -45,7 +51,6 @@ public class ScoreCalculator {
 	/**
 	 * Calculates a score to rate a given supplier.
 	 * Returns the score calculated over all deliveries of a given supplier.
-	 *
 	 * @param supplier The supplier to calculate the score for
 	 */
 	public double calculateScore(Supplier supplier) {
@@ -93,7 +98,6 @@ public class ScoreCalculator {
 	/**
 	 * Calculate score for a single delivery by a specific algorithm
      * Returns a single score value.
-     *
 	 * @param delayedDays The umber of delayed days
      * @param thresholds A list containing the thresholds
 	 */
