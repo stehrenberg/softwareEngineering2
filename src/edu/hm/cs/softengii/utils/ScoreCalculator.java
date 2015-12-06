@@ -26,9 +26,17 @@ public class ScoreCalculator {
 	private LocalDate rangeEnd = LocalDate.now();
 
 	/**
-	 * Create a new empty instance
+	 * Thresholds to score a delivery
 	 */
-	public ScoreCalculator() {}
+	ArrayList<ScoreThresholdEntity> thresholds;
+	
+	/**
+	 * Create a new instance
+	 */
+	public ScoreCalculator()
+	{
+		this.thresholds = DatabaseDataStorage.getInstance().getScoreThresholds();
+	}
 
 	/**
 	 * Determines from which date on deliveries should be taken to calculate a supplier's score.
@@ -64,16 +72,13 @@ public class ScoreCalculator {
 				})
 				.collect(Collectors.toList());
 
-		// get all thresholds from db
-		ArrayList<ScoreThresholdEntity> thresholds = DatabaseDataStorage.getInstance().getScoreThresholds();
-		
 		for (Delivery delivery: filteredDels) {
 
 			// calculate difference of actual and promised delivery date in days
 			int diffInDays = delivery.getDelay();
 
 			// calculate single score
-			int singleScore = calculateSingleScore(diffInDays, thresholds);
+			int singleScore = calculateSingleScore(diffInDays);
 
 			scoreSum += singleScore;
 		}
@@ -91,11 +96,11 @@ public class ScoreCalculator {
 	 * @param delayedDays The umber of delayed days
      * @param thresholds A list containing the thresholds
 	 */
-	private int calculateSingleScore(int delayedDays, ArrayList<ScoreThresholdEntity> thresholds) {
+	private int calculateSingleScore(int delayedDays) {
 
 		int singleScore = 0; // default score is 0%
 
-		for (ScoreThresholdEntity threshold: thresholds) {
+		for (ScoreThresholdEntity threshold: this.thresholds) {
 
 			if (delayedDays >= threshold.getEarlyMin() && delayedDays <= threshold.getEarlyMax()
                     || delayedDays >= threshold.getLateMin() && delayedDays <= threshold.getLateMax()) {

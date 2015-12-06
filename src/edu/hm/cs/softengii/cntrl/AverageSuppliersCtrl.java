@@ -60,7 +60,6 @@ public class AverageSuppliersCtrl implements Initializable {
 
 	@FXML private DatePicker endDatePicker;
 
-	private ScoreCalculator scoreCalculator = new ScoreCalculator();
 	/** Contains all supplier classes that are selected via checkbox to be displayed. */
 	private List<SupplierClass> classesToDisplay = new ArrayList<>();
 
@@ -117,15 +116,11 @@ public class AverageSuppliersCtrl implements Initializable {
 
     @FXML
 	void startDatePickerAction(ActionEvent event) {
-		LocalDate dateRangeStart = startDatePicker.getValue();
-		scoreCalculator.setRangeStart(dateRangeStart);
 		updateChart();
 	}
 
 	@FXML
 	void endDatePickerAction(ActionEvent event) {
-		LocalDate dateRangeEnd = endDatePicker.getValue();
-		scoreCalculator.setRangeEnd(dateRangeEnd);
 		updateChart();
 	}
 
@@ -170,6 +165,16 @@ public class AverageSuppliersCtrl implements Initializable {
 	 */
 	private void updateChart() {
 
+		ScoreCalculator scoreCalculator = new ScoreCalculator();
+		
+		if (startDatePicker.getValue() != null) {
+			scoreCalculator.setRangeStart(startDatePicker.getValue());
+		}
+		
+		if (endDatePicker.getValue() != null) {
+			scoreCalculator.setRangeEnd(endDatePicker.getValue());
+		}
+		
 		XYChart.Series<Number, String> serie = new XYChart.Series<>();
 
 		List<Supplier> suppliers = Database.getInstance().getSupplierData();
