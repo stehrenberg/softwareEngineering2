@@ -21,9 +21,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -173,15 +176,23 @@ public class AverageSuppliersCtrl implements Initializable {
 		List<Supplier> filteredSupps = suppliers.stream()
 		    .filter(supplier -> classesToDisplay.contains(supplier.getSupplierClass()))
 		    .collect(Collectors.toList());
-
+		
 		for (Supplier supplier: filteredSupps) {
 
 			double score = scoreCalculator.calculateScore(supplier);
-			double rounded = ((int)(score*100)) /100.0;
+			double rounded = ((int)(score * 100)) / 100.0;
 
     		serie.getData().add(new XYChart.Data<Number, String>(score, supplier.getName() + " "
     		    + rounded + "%\n" + supplier.getSupplierClass()));
     	}
+
+		// Sort entries by score value
+		Collections.sort(serie.getData(), new Comparator<XYChart.Data<Number, String>>() {
+			@Override
+			public int compare(XYChart.Data<Number, String> s1, XYChart.Data<Number, String> s2) {
+				return new BigDecimal(s1.getXValue().toString()).compareTo(new BigDecimal(s2.getXValue().toString()));
+			}
+		});
 
 		compareChart.getData().clear();
 		compareChart.getData().add(serie);
