@@ -68,7 +68,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
 
         try {
             if (this.connection == null || this.connection.isClosed()) {
-                this.connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+                this.connection = DriverManager.getConnection("jdbc:sqlite::resource:userAuth.db", USER, PASSWORD);
             }
         } catch (SQLException e) {
             e.printStackTrace();

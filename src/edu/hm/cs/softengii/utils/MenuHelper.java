@@ -32,7 +32,7 @@ public class MenuHelper {
 
     public void gotoCreateNewUser(){
 
-            String fxmlPath = "../view/createNewUser.fxml";
+            String fxmlPath = "/createNewUser.fxml";
             FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         try {
@@ -48,7 +48,7 @@ public class MenuHelper {
 
     public void gotoManageAllUsers() {
 
-        String fxmlPath = "../view/manageAllUsers.fxml";
+        String fxmlPath = "/manageAllUsers.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         try {
@@ -64,7 +64,7 @@ public class MenuHelper {
 
     public void gotoCompareSuppliers() {
 
-        String fxmlPath = "../view/compareSuppliers.fxml";
+        String fxmlPath = "/compareSuppliers.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         try {
@@ -80,7 +80,7 @@ public class MenuHelper {
 
     public void gotoAverageSuppliers() {
 
-        String fxmlPath = "../view/averageSuppliers.fxml";
+        String fxmlPath = "/averageSuppliers.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         try {
@@ -96,7 +96,7 @@ public class MenuHelper {
 
     public void gotoUserSettings() {
 
-        String fxmlPath = "../view/userSettings.fxml";
+        String fxmlPath = "/userSettings.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         try {
@@ -112,7 +112,7 @@ public class MenuHelper {
 
     public void gotoAbout() {
 
-        String fxmlPath = "../view/about.fxml";
+        String fxmlPath = "/about.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         try {
@@ -130,7 +130,7 @@ public class MenuHelper {
 
         Session.getInstance().close();
 
-        String fxmlPath = "../view/login.fxml";
+        String fxmlPath = "/login.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         try {
@@ -146,7 +146,7 @@ public class MenuHelper {
 
     public void gotoPreferences() {
 
-        String fxmlPath = "../view/preferences.fxml";
+        String fxmlPath = "/preferences.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         try {
@@ -162,7 +162,7 @@ public class MenuHelper {
 
     public void gotoMainMenu() {
 
-        String fxmlPath = "../view/compareSuppliers.fxml";
+        String fxmlPath = "/compareSuppliers.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         try {
@@ -178,7 +178,7 @@ public class MenuHelper {
 
     public void gotoRegistration() {
 
-        String fxmlPath = "../view/registration.fxml";
+        String fxmlPath = "/registration.fxml";
         FXMLLoader loader = new FXMLLoader (MenuHelper.class.getResource(fxmlPath));
 
         try {

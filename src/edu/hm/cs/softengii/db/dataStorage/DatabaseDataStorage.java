@@ -69,7 +69,7 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
     	
         try {
             if (this.connection == null || this.connection.isClosed()) {
-                this.connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+                this.connection = DriverManager.getConnection("jdbc:sqlite::resource:dataStorage.db", USER, PASSWORD);
             }
         } catch (SQLException e) {
             e.printStackTrace();
