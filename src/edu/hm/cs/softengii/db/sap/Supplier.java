@@ -8,6 +8,8 @@ package edu.hm.cs.softengii.db.sap;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.hm.cs.softengii.db.dataStorage.SupplierClass;
+
 /**
  * Represents the necessary data for each supplier.
  */

@@ -57,4 +57,20 @@ public interface IDatabaseDataStorage {
      * @param thresholds New thresholds
      */
     void setDeliveryRangeThresholds(ObservableList<DeliveryRangeThresholdEntity> thresholds);
+    
+    /**
+     * Get all supplier classification thresholds from the database
+     */
+    ArrayList<SupplierClassificationThresholdEntity> getSupplierClassificationThresholds();
+
+    /**
+     * Get all default supplier classification thresholds from the database
+     */
+    ArrayList<SupplierClassificationThresholdEntity> getSupplierClassificationDefaults();
+    
+    /**
+     * Set new supplier classification thresholds to the database. Old thresholds are removed.
+     * @param thresholds New thresholds
+     */
+    void setSupplierClassificationThresholds(ObservableList<SupplierClassificationThresholdEntity> thresholds);
 }

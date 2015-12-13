@@ -7,7 +7,7 @@ package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.sap.Database;
 import edu.hm.cs.softengii.db.sap.Supplier;
-import edu.hm.cs.softengii.db.sap.SupplierClass;
+import edu.hm.cs.softengii.db.dataStorage.SupplierClass;
 import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.ScoreCalculator;
 import edu.hm.cs.softengii.utils.Session;

@@ -9,11 +9,8 @@ package edu.hm.cs.softengii.db.dataStorage;
 import edu.hm.cs.softengii.utils.SettingsPropertiesHelper;
 import javafx.collections.ObservableList;
 
-import java.io.Console;
 import java.sql.*;
 import java.util.ArrayList;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Wrapper class to manage storing data in the database
@@ -285,6 +282,105 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
 		    			threshold.getDeliveryRangeName().ordinal() + ", " + 
 		    			threshold.getDaysMin() + ", " + 
 		    			threshold.getDaysMax() + ");";
+			    statement = this.connection.createStatement();
+			    statement.execute(query);
+		    }
+		
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+		
+		closeConnection();
+    }
+    
+    /**
+     * Get all supplier classification thresholds from the database
+     */
+    @Override
+    public ArrayList<SupplierClassificationThresholdEntity> getSupplierClassificationThresholds() {
+    	
+    	ArrayList<SupplierClassificationThresholdEntity> thresholds = new ArrayList<>();
+    	
+    	establishConnection();
+    	
+		try {
+		    String query = "SELECT * FROM SupplierClassificationThresholds;";
+		    Statement statement = this.connection.createStatement();
+		    ResultSet set = statement.executeQuery(query);
+		    
+		    while (set.next()) {
+		    	
+		    	SupplierClass supplierClass = SupplierClass.values()[set.getInt(1)];
+		    	int deliveriesMin = set.getInt(2);
+		    	int deliveriesMax = set.getInt(3);
+		    	
+		    	thresholds.add(new SupplierClassificationThresholdEntity(supplierClass, deliveriesMin, deliveriesMax));
+		    }
+		
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+		
+		closeConnection();
+		
+		return thresholds;
+    }
+
+    /**
+     * Get all default supplier classification thresholds from the database
+     */
+    @Override
+    public ArrayList<SupplierClassificationThresholdEntity> getSupplierClassificationDefaults() {
+
+ArrayList<SupplierClassificationThresholdEntity> thresholds = new ArrayList<>();
+    	
+    	establishConnection();
+    	
+		try {
+		    String query = "SELECT * FROM SupplierClassificationDefaults;";
+		    Statement statement = this.connection.createStatement();
+		    ResultSet set = statement.executeQuery(query);
+		    
+		    while (set.next()) {
+		    	
+		    	SupplierClass supplierClass = SupplierClass.values()[set.getInt(1)];
+		    	int deliveriesMin = set.getInt(2);
+		    	int deliveriesMax = set.getInt(3);
+		    	
+		    	thresholds.add(new SupplierClassificationThresholdEntity(supplierClass, deliveriesMin, deliveriesMax));
+		    }
+		
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+		
+		closeConnection();
+		
+		return thresholds;
+    }
+    
+    /**
+     * Set new supplier classification thresholds to the database. Old thresholds are removed.
+     * @param thresholds New thresholds
+     */
+    @Override
+    public void setSupplierClassificationThresholds(ObservableList<SupplierClassificationThresholdEntity> thresholds) {
+    	
+    	establishConnection();
+    	
+		try {
+			// First remove all old thresholds in db
+		    String query = "DELETE FROM SupplierClassificationThresholds;";
+		    Statement statement = this.connection.createStatement();
+		    statement.execute(query);
+		    
+		    // Then insert new thresholds to database
+		    for (SupplierClassificationThresholdEntity threshold: thresholds) {
+		    	
+		    	query = "INSERT INTO DeliveryRangeThresholds VALUES (" +
+		    			threshold.getClassificationName().ordinal() + ", " + 
+		    			threshold.getDelivieriesMin() + ", " + 
+		    			threshold.getDelivieriesMax() + ");";
 			    statement = this.connection.createStatement();
 			    statement.execute(query);
 		    }

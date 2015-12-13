@@ -17,6 +17,9 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
+import edu.hm.cs.softengii.db.dataStorage.DatabaseDataStorage;
+import edu.hm.cs.softengii.db.dataStorage.SupplierClass;
+import edu.hm.cs.softengii.db.dataStorage.SupplierClassificationThresholdEntity;
 import edu.hm.cs.softengii.utils.SettingsPropertiesHelper;
 
 /**
@@ -167,17 +170,39 @@ public class Database implements IDatabase {
      */
     private void assignSupplierClasses(List<Supplier> suppliers) {
 
+    	ArrayList<SupplierClassificationThresholdEntity> thresholds =
+    			DatabaseDataStorage.getInstance().getSupplierClassificationThresholds();
+    	
         suppliers.stream().forEach(supplier -> {
-            int deliveryCount = supplier.getDeliveries().size();
-            SupplierClass suppClass = SupplierClass.NORMAL;
-
-            if (deliveryCount < SupplierClass.NORMAL.getDeliveryCountLowerBorder()) {
-                suppClass = SupplierClass.ONE_OFF;
-            } else if (deliveryCount > SupplierClass.NORMAL.getDeliveryCountUpperBorder()) {
-                suppClass = SupplierClass.TOP;
-            }
-            supplier.setSupplierClass(suppClass);
+            supplier.setSupplierClass(this.getClassforSupplier(supplier, thresholds));
         });
+    }
+    
+    /**
+     * Get the classification for a supplier
+     * @param supplier Supplier
+     * @param thresholds Classification thresholds
+     * @return Classification
+     */
+    private SupplierClass getClassforSupplier(Supplier supplier,
+    		ArrayList<SupplierClassificationThresholdEntity> thresholds) {
+    	
+    	int deliveryCount = supplier.getDeliveries().size();
+        SupplierClass suppClass = SupplierClass.NORMAL;
+    	
+    	// Search for classification
+        for (SupplierClassificationThresholdEntity threshold: thresholds) {
+        	
+        	if (deliveryCount >= threshold.getDelivieriesMin() && 
+        		deliveryCount <= threshold.getDelivieriesMax()) {
+        		
+        		// found!!
+        		suppClass = threshold.getClassificationName();
+        		break;
+        	}
+        }
+        
+        return suppClass;
     }
 
     /**
