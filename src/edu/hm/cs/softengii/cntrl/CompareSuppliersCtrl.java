@@ -5,10 +5,10 @@ Project: SupplyAlyticsApp
 
 package edu.hm.cs.softengii.cntrl;
 
+import edu.hm.cs.softengii.db.dataStorage.DeliveryRange;
 import edu.hm.cs.softengii.db.sap.Database;
 import edu.hm.cs.softengii.db.sap.Supplier;
 import edu.hm.cs.softengii.utils.DeliveryRangeCalculator;
-import edu.hm.cs.softengii.utils.DeliveryRangeCalculator.Range;
 import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.collections.FXCollections;
@@ -24,7 +24,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.util.StringConverter;
 
-import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -246,14 +245,29 @@ public class CompareSuppliersCtrl implements Initializable {
 
 			serie.setName(supplier.getName());
 
-			Map<Range, Double> ranges = rangeCalculator.calculateDeliveryRanges(supplier);
+			Map<DeliveryRange, Double> ranges = rangeCalculator.calculateDeliveryRanges(supplier);
 
-			serie.getData().add(new XYChart.Data<String, Number>("much too early", 100* ranges.get(Range.VERY_EARLY)));
-			serie.getData().add(new XYChart.Data<String, Number>("too early", 100 * ranges.get(Range.EARLY)));
-			serie.getData().add(new XYChart.Data<String, Number>("on time", 100 * ranges.get(Range.IN_TIME)));
-			serie.getData().add(new XYChart.Data<String, Number>("too late", 100 * ranges.get(Range.LATE)));
-			serie.getData().add(new XYChart.Data<String, Number>("much too late", 100 * ranges.get(Range.VERY_LATE)));
+			
+			this.addDeliveryRangeToSerie(serie, ranges, DeliveryRange.VERY_EARLY, "much too early");
+			this.addDeliveryRangeToSerie(serie, ranges, DeliveryRange.EARLY, "too early");
+			this.addDeliveryRangeToSerie(serie, ranges, DeliveryRange.IN_TIME, "on time");
+			this.addDeliveryRangeToSerie(serie, ranges, DeliveryRange.LATE, "too late");
+			this.addDeliveryRangeToSerie(serie, ranges, DeliveryRange.VERY_LATE, "much too late");
 		}
 	}
 
+	/**
+	 * Add a range with a label to the serie
+	 * @param serie Serie to add
+	 * @param ranges All available ranges
+	 * @param range Range to add
+	 * @param label Label
+	 */
+	private void addDeliveryRangeToSerie(XYChart.Series<String, Number> serie, 
+			Map<DeliveryRange, Double> ranges, DeliveryRange range, String label) {
+		
+		if (ranges.containsKey(range)) {
+			serie.getData().add(new XYChart.Data<String, Number>(label, 100 * ranges.get(range)));
+		}
+	}
 }

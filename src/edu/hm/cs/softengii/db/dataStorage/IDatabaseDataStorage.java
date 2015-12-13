@@ -41,4 +41,20 @@ public interface IDatabaseDataStorage {
      * @param thresholds New thresholds
      */
     void setScoreThresholds(ObservableList<ScoreThresholdEntity> thresholds);
+    
+    /**
+     * Get all delivery range thresholds from the database
+     */
+    ArrayList<DeliveryRangeThresholdEntity> getDeliveryRangeThresholds();
+
+    /**
+     * Get all default delivery range thresholds from the database
+     */
+    ArrayList<DeliveryRangeThresholdEntity> getDeliveryRangeDefaults();
+    
+    /**
+     * Set new delivery range thresholds to the database. Old thresholds are removed.
+     * @param thresholds New thresholds
+     */
+    void setDeliveryRangeThresholds(ObservableList<DeliveryRangeThresholdEntity> thresholds);
 }

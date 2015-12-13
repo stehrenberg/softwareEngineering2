@@ -1,10 +1,13 @@
 package edu.hm.cs.softengii.utils;
 
+import edu.hm.cs.softengii.db.dataStorage.DatabaseDataStorage;
+import edu.hm.cs.softengii.db.dataStorage.DeliveryRange;
+import edu.hm.cs.softengii.db.dataStorage.DeliveryRangeThresholdEntity;
 import edu.hm.cs.softengii.db.sap.Delivery;
 import edu.hm.cs.softengii.db.sap.Supplier;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,17 +17,6 @@ import java.util.stream.Collectors;
  * Class to calculate the delivery ranges of a supplier.
  */
 public class DeliveryRangeCalculator {
-
-	/**
-	 * Enum to classify a range
-	 * @author Kevin Beck
-	 */
-	public enum Range { VERY_LATE, LATE, IN_TIME, EARLY, VERY_EARLY } 
-	
-	/**
-	 * Number of seconds per day (24 * 60 * 60)
-	 */
-	private static final long SECS_PER_DAY = 86400;
 
 	/**
 	 * Date pickers range start date
@@ -62,29 +54,21 @@ public class DeliveryRangeCalculator {
      * Returns a map of the date ranges with their rates.
      * @param supplier Supplier to calculate rates for.
      */
-	public Map<Range, Double> calculateDeliveryRanges(Supplier supplier) {
+	public Map<DeliveryRange, Double> calculateDeliveryRanges(Supplier supplier) {
 
-		Map<Range, Double> ranges = new HashMap<>();
+		Map<DeliveryRange, Double> ranges = new HashMap<>();
 
-		ranges.put(Range.VERY_EARLY, calculateRangeRate(supplier, Integer.MIN_VALUE, -6));
-		ranges.put(Range.EARLY, calculateRangeRate(supplier, -5, -2));
-		ranges.put(Range.IN_TIME, calculateRangeRate(supplier, -1, 0));
-		ranges.put(Range.LATE, calculateRangeRate(supplier, 1, 5));
-		ranges.put(Range.VERY_LATE, calculateRangeRate(supplier, 6, Integer.MAX_VALUE));
+		// Get range thrsholds from database
+		ArrayList<DeliveryRangeThresholdEntity> rangeEntities =
+				DatabaseDataStorage.getInstance().getDeliveryRangeThresholds();
+		
+		for (DeliveryRangeThresholdEntity entity: rangeEntities) {
+			
+			ranges.put(entity.getDeliveryRangeName(),
+					calculateRangeRate(supplier, entity.getDaysMin(), entity.getDaysMax()));
+		}
 
 		return ranges;
-	}
-
-	/**
-	 * Returns the difference in days between two given dates.
-	 * @param start The start date
-	 * @param end The end date
-	 */
-	private int calculateDayDiff(Date start, Date end) {
-
-		long diffInSeconds = (end.getTime() - start.getTime()) / 1000;
-
-        return (int)(diffInSeconds / SECS_PER_DAY);
 	}
 
 	/**

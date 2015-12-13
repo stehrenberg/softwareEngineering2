@@ -9,8 +9,11 @@ package edu.hm.cs.softengii.db.dataStorage;
 import edu.hm.cs.softengii.utils.SettingsPropertiesHelper;
 import javafx.collections.ObservableList;
 
+import java.io.Console;
 import java.sql.*;
 import java.util.ArrayList;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Wrapper class to manage storing data in the database
@@ -69,7 +72,7 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
     	
         try {
             if (this.connection == null || this.connection.isClosed()) {
-                this.connection = DriverManager.getConnection("jdbc:sqlite::resource:dataStorage.db", USER, PASSWORD);
+                this.connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -163,6 +166,7 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
      * Set new score thresholds to the database. Old thresholds are removed.
      * @param thresholds New thresholds
      */
+    @Override
     public void setScoreThresholds(ObservableList<ScoreThresholdEntity> thresholds) {
     	
     	establishConnection();
@@ -182,6 +186,105 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
 		    			threshold.getEarlyMax() + ", " + 
 		    			threshold.getLateMin() + ", " + 
 		    			threshold.getLateMax() + ");";
+			    statement = this.connection.createStatement();
+			    statement.execute(query);
+		    }
+		
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+		
+		closeConnection();
+    }
+    
+    /**
+     * Get all delivery range thresholds from the database
+     */
+    @Override
+    public ArrayList<DeliveryRangeThresholdEntity> getDeliveryRangeThresholds() {
+    	
+    	ArrayList<DeliveryRangeThresholdEntity> thresholds = new ArrayList<>();
+    	
+    	establishConnection();
+    	
+		try {
+		    String query = "SELECT * FROM DeliveryRangeThresholds;";
+		    Statement statement = this.connection.createStatement();
+		    ResultSet set = statement.executeQuery(query);
+		    
+		    while (set.next()) {
+		    	
+		    	DeliveryRange deliveryRange = DeliveryRange.values()[set.getInt(1)];
+		    	int daysMin = set.getInt(2);
+		    	int daysMax = set.getInt(3);
+		    	
+		    	thresholds.add(new DeliveryRangeThresholdEntity(deliveryRange, daysMin, daysMax));
+		    }
+		
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+		
+		closeConnection();
+		
+		return thresholds;
+    }
+
+    /**
+     * Get all default delivery range thresholds from the database
+     */
+    @Override
+    public ArrayList<DeliveryRangeThresholdEntity> getDeliveryRangeDefaults() {
+
+    	ArrayList<DeliveryRangeThresholdEntity> thresholds = new ArrayList<>();
+    	
+    	establishConnection();
+    	
+		try {
+		    String query = "SELECT * FROM DeliveryRangeDefaults;";
+		    Statement statement = this.connection.createStatement();
+		    ResultSet set = statement.executeQuery(query);
+		    
+		    while (set.next()) {
+		    	
+		    	DeliveryRange deliveryRange = DeliveryRange.values()[set.getInt(1)];
+		    	int daysMin = set.getInt(2);
+		    	int daysMax = set.getInt(3);
+		    	
+		    	thresholds.add(new DeliveryRangeThresholdEntity(deliveryRange, daysMin, daysMax));
+		    }
+		
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+		
+		closeConnection();
+		
+		return thresholds;
+    }
+    
+    /**
+     * Set new delivery range thresholds to the database. Old thresholds are removed.
+     * @param thresholds New thresholds
+     */
+    @Override
+    public void setDeliveryRangeThresholds(ObservableList<DeliveryRangeThresholdEntity> thresholds) {
+    	
+    	establishConnection();
+    	
+		try {
+			// First remove all old thresholds in db
+		    String query = "DELETE FROM DeliveryRangeThresholds;";
+		    Statement statement = this.connection.createStatement();
+		    statement.execute(query);
+		    
+		    // Then insert new thresholds to database
+		    for (DeliveryRangeThresholdEntity threshold: thresholds) {
+		    	
+		    	query = "INSERT INTO DeliveryRangeThresholds VALUES (" +
+		    			threshold.getDeliveryRangeName().ordinal() + ", " + 
+		    			threshold.getDaysMin() + ", " + 
+		    			threshold.getDaysMax() + ");";
 			    statement = this.connection.createStatement();
 			    statement.execute(query);
 		    }
