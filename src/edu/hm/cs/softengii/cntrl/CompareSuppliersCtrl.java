@@ -24,8 +24,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.util.StringConverter;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -95,6 +98,15 @@ public class CompareSuppliersCtrl implements Initializable {
 		    }
 		 };
 
+		// Sort entries alphabetically
+		Collections.sort(list, new Comparator<Supplier>() {
+			@Override
+			public int compare(Supplier s1, Supplier s2) {
+				return s1.getName().compareTo(s2.getName());
+			}
+		});
+
+		 
 		supplier1Combo.setItems(list);
 		supplier1Combo.setConverter(converter);
 		supplier2Combo.setItems(list);
