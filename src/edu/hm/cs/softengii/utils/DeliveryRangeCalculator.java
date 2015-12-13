@@ -96,9 +96,8 @@ public class DeliveryRangeCalculator {
 	private double calculateRangeRate(Supplier supplier, int dayDiffMin, int dayDiffMax) {
 
 		double deliveryCounter = 0;
-		List<Delivery> deliveries = supplier.getDeliveries();
 
-		List<Delivery> filteredDels = deliveries.stream()
+		List<Delivery> filteredDels = supplier.getDeliveries().stream()
 				.filter(delivery -> {
 
 					boolean isBefore = delivery.getActualDeliveryDate().isBefore(rangeEnd);
@@ -120,8 +119,8 @@ public class DeliveryRangeCalculator {
 
 		double rate = 0; // prevent dividing by zero
 
-		if (supplier.getDeliveries().size() > 0) {
-			rate = deliveryCounter / supplier.getDeliveries().size(); // calculate rate by dividing by all deliveries
+		if (filteredDels.size() > 0) {
+			rate = deliveryCounter / filteredDels.size(); // calculate rate by dividing by all deliveries
 		}
 
 		return rate;
