@@ -15,6 +15,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 
 import java.net.URL;
@@ -63,6 +65,13 @@ public class LoginCtrl implements Initializable{
     }
 
     @FXML
+    void keyPressedAction(KeyEvent event) {
+    	if (event.getCode() == KeyCode.ENTER) {
+    		loginToMainMenu(new ActionEvent());
+    	}
+    }
+
+   @FXML
     void switchToGerman(ActionEvent event) {
         LanguagePropertiesHelper.getInstance().setLanguage("de");
         loadAllTexts();
