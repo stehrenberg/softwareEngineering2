@@ -105,13 +105,16 @@ public class CompareSuppliersCtrl implements Initializable {
 			}
 		});
 
-		 
+		supplier1Combo.getStyleClass().add("comboBox-supplier1");
 		supplier1Combo.setItems(list);
 		supplier1Combo.setConverter(converter);
+		supplier2Combo.getStyleClass().add("comboBox-supplier2");
 		supplier2Combo.setItems(list);
 		supplier2Combo.setConverter(converter);
+		supplier3Combo.getStyleClass().add("comboBox-supplier3");
 		supplier3Combo.setItems(list);
 		supplier3Combo.setConverter(converter);
+		supplier4Combo.getStyleClass().add("comboBox-supplier4");
 		supplier4Combo.setItems(list);
 		supplier4Combo.setConverter(converter);
 	}

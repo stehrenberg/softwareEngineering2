@@ -208,6 +208,7 @@ public class MenuHelper {
             scene = new Scene(page, SettingsPropertiesHelper.getInstance().getWindowWidth(),
                     SettingsPropertiesHelper.getInstance().getWindowHeight());
 
+            scene.getStylesheets().add(MenuHelper.class.getResource("/style.css").toExternalForm());
             stage.setScene(scene);
 
         } else {
