@@ -6,7 +6,6 @@ Project: SupplyAlyticsApp
 package edu.hm.cs.softengii.cntrl;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -33,12 +32,11 @@ import javafx.scene.image.WritableImage;
 
 import javax.imageio.ImageIO;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Image;
+import com.lowagie.text.Rectangle;
+import com.lowagie.text.pdf.PdfWriter;
 
 import edu.hm.cs.softengii.db.dataStorage.SupplierClass;
 import edu.hm.cs.softengii.db.sap.Database;
