@@ -228,7 +228,8 @@ public class CompareSuppliersCtrl implements Initializable {
         PdfWriter writer = null;
         
         try {
-            writer = PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\maximilianr\\Desktop\\Compare.pdf"));
+            String pathJarFile = getClass().getProtectionDomain().getCodeSource().getLocation().getHost();
+            writer = PdfWriter.getInstance(document, new FileOutputStream(pathJarFile + "CompareSuppliers.pdf"));
             document.open();
             ImageIO.write(SwingFXUtils.fromFXImage(writeableScene, null),"png", byteOutputScene);
             

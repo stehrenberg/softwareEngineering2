@@ -176,7 +176,8 @@ public class AverageSuppliersCtrl implements Initializable {
         PdfWriter writer = null;
         
         try {
-            writer = PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\maximilianr\\Desktop\\Average.pdf"));
+            String pathJarFile = getClass().getProtectionDomain().getCodeSource().getLocation().getHost();
+            writer = PdfWriter.getInstance(document, new FileOutputStream(pathJarFile + "AverageSuppliers.pdf"));
             document.open();
             ImageIO.write(SwingFXUtils.fromFXImage(writeableGraph, null),"png", byteOutputGraph);
             ImageIO.write(SwingFXUtils.fromFXImage(writeableScene, null),"png", byteOutputScene);
