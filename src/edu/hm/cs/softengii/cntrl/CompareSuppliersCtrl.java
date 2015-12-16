@@ -5,25 +5,9 @@ Project: SupplyAlyticsApp
 
 package edu.hm.cs.softengii.cntrl;
 
-import edu.hm.cs.softengii.db.dataStorage.DeliveryRange;
-import edu.hm.cs.softengii.db.sap.Database;
-import edu.hm.cs.softengii.db.sap.Supplier;
-import edu.hm.cs.softengii.utils.DeliveryRangeCalculator;
-import edu.hm.cs.softengii.utils.MenuHelper;
-import edu.hm.cs.softengii.utils.Session;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.util.StringConverter;
-
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -31,6 +15,37 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.WritableImage;
+import javafx.util.StringConverter;
+
+import javax.imageio.ImageIO;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import edu.hm.cs.softengii.db.dataStorage.DeliveryRange;
+import edu.hm.cs.softengii.db.sap.Database;
+import edu.hm.cs.softengii.db.sap.Supplier;
+import edu.hm.cs.softengii.utils.DeliveryRangeCalculator;
+import edu.hm.cs.softengii.utils.MenuHelper;
+import edu.hm.cs.softengii.utils.Session;
 
 /**
  * JavaFX Controller for 'compareSuppliers.fxml'.
@@ -197,6 +212,37 @@ public class CompareSuppliersCtrl implements Initializable {
 		rangeCalculator.setRangeEnd(dateRangeEnd);
 		updateChartForAllSuppliers();
 	}
+	
+	@FXML
+    void exportPDF(ActionEvent event) {
+        Scene scene = compareChart.getScene();
+        
+        int widthScene = (int)scene.getWidth();
+        int heightScene = (int)scene.getHeight();
+        
+        Rectangle page = new Rectangle(widthScene, heightScene);
+        Document document = new Document(page);
+        
+        WritableImage writeableScene = scene.snapshot(new WritableImage(widthScene, heightScene));
+        ByteArrayOutputStream byteOutputScene = new ByteArrayOutputStream();
+        PdfWriter writer = null;
+        
+        try {
+            writer = PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\maximilianr\\Desktop\\Compare.pdf"));
+            document.open();
+            ImageIO.write(SwingFXUtils.fromFXImage(writeableScene, null),"png", byteOutputScene);
+            
+            Image imageScene = Image.getInstance(byteOutputScene.toByteArray());
+            
+            imageScene.setAbsolutePosition(0, 0);
+            document.add(imageScene);
+            
+        } catch (DocumentException | IOException e) {
+            e.printStackTrace();
+        }
+        document.close();
+        writer.close();
+    }
 
     /**
      * Decide whether admin menu items should be shown.

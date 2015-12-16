@@ -5,31 +5,47 @@ Project: SupplyAlyticsApp
 
 package edu.hm.cs.softengii.cntrl;
 
-import edu.hm.cs.softengii.db.sap.Database;
-import edu.hm.cs.softengii.db.sap.Supplier;
-import edu.hm.cs.softengii.db.dataStorage.SupplierClass;
-import edu.hm.cs.softengii.utils.MenuHelper;
-import edu.hm.cs.softengii.utils.ScoreCalculator;
-import edu.hm.cs.softengii.utils.Session;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
+
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.WritableImage;
+
+import javax.imageio.ImageIO;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfWriter;
+
+import edu.hm.cs.softengii.db.dataStorage.SupplierClass;
+import edu.hm.cs.softengii.db.sap.Database;
+import edu.hm.cs.softengii.db.sap.Supplier;
+import edu.hm.cs.softengii.utils.MenuHelper;
+import edu.hm.cs.softengii.utils.ScoreCalculator;
+import edu.hm.cs.softengii.utils.Session;
 
 /**
  * JavaFX Controller for 'averageSuppliers.fxml'.
@@ -139,6 +155,48 @@ public class AverageSuppliersCtrl implements Initializable {
 		}
 		updateChart();
 	}
+	
+	@FXML
+    void exportPDF(ActionEvent event) {
+	    Scene scene = compareChart.getScene();
+	    
+	    int widthScene = (int)scene.getWidth();
+	    int heightScene = (int)scene.getHeight();
+	    
+	    int width = (int)compareChart.getWidth();
+	    int height = (int)compareChart.getHeight();
+        
+        Rectangle page = new Rectangle(widthScene, heightScene);
+        Document document = new Document(page);
+	    
+	    WritableImage writeableScene = scene.snapshot(new WritableImage(widthScene, heightScene));
+        WritableImage writeableGraph = compareChart.snapshot(null, null);
+        ByteArrayOutputStream byteOutputGraph = new ByteArrayOutputStream();
+        ByteArrayOutputStream byteOutputScene = new ByteArrayOutputStream();
+        PdfWriter writer = null;
+        
+        try {
+            writer = PdfWriter.getInstance(document, new FileOutputStream("C:\\Users\\maximilianr\\Desktop\\Average.pdf"));
+            document.open();
+            ImageIO.write(SwingFXUtils.fromFXImage(writeableGraph, null),"png", byteOutputGraph);
+            ImageIO.write(SwingFXUtils.fromFXImage(writeableScene, null),"png", byteOutputScene);
+            
+            Image imageGraph = Image.getInstance(byteOutputGraph.toByteArray());
+            Image imageScene = Image.getInstance(byteOutputScene.toByteArray());
+            
+            imageScene.setAbsolutePosition(0, 0);
+            document.add(imageScene);
+            
+            document.setPageSize(new Rectangle((float)width + 100, (float)height));
+            document.newPage();
+            document.add(imageGraph);
+            
+        } catch (DocumentException | IOException e) {
+            e.printStackTrace();
+        }
+        document.close();
+        writer.close();
+    }
 
 	/**
 	 * Decide whether admin menu items should be shown.
