@@ -126,4 +126,12 @@ public class LanguagePropertiesHelper {
     public String getLoginError() {
         return properties.getProperty(language + ".loginError");
     }
+
+    public String getAboutDevelopers() {
+        return properties.getProperty("about_developers");
+    }
+
+    public String getGitReference() {
+        return properties.getProperty("git_ref");
+    }
 }

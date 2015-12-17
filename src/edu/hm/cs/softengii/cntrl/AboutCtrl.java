@@ -5,6 +5,7 @@ Project: SupplyAlyticsApp
 
 package edu.hm.cs.softengii.cntrl;
 
+import edu.hm.cs.softengii.utils.LanguagePropertiesHelper;
 import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.fxml.FXML;
@@ -12,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -32,9 +34,13 @@ public class AboutCtrl implements Initializable {
     @FXML private MenuItem preferencesMenuItem;
     @FXML private SeparatorMenuItem preferencesMenuSeperator;
 
+    @FXML private Text about_developers;
+    @FXML private Text git_ref;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
+        loadAllTexts();
     }
 
     @FXML
@@ -81,6 +87,12 @@ public class AboutCtrl implements Initializable {
     public void quitApplication() {
         MenuHelper.getInstance().quitApplication();
     }
+
+    private void loadAllTexts() {
+        about_developers.setText(LanguagePropertiesHelper.getInstance().getAboutDevelopers());
+        git_ref.setText(LanguagePropertiesHelper.getInstance().getGitReference());
+    }
+
 
     /**
      * Decide whether admin menu items should be shown.
