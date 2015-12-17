@@ -9,7 +9,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
@@ -214,7 +213,12 @@ public class AverageSuppliersCtrl implements Initializable {
                 ImageIO.write(SwingFXUtils.fromFXImage(writeableGraph, null),"png", byteOutputGraph);
                 Image imageGraph = Image.getInstance(byteOutputGraph.toByteArray());
             	
-            	document.setPageSize(new Rectangle((float)width + 100, (float)PAGE_HEIGHT + 100));
+                if(currentHeight + PAGE_HEIGHT > compareChartheight) {
+                	document.setPageSize(new Rectangle((float)width + 100, (float)compareChartheight - currentHeight + 100));
+                }
+                else {
+                	document.setPageSize(new Rectangle((float)width + 100, (float)PAGE_HEIGHT + 100));
+                }
             	document.newPage();
             	document.add(imageGraph);
             }
