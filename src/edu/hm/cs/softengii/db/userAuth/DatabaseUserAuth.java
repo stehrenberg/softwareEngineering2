@@ -25,7 +25,8 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     private static DatabaseUserAuth instance = null;
 
     /** Database URL */
-    private final static String DB_URL = SettingsPropertiesHelper.getInstance().getUserAuthDbUrl();
+    private final static String DB_URL = "jdbc:sqlite::resource:" +
+            DatabaseUserAuth.class.getResource("userAuth.db").toString();
 
     /** Database username */
     private final static String USER = SettingsPropertiesHelper.getInstance().getUserAuthDbUser();
@@ -66,9 +67,10 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     @Override
     public void establishConnection() {
 
+
         try {
             if (this.connection == null || this.connection.isClosed()) {
-                this.connection = DriverManager.getConnection("jdbc:sqlite::resource:userAuth.db", USER, PASSWORD);
+                this.connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
             }
         } catch (SQLException e) {
             e.printStackTrace();
