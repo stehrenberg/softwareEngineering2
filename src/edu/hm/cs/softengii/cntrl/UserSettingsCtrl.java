@@ -30,7 +30,7 @@ public class UserSettingsCtrl implements Initializable{
     @FXML private MenuItem manageAllUsersMenuItem;
     @FXML private SeparatorMenuItem userMenuSeperator;
 
-    @FXML private MenuItem preferencesMenuItem;
+    @FXML private Menu preferencesMenu;
     @FXML private SeparatorMenuItem preferencesMenuSeperator;
 
     @FXML private Text forenameLabel;
@@ -124,6 +124,11 @@ public class UserSettingsCtrl implements Initializable{
     }
 
     @FXML
+    public void gotoScorePreferences() {
+        MenuHelper.getInstance().gotoScorePreferences();
+    }
+
+    @FXML
     public void quitApplication() {
         MenuHelper.getInstance().quitApplication();
     }
@@ -134,20 +139,18 @@ public class UserSettingsCtrl implements Initializable{
      */
     private void setAdminMenusVisible(boolean isAdmin) {
         if (isAdmin) {
-            isAdminLabel.setVisible(true);
-            this.isAdmin.setVisible(true);
             newUserMenuItem.setVisible(true);
             manageAllUsersMenuItem.setVisible(true);
             userMenuSeperator.setVisible(true);
-            preferencesMenuItem.setVisible(true);
+            preferencesMenu.setVisible(true);
+            //preferencesMenuItem.setVisible(true);
             preferencesMenuSeperator.setVisible(true);
         } else {
-            isAdminLabel.setVisible(false);
-            this.isAdmin.setVisible(false);
             newUserMenuItem.setVisible(false);
             manageAllUsersMenuItem.setVisible(false);
             userMenuSeperator.setVisible(false);
-            preferencesMenuItem.setVisible(false);
+            preferencesMenu.setVisible(false);
+            //preferencesMenuItem.setVisible(false);
             preferencesMenuSeperator.setVisible(false);
         }
     }

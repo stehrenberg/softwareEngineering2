@@ -24,10 +24,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
 
 import javax.imageio.ImageIO;
@@ -58,8 +55,7 @@ public class AverageSuppliersCtrl implements Initializable {
     @FXML private MenuItem manageAllUsersMenuItem;
 
     @FXML private SeparatorMenuItem userMenuSeperator;
-    @FXML private MenuItem preferencesMenuItem;
-
+	@FXML private Menu preferencesMenu;
 	@FXML private SeparatorMenuItem preferencesMenuSeperator;
 
 	@FXML private BarChart<Number, String> compareChart;
@@ -123,6 +119,10 @@ public class AverageSuppliersCtrl implements Initializable {
 		MenuHelper.getInstance().gotoPreferences();
 	}
 
+	@FXML
+	public void gotoScorePreferences() {
+		MenuHelper.getInstance().gotoScorePreferences();
+	}
     @FXML
     public void quitApplication() {
         MenuHelper.getInstance().quitApplication();
@@ -206,13 +206,15 @@ public class AverageSuppliersCtrl implements Initializable {
 			newUserMenuItem.setVisible(true);
 			manageAllUsersMenuItem.setVisible(true);
 			userMenuSeperator.setVisible(true);
-			preferencesMenuItem.setVisible(true);
+			preferencesMenu.setVisible(true);
+			//preferencesMenuItem.setVisible(true);
 			preferencesMenuSeperator.setVisible(true);
 		} else {
 			newUserMenuItem.setVisible(false);
 			manageAllUsersMenuItem.setVisible(false);
 			userMenuSeperator.setVisible(false);
-			preferencesMenuItem.setVisible(false);
+			preferencesMenu.setVisible(false);
+			//preferencesMenuItem.setVisible(false);
 			preferencesMenuSeperator.setVisible(false);
 		}
 	}

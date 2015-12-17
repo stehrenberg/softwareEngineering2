@@ -10,6 +10,7 @@ import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.AnchorPane;
@@ -30,8 +31,7 @@ public class AboutCtrl implements Initializable {
     @FXML private MenuItem newUserMenuItem;
     @FXML private MenuItem manageAllUsersMenuItem;
     @FXML private SeparatorMenuItem userMenuSeperator;
-
-    @FXML private MenuItem preferencesMenuItem;
+    @FXML private Menu preferencesMenu;
     @FXML private SeparatorMenuItem preferencesMenuSeperator;
 
     @FXML private Text about_developers;
@@ -84,6 +84,11 @@ public class AboutCtrl implements Initializable {
     }
 
     @FXML
+    public void gotoScorePreferences() {
+        MenuHelper.getInstance().gotoScorePreferences();
+    }
+
+    @FXML
     public void quitApplication() {
         MenuHelper.getInstance().quitApplication();
     }
@@ -103,13 +108,15 @@ public class AboutCtrl implements Initializable {
             newUserMenuItem.setVisible(true);
             manageAllUsersMenuItem.setVisible(true);
             userMenuSeperator.setVisible(true);
-            preferencesMenuItem.setVisible(true);
+            preferencesMenu.setVisible(true);
+            //preferencesMenuItem.setVisible(true);
             preferencesMenuSeperator.setVisible(true);
         } else {
             newUserMenuItem.setVisible(false);
             manageAllUsersMenuItem.setVisible(false);
             userMenuSeperator.setVisible(false);
-            preferencesMenuItem.setVisible(false);
+            preferencesMenu.setVisible(false);
+            //preferencesMenuItem.setVisible(false);
             preferencesMenuSeperator.setVisible(false);
         }
     }

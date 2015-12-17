@@ -24,7 +24,12 @@
                         <MenuItem mnemonicParsing="false" onAction="#gotoCompareSuppliers" text="Compare Suppliers" />
                         <MenuItem mnemonicParsing="false" onAction="#gotoAverageSuppliers" text="Suppliers Average" />
                         <SeparatorMenuItem fx:id="preferencesMenuSeperator" mnemonicParsing="false" />
-                        <MenuItem fx:id="preferencesMenuItem" mnemonicParsing="false" onAction="#gotoPreferences" text="Preferences" />
+                        <Menu fx:id="preferencesMenu" mnemonicParsing="false" text="Preferences">
+                            <items>
+                                <MenuItem fx:id="supplierClassificationMenuItem" mnemonicParsing="false" onAction="#gotoPreferences" text="Supplier Classification" />
+                                <MenuItem fx:id="scoreThresholdMenuItem" mnemonicParsing="false" onAction="#gotoScorePreferences" text="Score Thresholds" />
+                            </items>
+                        </Menu>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="User">
