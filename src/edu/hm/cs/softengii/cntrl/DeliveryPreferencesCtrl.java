@@ -1,8 +1,8 @@
 package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.dataStorage.DatabaseDataStorage;
-import edu.hm.cs.softengii.db.dataStorage.SupplierClass;
-import edu.hm.cs.softengii.db.dataStorage.SupplierClassificationThresholdEntity;
+import edu.hm.cs.softengii.db.dataStorage.DeliveryRange;
+import edu.hm.cs.softengii.db.dataStorage.DeliveryRangeThresholdEntity;
 import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.application.Platform;
@@ -36,16 +36,16 @@ import java.util.ResourceBundle;
  * @author Apachen Pub Team
  *
  */
-public class PreferencesCtrl implements Initializable {
+public class DeliveryPreferencesCtrl implements Initializable {
 
-    private final ObservableList<SupplierClassificationThresholdEntity> scoreData = FXCollections.observableArrayList();
+    private final ObservableList<DeliveryRangeThresholdEntity> scoreData = FXCollections.observableArrayList();
 
     @FXML private AnchorPane rootPane;
 
-    @FXML private TableView<SupplierClassificationThresholdEntity> supplierClassTable;
-    @FXML private TableColumn<SupplierClassificationThresholdEntity, Number> deliveriesMinCol;
-    @FXML private TableColumn<SupplierClassificationThresholdEntity, Number> deliveriesMaxCol;
-    @FXML private TableColumn<SupplierClassificationThresholdEntity, SupplierClass> supplierClassCol;
+    @FXML private TableView<DeliveryRangeThresholdEntity> deliveryRangeTable;
+    @FXML private TableColumn<DeliveryRangeThresholdEntity, Number> daysMinCol;
+    @FXML private TableColumn<DeliveryRangeThresholdEntity, Number> daysMaxCol;
+    @FXML private TableColumn<DeliveryRangeThresholdEntity, DeliveryRange> deliveryRangeCol;
 
     @FXML private MenuItem newUserMenuItem;
     @FXML private MenuItem manageAllUsersMenuItem;
@@ -63,7 +63,7 @@ public class PreferencesCtrl implements Initializable {
         errorMessage.setText("");
         setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
 
-        scoreData.addAll(DatabaseDataStorage.getInstance().getSupplierClassificationThresholds());
+        scoreData.addAll(DatabaseDataStorage.getInstance().getDeliveryRangeThresholds());
         populateScoreTable();
     }
 
@@ -80,7 +80,7 @@ public class PreferencesCtrl implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
 
-            DatabaseDataStorage.getInstance().setSupplierClassificationThresholds(scoreData);
+            DatabaseDataStorage.getInstance().setDeliveryRangeThresholds(scoreData);
 
             errorMessage.setFill(Color.GREEN);
             errorMessage.setText("Supplier classification data updated.");
@@ -101,7 +101,7 @@ public class PreferencesCtrl implements Initializable {
         if (result.get() == ButtonType.OK) {
 
             populateScoreTableWithDefaults();
-            DatabaseDataStorage.getInstance().setSupplierClassificationThresholds(scoreData);
+            DatabaseDataStorage.getInstance().setDeliveryRangeThresholds(scoreData);
 
             errorMessage.setFill(Color.GREEN);
             errorMessage.setText("Classification data reset to defaults.");
@@ -146,12 +146,12 @@ public class PreferencesCtrl implements Initializable {
 
     @FXML
     public void gotoPreferences() {
-        //Do nothing, we are already here
+        MenuHelper.getInstance().gotoPreferences();
     }
 
     @FXML
     public void gotoDeliveryPreferences() {
-        MenuHelper.getInstance().gotoDeliveryPreferences();
+        //Do nothing, we are already here
     }
 
     @FXML
@@ -187,74 +187,74 @@ public class PreferencesCtrl implements Initializable {
     private void populateScoreTableWithDefaults() {
         scoreData.removeAll();
         scoreData.clear();
-        scoreData.addAll(DatabaseDataStorage.getInstance().getSupplierClassificationDefaults());
+        scoreData.addAll(DatabaseDataStorage.getInstance().getDeliveryRangeDefaults());
         populateScoreTable();
     }
 
     private void populateScoreTable() {
 
-        supplierClassTable.setEditable(true);
+        deliveryRangeTable.setEditable(true);
 
-        Callback<TableColumn<SupplierClassificationThresholdEntity, Number>, TableCell<SupplierClassificationThresholdEntity, Number>> cellFactory =
-            new Callback<TableColumn<SupplierClassificationThresholdEntity, Number>, TableCell<SupplierClassificationThresholdEntity, Number>>() {
+        Callback<TableColumn<DeliveryRangeThresholdEntity, Number>, TableCell<DeliveryRangeThresholdEntity, Number>> cellFactory =
+            new Callback<TableColumn<DeliveryRangeThresholdEntity, Number>, TableCell<DeliveryRangeThresholdEntity, Number>>() {
 
                 @Override
-                public TableCell<SupplierClassificationThresholdEntity, Number> call(TableColumn<SupplierClassificationThresholdEntity, Number> p) {
+                public TableCell<DeliveryRangeThresholdEntity, Number> call(TableColumn<DeliveryRangeThresholdEntity, Number> p) {
                     return new EditingCell();
                 }
         };
 
-        Callback<TableColumn<SupplierClassificationThresholdEntity, SupplierClass>,
-                TableCell<SupplierClassificationThresholdEntity, SupplierClass>> supplierClassCellFactory =
-            new Callback<TableColumn<SupplierClassificationThresholdEntity, SupplierClass>, TableCell<SupplierClassificationThresholdEntity, SupplierClass>>() {
+        Callback<TableColumn<DeliveryRangeThresholdEntity, DeliveryRange>,
+                TableCell<DeliveryRangeThresholdEntity, DeliveryRange>> deliveryRangeCellFactory =
+            new Callback<TableColumn<DeliveryRangeThresholdEntity, DeliveryRange>, TableCell<DeliveryRangeThresholdEntity, DeliveryRange>>() {
 
                 @Override
-                public TableCell<SupplierClassificationThresholdEntity, SupplierClass> call(TableColumn<SupplierClassificationThresholdEntity, SupplierClass> p) {
+                public TableCell<DeliveryRangeThresholdEntity, DeliveryRange> call(TableColumn<DeliveryRangeThresholdEntity, DeliveryRange> p) {
                     return new EditingStringCell();
                 }
         };
 
-        deliveriesMinCol.setCellValueFactory(
-            new PropertyValueFactory<SupplierClassificationThresholdEntity, Number>("deliveriesMin")
+        daysMinCol.setCellValueFactory(
+            new PropertyValueFactory<DeliveryRangeThresholdEntity, Number>("daysMin")
         );
-        deliveriesMinCol.setCellFactory(cellFactory);
+        daysMinCol.setCellFactory(cellFactory);
 
-        deliveriesMaxCol.setCellValueFactory(
-            new PropertyValueFactory<SupplierClassificationThresholdEntity, Number>("deliveriesMax")
+        daysMaxCol.setCellValueFactory(
+            new PropertyValueFactory<DeliveryRangeThresholdEntity, Number>("daysMax")
         );
-        deliveriesMaxCol.setCellFactory(cellFactory);
+        daysMaxCol.setCellFactory(cellFactory);
 
-        supplierClassCol.setCellValueFactory(
-            new PropertyValueFactory<SupplierClassificationThresholdEntity, SupplierClass>("className")
+        deliveryRangeCol.setCellValueFactory(
+            new PropertyValueFactory<DeliveryRangeThresholdEntity, DeliveryRange>("deliveryRangeName")
         );
-        supplierClassCol.setCellFactory(supplierClassCellFactory);
+        deliveryRangeCol.setCellFactory(deliveryRangeCellFactory);
 
 
-        supplierClassTable.setItems(scoreData);
+        deliveryRangeTable.setItems(scoreData);
 
 
-        deliveriesMinCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, Number>>() {
+        daysMinCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<DeliveryRangeThresholdEntity, Number>>() {
             @Override
-            public void handle(TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, Number> t) {
-                ((SupplierClassificationThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
-                    setDeliveriesMin((int) t.getNewValue());
+            public void handle(TableColumn.CellEditEvent<DeliveryRangeThresholdEntity, Number> t) {
+                ((DeliveryRangeThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+                    .setDaysMin((int) t.getNewValue());
             }
         });
 
-        deliveriesMaxCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, Number>>() {
+        daysMaxCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<DeliveryRangeThresholdEntity, Number>>() {
             @Override
-            public void handle(TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, Number> t) {
-                ((SupplierClassificationThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow()))
-                    .setDeliveriesMax((int)t.getNewValue());
+            public void handle(TableColumn.CellEditEvent<DeliveryRangeThresholdEntity, Number> t) {
+                ((DeliveryRangeThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+                    .setDaysMax((int)t.getNewValue());
             }
         });
 
-        supplierClassCol.setOnEditCommit(new EventHandler<TableColumn
-                .CellEditEvent<SupplierClassificationThresholdEntity, SupplierClass>>() {
+        deliveryRangeCol.setOnEditCommit(new EventHandler<TableColumn
+                .CellEditEvent<DeliveryRangeThresholdEntity, DeliveryRange>>() {
             @Override
-            public void handle(TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, SupplierClass> t) {
-                ((SupplierClassificationThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
-                setClassName(t.getNewValue());
+            public void handle(TableColumn.CellEditEvent<DeliveryRangeThresholdEntity, DeliveryRange> t) {
+                ((DeliveryRangeThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+                    .setDeliveryRangeName(t.getNewValue());
             }
         });
     }
@@ -264,7 +264,7 @@ public class PreferencesCtrl implements Initializable {
      * @author Apachen Pub Team
      *
      */
-    class EditingCell extends TableCell<SupplierClassificationThresholdEntity, Number> {
+    class EditingCell extends TableCell<DeliveryRangeThresholdEntity, Number> {
 
         private TextField textField;
 
@@ -354,9 +354,9 @@ public class PreferencesCtrl implements Initializable {
          * @param forward true gets the column to the right, false the column to the left of the current column
          * @return
          */
-        private TableColumn<SupplierClassificationThresholdEntity, ?> getNextColumn(boolean forward) {
-            List<TableColumn<SupplierClassificationThresholdEntity, ?>> columns = new ArrayList<>();
-            for (TableColumn<SupplierClassificationThresholdEntity, ?> column : getTableView().getColumns()) {
+        private TableColumn<DeliveryRangeThresholdEntity, ?> getNextColumn(boolean forward) {
+            List<TableColumn<DeliveryRangeThresholdEntity, ?>> columns = new ArrayList<>();
+            for (TableColumn<DeliveryRangeThresholdEntity, ?> column : getTableView().getColumns()) {
                 columns.addAll(getLeaves(column));
             }
             //There is no other column that supports editing.
@@ -379,8 +379,8 @@ public class PreferencesCtrl implements Initializable {
             return columns.get(nextIndex);
         }
 
-        private List<TableColumn<SupplierClassificationThresholdEntity, ?>> getLeaves(TableColumn<SupplierClassificationThresholdEntity, ?> root) {
-            List<TableColumn<SupplierClassificationThresholdEntity, ?>> columns = new ArrayList<>();
+        private List<TableColumn<DeliveryRangeThresholdEntity, ?>> getLeaves(TableColumn<DeliveryRangeThresholdEntity, ?> root) {
+            List<TableColumn<DeliveryRangeThresholdEntity, ?>> columns = new ArrayList<>();
             if (root.getColumns().isEmpty()) {
                 //We only want the leaves that are editable.
                 if (root.isEditable()) {
@@ -388,7 +388,7 @@ public class PreferencesCtrl implements Initializable {
                 }
                 return columns;
             } else {
-                for (TableColumn<SupplierClassificationThresholdEntity, ?> column : root.getColumns()) {
+                for (TableColumn<DeliveryRangeThresholdEntity, ?> column : root.getColumns()) {
                     columns.addAll(getLeaves(column));
                 }
                 return columns;
@@ -400,7 +400,7 @@ public class PreferencesCtrl implements Initializable {
      * @author Apachen Pub Team
      *
      */
-    class EditingStringCell extends TableCell<SupplierClassificationThresholdEntity, SupplierClass> {
+    class EditingStringCell extends TableCell<DeliveryRangeThresholdEntity, DeliveryRange> {
 
         private TextField textField;
 
@@ -432,7 +432,7 @@ public class PreferencesCtrl implements Initializable {
         }
 
         @Override
-        public void updateItem(SupplierClass item, boolean empty) {
+        public void updateItem(DeliveryRange item, boolean empty) {
             super.updateItem(item, empty);
             if (empty) {
                 setText(null);
@@ -459,11 +459,11 @@ public class PreferencesCtrl implements Initializable {
                 @Override
                 public void handle(KeyEvent t) {
                     if (t.getCode() == KeyCode.ENTER) {
-                        commitEdit(SupplierClass.valueOf(textField.getText()));
+                        commitEdit(DeliveryRange.valueOf(textField.getText()));
                     } else if (t.getCode() == KeyCode.ESCAPE) {
                         cancelEdit();
                     } else if (t.getCode() == KeyCode.TAB) {
-                        commitEdit(SupplierClass.valueOf(textField.getText()));
+                        commitEdit(DeliveryRange.valueOf(textField.getText()));
                         TableColumn nextColumn = getNextColumn(!t.isShiftDown());
                         if (nextColumn != null) {
                             getTableView().edit(getTableRow().getIndex(), nextColumn);
@@ -476,7 +476,7 @@ public class PreferencesCtrl implements Initializable {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                     if (!newValue && textField != null) {
-                        commitEdit(SupplierClass.valueOf(textField.getText()));
+                        commitEdit(DeliveryRange.valueOf(textField.getText()));
                     }
                 }
             });
@@ -490,9 +490,9 @@ public class PreferencesCtrl implements Initializable {
          * @param forward true gets the column to the right, false the column to the left of the current column
          * @return
          */
-        private TableColumn<SupplierClassificationThresholdEntity, ?> getNextColumn(boolean forward) {
-            List<TableColumn<SupplierClassificationThresholdEntity, ?>> columns = new ArrayList<>();
-            for (TableColumn<SupplierClassificationThresholdEntity, ?> column : getTableView().getColumns()) {
+        private TableColumn<DeliveryRangeThresholdEntity, ?> getNextColumn(boolean forward) {
+            List<TableColumn<DeliveryRangeThresholdEntity, ?>> columns = new ArrayList<>();
+            for (TableColumn<DeliveryRangeThresholdEntity, ?> column : getTableView().getColumns()) {
                 columns.addAll(getLeaves(column));
             }
             //There is no other column that supports editing.
@@ -515,8 +515,8 @@ public class PreferencesCtrl implements Initializable {
             return columns.get(nextIndex);
         }
 
-        private List<TableColumn<SupplierClassificationThresholdEntity, ?>> getLeaves(TableColumn<SupplierClassificationThresholdEntity, ?> root) {
-            List<TableColumn<SupplierClassificationThresholdEntity, ?>> columns = new ArrayList<>();
+        private List<TableColumn<DeliveryRangeThresholdEntity, ?>> getLeaves(TableColumn<DeliveryRangeThresholdEntity, ?> root) {
+            List<TableColumn<DeliveryRangeThresholdEntity, ?>> columns = new ArrayList<>();
             if (root.getColumns().isEmpty()) {
                 //We only want the leaves that are editable.
                 if (root.isEditable()) {
@@ -524,7 +524,7 @@ public class PreferencesCtrl implements Initializable {
                 }
                 return columns;
             } else {
-                for (TableColumn<SupplierClassificationThresholdEntity, ?> column : root.getColumns()) {
+                for (TableColumn<DeliveryRangeThresholdEntity, ?> column : root.getColumns()) {
                     columns.addAll(getLeaves(column));
                 }
                 return columns;

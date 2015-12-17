@@ -123,6 +123,12 @@ public class AverageSuppliersCtrl implements Initializable {
 	public void gotoScorePreferences() {
 		MenuHelper.getInstance().gotoScorePreferences();
 	}
+
+	@FXML
+	public void gotoDeliveryPreferences() {
+		MenuHelper.getInstance().gotoDeliveryPreferences();
+	}
+
     @FXML
     public void quitApplication() {
         MenuHelper.getInstance().quitApplication();

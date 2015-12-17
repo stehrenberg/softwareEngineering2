@@ -104,6 +104,14 @@ public class MenuHelper {
         loadPage(loader, fxmlPath);
     }
 
+    public void gotoDeliveryPreferences() {
+
+        String fxmlPath = "/edu/hm/cs/softengii/view/deliveryPreferences.fxml";
+        FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
+
+        loadPage(loader, fxmlPath);
+    }
+
     public void gotoMainMenu() {
 
         String fxmlPath = "/edu/hm/cs/softengii/view/compareSuppliers.fxml";

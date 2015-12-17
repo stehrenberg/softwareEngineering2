@@ -26,6 +26,7 @@
                         <SeparatorMenuItem fx:id="preferencesMenuSeperator" mnemonicParsing="false" />
                         <Menu fx:id="preferencesMenu" mnemonicParsing="false" text="Preferences">
                             <items>
+                                <MenuItem fx:id="deliveryClassificationMenuItem1" mnemonicParsing="false" onAction="#gotoDeliveryPreferences" text="Delivery Classification" />
                                 <MenuItem fx:id="supplierClassificationMenuItem" mnemonicParsing="false" onAction="#gotoPreferences" text="Supplier Classification" />
                                 <MenuItem fx:id="scoreThresholdMenuItem" mnemonicParsing="false" onAction="#gotoScorePreferences" text="Score Thresholds" />
                             </items>

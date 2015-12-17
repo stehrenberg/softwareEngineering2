@@ -146,6 +146,11 @@ public class ScorePreferencesCtrl implements Initializable {
     }
 
     @FXML
+    public void gotoDeliveryPreferences() {
+        MenuHelper.getInstance().gotoDeliveryPreferences();
+    }
+
+    @FXML
     public void gotoPreferences() {
         MenuHelper.getInstance().gotoPreferences();
     }

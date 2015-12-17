@@ -171,6 +171,11 @@ public class CompareSuppliersCtrl implements Initializable {
     }
 
 	@FXML
+	public void gotoDeliveryPreferences() {
+		MenuHelper.getInstance().gotoDeliveryPreferences();
+	}
+
+	@FXML
 	public void gotoScorePreferences() {
 		MenuHelper.getInstance().gotoScorePreferences();
 	}

@@ -28,6 +28,7 @@
                         <SeparatorMenuItem fx:id="preferencesMenuSeperator" mnemonicParsing="false" />
                         <Menu fx:id="preferencesMenu" mnemonicParsing="false" text="Preferences">
                             <items>
+                                <MenuItem fx:id="deliveryClassificationMenuItem1" mnemonicParsing="false" onAction="#gotoDeliveryPreferences" text="Delivery Classification" />
                                 <MenuItem fx:id="supplierClassificationMenuItem" mnemonicParsing="false" onAction="#gotoPreferences" text="Supplier Classification" />
                                 <MenuItem fx:id="scoreThresholdMenuItem" mnemonicParsing="false" onAction="#gotoScorePreferences" text="Score Thresholds" />
                             </items>
@@ -62,7 +63,7 @@
          </font>
       </Text>
       <Button fx:id="updateButton" layoutX="30.0" layoutY="399.0" mnemonicParsing="false" onAction="#updateScoreSetttings" prefHeight="37.0" prefWidth="91.0" text="Update" />
-      <TableView fx:id="supplierClassTable" layoutX="35.0" layoutY="139.0" prefHeight="236.0" prefWidth="488.0">
+      <TableView fx:id="supplierClassTable" layoutX="35.0" layoutY="139.0" prefHeight="160.0" prefWidth="490.0">
         <columns>
           <TableColumn fx:id="deliveriesMinCol" prefWidth="169.0" text="DeliveriesMin (days)" />
           <TableColumn fx:id="deliveriesMaxCol" minWidth="7.0" prefWidth="169.0" text="DeliveriesMax (days)" />
