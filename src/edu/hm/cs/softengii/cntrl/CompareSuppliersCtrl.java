@@ -237,14 +237,14 @@ public class CompareSuppliersCtrl implements Initializable {
         DirectoryChooser chooser = new DirectoryChooser();
     	chooser.setTitle("Choose an export directory");
     	File selectedDirectory = chooser.showDialog(scene.getWindow());
+    	String path = "";
+    	if(selectedDirectory.isDirectory()) {
+    		path = selectedDirectory.getAbsolutePath();
+    	} else {
+    		path = getClass().getProtectionDomain().getCodeSource().getLocation().getHost();
+    	}
         
         try {
-        	String path = "";
-        	if(selectedDirectory.isDirectory()) {
-        		path = selectedDirectory.getAbsolutePath();
-        	} else {
-        		path = getClass().getProtectionDomain().getCodeSource().getLocation().getHost();
-        	}
             writer = PdfWriter.getInstance(document, new FileOutputStream(path + "/CompareSuppliers.pdf"));
             document.open();
             ImageIO.write(SwingFXUtils.fromFXImage(writeableScene, null),"png", byteOutputScene);

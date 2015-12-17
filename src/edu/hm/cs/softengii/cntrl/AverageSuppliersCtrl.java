@@ -175,8 +175,7 @@ public class AverageSuppliersCtrl implements Initializable {
 	    int widthScene = (int)scene.getWidth();
 	    int heightScene = (int)scene.getHeight();
         
-        Rectangle page = new Rectangle(widthScene, heightScene);
-        Document document = new Document(page);
+        Document document = new Document(new Rectangle(widthScene, heightScene));
 	    WritableImage writeableScene = scene.snapshot(new WritableImage(widthScene, heightScene));
         ByteArrayOutputStream byteOutputScene = new ByteArrayOutputStream();
         PdfWriter writer = null;
@@ -185,20 +184,20 @@ public class AverageSuppliersCtrl implements Initializable {
         chooser.setTitle("Choose an export directory");
         File selectedDirectory = chooser.showDialog(scene.getWindow());
         
+        String path = "";
+        if(selectedDirectory.isDirectory()) {
+        	path = selectedDirectory.getAbsolutePath();
+        } else {
+        	path = getClass().getProtectionDomain().getCodeSource().getLocation().getHost();
+        }
+        
         try {
-        	String path = "";
-        	if(selectedDirectory.isDirectory()) {
-        		path = selectedDirectory.getAbsolutePath();
-        	} else {
-        		path = getClass().getProtectionDomain().getCodeSource().getLocation().getHost();
-        	}
             writer = PdfWriter.getInstance(document, new FileOutputStream(path + "/AverageSuppliers.pdf"));
             document.open();
             ImageIO.write(SwingFXUtils.fromFXImage(writeableScene, null),"png", byteOutputScene);
             Image imageScene = Image.getInstance(byteOutputScene.toByteArray());
             
             imageScene.setAbsolutePosition(0, 0);
-            document.add(imageScene);
             document.add(imageScene);
             
             int compareChartheight = (int)compareChart.getHeight();
