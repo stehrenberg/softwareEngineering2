@@ -6,6 +6,7 @@ Project: SupplyAlyticsApp
 package edu.hm.cs.softengii.cntrl;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -27,6 +28,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.image.WritableImage;
+import javafx.stage.DirectoryChooser;
 import javafx.util.StringConverter;
 
 import javax.imageio.ImageIO;
@@ -232,9 +234,18 @@ public class CompareSuppliersCtrl implements Initializable {
         ByteArrayOutputStream byteOutputScene = new ByteArrayOutputStream();
         PdfWriter writer = null;
         
+        DirectoryChooser chooser = new DirectoryChooser();
+    	chooser.setTitle("Choose an export directory");
+    	File selectedDirectory = chooser.showDialog(scene.getWindow());
+        
         try {
-            String pathJarFile = getClass().getProtectionDomain().getCodeSource().getLocation().getHost();
-            writer = PdfWriter.getInstance(document, new FileOutputStream(pathJarFile + "CompareSuppliers.pdf"));
+        	String path = "";
+        	if(selectedDirectory.isDirectory()) {
+        		path = selectedDirectory.getAbsolutePath();
+        	} else {
+        		path = getClass().getProtectionDomain().getCodeSource().getLocation().getHost();
+        	}
+            writer = PdfWriter.getInstance(document, new FileOutputStream(path + "/CompareSuppliers.pdf"));
             document.open();
             ImageIO.write(SwingFXUtils.fromFXImage(writeableScene, null),"png", byteOutputScene);
             
