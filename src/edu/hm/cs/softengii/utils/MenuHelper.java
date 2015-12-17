@@ -155,7 +155,6 @@ public class MenuHelper {
             stage.getScene().setRoot(page);
         }
 
-        stage.sizeToScene();
         return page;
     }
 }
