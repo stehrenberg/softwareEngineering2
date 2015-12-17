@@ -1,6 +1,7 @@
 package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.dataStorage.DatabaseDataStorage;
+import edu.hm.cs.softengii.db.dataStorage.SupplierClass;
 import edu.hm.cs.softengii.db.dataStorage.SupplierClassificationThresholdEntity;
 import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
@@ -238,10 +239,8 @@ public class PreferencesCtrl implements Initializable {
         supplierClassCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, Number> t) {
-                //((SupplierClassificationThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
-
-                        //TODO Fix supplierClass Name... h??
-                //set((int)t.getNewValue());
+                ((SupplierClassificationThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
+                setClassificationName(SupplierClass.values()[(int)t.getNewValue()]); ;
             }
         });
     }
