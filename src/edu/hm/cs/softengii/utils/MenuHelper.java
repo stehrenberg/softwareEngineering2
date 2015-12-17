@@ -35,15 +35,7 @@ public class MenuHelper {
             String fxmlPath = "/createNewUser.fxml";
             FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
-        try {
-
-            Parent page = loader.load();
-            replaceSceneContent(page);
-
-        } catch (IOException ex) {
-        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
-            Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
-        }
+        loadPage(loader, fxmlPath);
     }
 
     public void gotoManageAllUsers() {
@@ -51,15 +43,7 @@ public class MenuHelper {
         String fxmlPath = "/manageAllUsers.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
-        try {
-
-            Parent page = loader.load();
-            replaceSceneContent(page);
-
-        } catch (IOException ex) {
-            String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
-            Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
-        }
+        loadPage(loader, fxmlPath);
     }
 
     public void gotoCompareSuppliers() {
@@ -67,15 +51,7 @@ public class MenuHelper {
         String fxmlPath = "/compareSuppliers.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
-        try {
-
-            Parent page = loader.load();
-            replaceSceneContent(page);
-
-        } catch (IOException ex) {
-        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
-            Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
-        }
+        loadPage(loader, fxmlPath);
     }
 
     public void gotoAverageSuppliers() {
@@ -83,15 +59,7 @@ public class MenuHelper {
         String fxmlPath = "/averageSuppliers.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
-        try {
-
-            Parent page = loader.load();
-            replaceSceneContent(page);
-
-        } catch (IOException ex) {
-        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
-            Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
-        }
+        loadPage(loader, fxmlPath);
     }
 
     public void gotoUserSettings() {
@@ -99,15 +67,7 @@ public class MenuHelper {
         String fxmlPath = "/userSettings.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
-        try {
-
-            Parent page = loader.load();
-            replaceSceneContent(page);
-
-        } catch (IOException ex) {
-        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
-            Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
-        }
+        loadPage(loader, fxmlPath);
     }
 
     public void gotoAbout() {
@@ -115,15 +75,7 @@ public class MenuHelper {
         String fxmlPath = "/about.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
-        try {
-
-            Parent page = loader.load();
-            replaceSceneContent(page);
-
-        } catch (IOException ex) {
-        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
-            Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
-        }
+        loadPage(loader, fxmlPath);
     }
 
     public void gotoLogin() {
@@ -133,15 +85,7 @@ public class MenuHelper {
         String fxmlPath = "/login.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
-        try {
-
-            Parent page = loader.load();
-            replaceSceneContent(page);
-
-        } catch (IOException ex) {
-        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
-            Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
-        }
+        loadPage(loader, fxmlPath);
     }
 
     public void gotoPreferences() {
@@ -149,15 +93,15 @@ public class MenuHelper {
         String fxmlPath = "/preferences.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
-        try {
+        loadPage(loader, fxmlPath);
+    }
 
-            Parent page = loader.load();
-            replaceSceneContent(page);
+    public void gotoScorePreferences() {
 
-        } catch (IOException ex) {
-        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
-            Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
-        }
+        String fxmlPath = "/scorePreferences.fxml";
+        FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
+
+        loadPage(loader, fxmlPath);
     }
 
     public void gotoMainMenu() {
@@ -165,15 +109,7 @@ public class MenuHelper {
         String fxmlPath = "/compareSuppliers.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
-        try {
-
-            Parent page = loader.load();
-            replaceSceneContent(page);
-
-        } catch (IOException ex) {
-        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
-            Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
-        }
+        loadPage(loader, fxmlPath);
     }
 
     public void gotoRegistration() {
@@ -181,15 +117,7 @@ public class MenuHelper {
         String fxmlPath = "/registration.fxml";
         FXMLLoader loader = new FXMLLoader (MenuHelper.class.getResource(fxmlPath));
 
-        try {
-
-            Parent page = loader.load();
-            replaceSceneContent(page);
-
-        } catch (IOException ex) {
-        	String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
-            Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
-        }
+        loadPage(loader, fxmlPath);
     }
 
     public void quitApplication() {
@@ -198,6 +126,18 @@ public class MenuHelper {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    private void loadPage(FXMLLoader loader, String fxmlPath) {
+
+        try {
+            Parent page = loader.load();
+            replaceSceneContent(page);
+        } catch (IOException ex) {
+            String msg = ErrorMessagesPropertiesHelper.getInstance().getCouldNotLoadFileMsg(fxmlPath);
+            Logger.getLogger(MenuHelper.class.getName()).log(Level.SEVERE, msg, ex);
+        }
+
     }
 
     private Parent replaceSceneContent(Parent page) {

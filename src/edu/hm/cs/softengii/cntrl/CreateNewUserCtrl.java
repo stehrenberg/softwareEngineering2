@@ -13,10 +13,7 @@ import edu.hm.cs.softengii.utils.Session;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -40,7 +37,8 @@ public class CreateNewUserCtrl implements Initializable{
     @FXML private MenuItem newUserMenuItem;
     @FXML private MenuItem manageAllUsersMenuItem;
     @FXML private SeparatorMenuItem userMenuSeperator;
-    @FXML private MenuItem preferencesMenuItem;
+    //@FXML private MenuItem preferencesMenuItem;
+    @FXML private Menu preferencesMenu;
     @FXML private SeparatorMenuItem preferencesMenuSeperator;
 
     @FXML private Text errorMessage;
@@ -132,6 +130,11 @@ public class CreateNewUserCtrl implements Initializable{
     }
 
     @FXML
+    public void gotoScorePreferences() {
+        MenuHelper.getInstance().gotoScorePreferences();
+    }
+
+    @FXML
     public void quitApplication() {
         MenuHelper.getInstance().quitApplication();
     }
@@ -145,13 +148,15 @@ public class CreateNewUserCtrl implements Initializable{
             newUserMenuItem.setVisible(true);
             manageAllUsersMenuItem.setVisible(true);
             userMenuSeperator.setVisible(true);
-            preferencesMenuItem.setVisible(true);
+            preferencesMenu.setVisible(true);
+            //preferencesMenuItem.setVisible(true);
             preferencesMenuSeperator.setVisible(true);
         } else {
             newUserMenuItem.setVisible(false);
             manageAllUsersMenuItem.setVisible(false);
             userMenuSeperator.setVisible(false);
-            preferencesMenuItem.setVisible(false);
+            preferencesMenu.setVisible(false);
+            //preferencesMenuItem.setVisible(false);
             preferencesMenuSeperator.setVisible(false);
         }
     }

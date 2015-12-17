@@ -26,7 +26,12 @@
                         <MenuItem mnemonicParsing="false" onAction="#gotoCompareSuppliers" text="Compare Suppliers" />
                         <MenuItem mnemonicParsing="false" onAction="#gotoAverageSuppliers" text="Suppliers Average" />
                         <SeparatorMenuItem fx:id="preferencesMenuSeperator" mnemonicParsing="false" />
-                        <MenuItem fx:id="preferencesMenuItem" mnemonicParsing="false" onAction="#gotoPreferences" text="Preferences" />
+                        <Menu fx:id="preferencesMenu" mnemonicParsing="false" text="Preferences">
+                            <items>
+                                <MenuItem fx:id="supplierClassificationMenuItem" mnemonicParsing="false" onAction="#gotoPreferences" text="Supplier Classification" />
+                                <MenuItem fx:id="scoreThresholdMenuItem" mnemonicParsing="false" onAction="#gotoScorePreferences" text="Score Thresholds" />
+                            </items>
+                        </Menu>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="User">
@@ -51,19 +56,17 @@
          </font>
       </Text>
       <Line endX="580.0" fill="#00000099" layoutX="30.0" layoutY="77.0" />
-      <Text layoutX="35.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Here you can change the preferences for the score calculation!">
+      <Text layoutX="35.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Here you can change the preferences for the supplier classification!">
          <font>
             <Font size="14.0" />
          </font>
       </Text>
       <Button fx:id="updateButton" layoutX="30.0" layoutY="399.0" mnemonicParsing="false" onAction="#updateScoreSetttings" prefHeight="37.0" prefWidth="91.0" text="Update" />
-      <TableView fx:id="scoreTable" layoutX="35.0" layoutY="139.0" prefHeight="236.0" prefWidth="538.0">
+      <TableView fx:id="supplierClassTable" layoutX="35.0" layoutY="139.0" prefHeight="236.0" prefWidth="488.0">
         <columns>
-          <TableColumn fx:id="earlyMinCol" prefWidth="101.0" text="EarlyMin (days)" />
-          <TableColumn fx:id="earlyMaxCol" prefWidth="103.0" text="EarlyMax (days)" />
-            <TableColumn fx:id="lateMinCol" prefWidth="96.0" text="LateMin (days)" />
-            <TableColumn fx:id="lateMaxCol" minWidth="0.0" prefWidth="98.0" text="LateMax (days)" />
-            <TableColumn fx:id="scoreCol" prefWidth="138.0" text="Score Value (percent)" />
+          <TableColumn fx:id="deliveriesMinCol" prefWidth="169.0" text="DeliveriesMin (days)" />
+          <TableColumn fx:id="deliveriesMaxCol" minWidth="7.0" prefWidth="169.0" text="DeliveriesMax (days)" />
+            <TableColumn fx:id="supplierClassCol" minWidth="0.0" prefWidth="149.0" text="SupplierClass" />
         </columns>
       </TableView>
       <Text fx:id="errorMessage" fill="#dd0000" layoutX="378.0" layoutY="423.0" strokeType="OUTSIDE" strokeWidth="0.0" text="errorMessage">

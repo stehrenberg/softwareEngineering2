@@ -1,7 +1,7 @@
 package edu.hm.cs.softengii.cntrl;
 
 import edu.hm.cs.softengii.db.dataStorage.DatabaseDataStorage;
-import edu.hm.cs.softengii.db.dataStorage.SupplierClassificationThresholdEntity;
+import edu.hm.cs.softengii.db.dataStorage.ScoreThresholdEntity;
 import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.application.Platform;
@@ -35,16 +35,18 @@ import java.util.ResourceBundle;
  * @author Apachen Pub Team
  *
  */
-public class PreferencesCtrl implements Initializable {
+public class ScorePreferencesCtrl implements Initializable {
 
-    private final ObservableList<SupplierClassificationThresholdEntity> scoreData = FXCollections.observableArrayList();
+    private final ObservableList<ScoreThresholdEntity> scoreData = FXCollections.observableArrayList();
 
     @FXML private AnchorPane rootPane;
 
-    @FXML private TableView<SupplierClassificationThresholdEntity> supplierClassTable;
-    @FXML private TableColumn<SupplierClassificationThresholdEntity, Number> deliveriesMinCol;
-    @FXML private TableColumn<SupplierClassificationThresholdEntity, Number> deliveriesMaxCol;
-    @FXML private TableColumn<SupplierClassificationThresholdEntity, Number> supplierClassCol;
+    @FXML private TableView<ScoreThresholdEntity> scoreTable;
+    @FXML private TableColumn<ScoreThresholdEntity, Number> earlyMinCol;
+    @FXML private TableColumn<ScoreThresholdEntity, Number> earlyMaxCol;
+    @FXML private TableColumn<ScoreThresholdEntity, Number> lateMinCol;
+    @FXML private TableColumn<ScoreThresholdEntity, Number> lateMaxCol;
+    @FXML private TableColumn<ScoreThresholdEntity, Number> scoreCol;
 
     @FXML private MenuItem newUserMenuItem;
     @FXML private MenuItem manageAllUsersMenuItem;
@@ -62,7 +64,7 @@ public class PreferencesCtrl implements Initializable {
         errorMessage.setText("");
         setAdminMenusVisible(Session.getInstance().getAuthenticatedUser().isAdmin());
 
-        scoreData.addAll(DatabaseDataStorage.getInstance().getSupplierClassificationThresholds());
+        scoreData.addAll(DatabaseDataStorage.getInstance().getScoreThresholds());
         populateScoreTable();
     }
 
@@ -79,7 +81,7 @@ public class PreferencesCtrl implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
 
-            DatabaseDataStorage.getInstance().setSupplierClassificationThresholds(scoreData);
+            DatabaseDataStorage.getInstance().setScoreThresholds(scoreData);
 
             errorMessage.setFill(Color.GREEN);
             errorMessage.setText("Score data updated.");
@@ -100,7 +102,7 @@ public class PreferencesCtrl implements Initializable {
         if (result.get() == ButtonType.OK) {
 
             populateScoreTableWithDefaults();
-            DatabaseDataStorage.getInstance().setSupplierClassificationThresholds(scoreData);
+            DatabaseDataStorage.getInstance().setScoreThresholds(scoreData);
 
             errorMessage.setFill(Color.GREEN);
             errorMessage.setText("Score data reset to defaults.");
@@ -145,12 +147,13 @@ public class PreferencesCtrl implements Initializable {
 
     @FXML
     public void gotoPreferences() {
-        //Do nothing, we are already here
+        MenuHelper.getInstance().gotoPreferences();
     }
+
 
     @FXML
     public void gotoScorePreferences() {
-        MenuHelper.getInstance().gotoScorePreferences();
+        // Do nothing, we are already here
     }
 
     @FXML
@@ -183,67 +186,92 @@ public class PreferencesCtrl implements Initializable {
     private void populateScoreTableWithDefaults() {
         scoreData.removeAll();
         scoreData.clear();
-        scoreData.addAll(DatabaseDataStorage.getInstance().getSupplierClassificationDefaults());
+        scoreData.addAll(DatabaseDataStorage.getInstance().getScoreDefaults());
         populateScoreTable();
     }
 
     private void populateScoreTable() {
 
-        supplierClassTable.setEditable(true);
+        scoreTable.setEditable(true);
 
-        Callback<TableColumn<SupplierClassificationThresholdEntity, Number>, TableCell<SupplierClassificationThresholdEntity, Number>> cellFactory =
-            new Callback<TableColumn<SupplierClassificationThresholdEntity, Number>, TableCell<SupplierClassificationThresholdEntity, Number>>() {
+        Callback<TableColumn<ScoreThresholdEntity, Number>, TableCell<ScoreThresholdEntity, Number>> cellFactory =
+            new Callback<TableColumn<ScoreThresholdEntity, Number>, TableCell<ScoreThresholdEntity, Number>>() {
 
                 @Override
-                public TableCell<SupplierClassificationThresholdEntity, Number> call(TableColumn<SupplierClassificationThresholdEntity, Number> p) {
+                public TableCell<ScoreThresholdEntity, Number> call(TableColumn<ScoreThresholdEntity, Number> p) {
                     return new EditingCell();
                 }
         };
 
-        deliveriesMinCol.setCellValueFactory(
-            new PropertyValueFactory<SupplierClassificationThresholdEntity, Number>("deliveriesMin")
+        earlyMinCol.setCellValueFactory(
+            new PropertyValueFactory<ScoreThresholdEntity, Number>("earlyMin")
         );
-        deliveriesMinCol.setCellFactory(cellFactory);
+        earlyMinCol.setCellFactory(cellFactory);
 
-        deliveriesMaxCol.setCellValueFactory(
-            new PropertyValueFactory<SupplierClassificationThresholdEntity, Number>("deliveriesMax")
+        earlyMaxCol.setCellValueFactory(
+            new PropertyValueFactory<ScoreThresholdEntity, Number>("earlyMax")
         );
-        deliveriesMaxCol.setCellFactory(cellFactory);
+        earlyMaxCol.setCellFactory(cellFactory);
 
-        supplierClassCol.setCellValueFactory(
-            new PropertyValueFactory<SupplierClassificationThresholdEntity, Number>("supplierClass")
+        lateMinCol.setCellValueFactory(
+            new PropertyValueFactory<ScoreThresholdEntity, Number>("lateMin")
         );
-        supplierClassCol.setCellFactory(cellFactory);
+        lateMinCol.setCellFactory(cellFactory);
+
+        lateMaxCol.setCellValueFactory(
+            new PropertyValueFactory<ScoreThresholdEntity, Number>("lateMax")
+        );
+        lateMaxCol.setCellFactory(cellFactory);
+
+        scoreCol.setCellValueFactory(
+            new PropertyValueFactory<ScoreThresholdEntity, Number>("scoreValue")
+        );
+        scoreCol.setCellFactory(cellFactory);
+
+        scoreTable.setItems(scoreData);
 
 
-        supplierClassTable.setItems(scoreData);
-
-
-        deliveriesMinCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, Number>>() {
+        earlyMinCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
-            public void handle(TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, Number> t) {
-                ((SupplierClassificationThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
-                    setDeliveriesMin((int) t.getNewValue());
+            public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
+                    setEarlyMin((int) t.getNewValue());
             }
         });
 
-        deliveriesMaxCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, Number>>() {
+        earlyMaxCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
-            public void handle(TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, Number> t) {
-                ((SupplierClassificationThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow()))
-                    .setDeliveriesMax((int)t.getNewValue());
+            public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+                    .setEarlyMax((int)t.getNewValue());
             }
         });
 
-        supplierClassCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, Number>>() {
+        lateMinCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
-            public void handle(TableColumn.CellEditEvent<SupplierClassificationThresholdEntity, Number> t) {
-                //((SupplierClassificationThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
-
-                        //TODO Fix supplierClass Name... h??
-                //set((int)t.getNewValue());
+            public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
+                    setLateMin((int)t.getNewValue());
             }
         });
+
+        lateMaxCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
+                    setLateMax((int)t.getNewValue());
+            }
+        });
+
+        scoreCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
+                    setScoreValue((int)t.getNewValue());
+            }
+        });
+
+
     }
     
     /**
@@ -251,7 +279,7 @@ public class PreferencesCtrl implements Initializable {
      * @author Apachen Pub Team
      *
      */
-    class EditingCell extends TableCell<SupplierClassificationThresholdEntity, Number> {
+    class EditingCell extends TableCell<ScoreThresholdEntity, Number> {
 
         private TextField textField;
 
@@ -341,9 +369,9 @@ public class PreferencesCtrl implements Initializable {
          * @param forward true gets the column to the right, false the column to the left of the current column
          * @return
          */
-        private TableColumn<SupplierClassificationThresholdEntity, ?> getNextColumn(boolean forward) {
-            List<TableColumn<SupplierClassificationThresholdEntity, ?>> columns = new ArrayList<>();
-            for (TableColumn<SupplierClassificationThresholdEntity, ?> column : getTableView().getColumns()) {
+        private TableColumn<ScoreThresholdEntity, ?> getNextColumn(boolean forward) {
+            List<TableColumn<ScoreThresholdEntity, ?>> columns = new ArrayList<>();
+            for (TableColumn<ScoreThresholdEntity, ?> column : getTableView().getColumns()) {
                 columns.addAll(getLeaves(column));
             }
             //There is no other column that supports editing.
@@ -366,8 +394,8 @@ public class PreferencesCtrl implements Initializable {
             return columns.get(nextIndex);
         }
 
-        private List<TableColumn<SupplierClassificationThresholdEntity, ?>> getLeaves(TableColumn<SupplierClassificationThresholdEntity, ?> root) {
-            List<TableColumn<SupplierClassificationThresholdEntity, ?>> columns = new ArrayList<>();
+        private List<TableColumn<ScoreThresholdEntity, ?>> getLeaves(TableColumn<ScoreThresholdEntity, ?> root) {
+            List<TableColumn<ScoreThresholdEntity, ?>> columns = new ArrayList<>();
             if (root.getColumns().isEmpty()) {
                 //We only want the leaves that are editable.
                 if (root.isEditable()) {
@@ -375,7 +403,7 @@ public class PreferencesCtrl implements Initializable {
                 }
                 return columns;
             } else {
-                for (TableColumn<SupplierClassificationThresholdEntity, ?> column : root.getColumns()) {
+                for (TableColumn<ScoreThresholdEntity, ?> column : root.getColumns()) {
                     columns.addAll(getLeaves(column));
                 }
                 return columns;
