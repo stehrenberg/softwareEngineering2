@@ -65,14 +65,14 @@
       <Button fx:id="updateButton" layoutX="30.0" layoutY="399.0" mnemonicParsing="false" onAction="#updateScoreSetttings" prefHeight="37.0" prefWidth="91.0" text="Update" />
       <TableView fx:id="scoreTable" layoutX="35.0" layoutY="139.0" prefHeight="236.0" prefWidth="538.0">
         <columns>
-          <TableColumn fx:id="earlyMinCol" prefWidth="101.0" text="EarlyMin (days)" />
-          <TableColumn fx:id="earlyMaxCol" prefWidth="103.0" text="EarlyMax (days)" />
-            <TableColumn fx:id="lateMinCol" prefWidth="96.0" text="LateMin (days)" />
-            <TableColumn fx:id="lateMaxCol" minWidth="0.0" prefWidth="98.0" text="LateMax (days)" />
-            <TableColumn fx:id="scoreCol" prefWidth="138.0" text="Score Value (percent)" />
+          <TableColumn fx:id="earlyMinCol" prefWidth="101.0" sortable="false" text="EarlyMin (days)" />
+          <TableColumn fx:id="earlyMaxCol" prefWidth="103.0" sortable="false" text="EarlyMax (days)" />
+            <TableColumn fx:id="lateMinCol" prefWidth="96.0" sortable="false" text="LateMin (days)" />
+            <TableColumn fx:id="lateMaxCol" minWidth="0.0" prefWidth="98.0" sortable="false" text="LateMax (days)" />
+            <TableColumn fx:id="scoreCol" prefWidth="138.0" sortable="false" text="Score Value (percent)" />
         </columns>
       </TableView>
-      <Text fx:id="errorMessage" fill="#dd0000" layoutX="378.0" layoutY="423.0" strokeType="OUTSIDE" strokeWidth="0.0" text="errorMessage">
+      <Text fx:id="errorMessage" fill="#dd0000" layoutX="262.0" layoutY="423.0" strokeType="OUTSIDE" strokeWidth="0.0" text="errorMessage">
          <font>
             <Font size="14.0" />
          </font>
