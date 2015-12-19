@@ -3,6 +3,7 @@ package edu.hm.cs.softengii.cntrl;
 import edu.hm.cs.softengii.db.dataStorage.DatabaseDataStorage;
 import edu.hm.cs.softengii.db.dataStorage.DeliveryRange;
 import edu.hm.cs.softengii.db.dataStorage.DeliveryRangeThresholdEntity;
+import edu.hm.cs.softengii.db.dataStorage.SupplierClass;
 import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.application.Platform;
@@ -57,6 +58,7 @@ public class DeliveryPreferencesCtrl implements Initializable {
     @FXML private Button updateButton;
     @FXML private Button resetButton;
     @FXML private Text errorMessage;
+    private String currentError;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -315,23 +317,127 @@ public class DeliveryPreferencesCtrl implements Initializable {
             }
         }
 
+        public boolean isValidEntry() {
+
+            boolean isValidEntry = true;
+
+            int columnIndex = getTableView().getColumns().indexOf(getTableColumn());
+            int rowIndex = getIndex();
+            int oldEntry = (int) getItem();
+            int newEntry = Integer.parseInt(textField.getText());
+
+            int daysMin = getTableView().getItems().get(getIndex()).getDaysMin();
+            int daysMax = getTableView().getItems().get(getIndex()).getDaysMax();
+            DeliveryRange deliveryRange = getTableView().getItems().get(getIndex()).getDeliveryRangeName();
+
+            switch (columnIndex) {
+                case 0:
+
+                    if (newEntry > daysMax) {
+
+                        currentError = "Error: DaysMin cannot be greater than DaysMax in this row.";
+                        isValidEntry = false;
+
+                    } else {
+
+                        int tmpIndex = 0;
+                        if(rowIndex > 0) {
+                            tmpIndex = --rowIndex;
+                        }
+                        int currentDaysMin = newEntry;
+                        int prevDaysMax = getTableView().getItems().get(tmpIndex).getDaysMax();
+
+                        while (tmpIndex >= 0) {
+
+                            if (currentDaysMin <= prevDaysMax
+                                    || currentDaysMin - 1 > prevDaysMax) {
+
+                                prevDaysMax = currentDaysMin - 1;
+                                getTableView().getItems().get(tmpIndex).setDaysMax(prevDaysMax);
+
+                                if (prevDaysMax < getTableView().getItems().get(tmpIndex).getDaysMin()) {
+                                    currentDaysMin = prevDaysMax;
+                                    getTableView().getItems().get(tmpIndex).setDaysMin(currentDaysMin);
+                                }
+                            }
+
+                            if (tmpIndex > 0) {
+                                currentDaysMin = getTableView().getItems().get(tmpIndex).getDaysMin();
+                                prevDaysMax = getTableView().getItems().get(tmpIndex - 1).getDaysMax();
+                            }
+
+                            tmpIndex--;
+                        }
+
+                        populateScoreTable();
+                    }
+                    break;
+
+                case 1:
+                    if (newEntry < daysMin) {
+                        currentError = "Error: DaysMax cannot be less than DaysMin in this row.";
+                        isValidEntry = false;
+                    } else {
+
+                        int tmpIndex = ++rowIndex;
+                        int currentDaysMax = newEntry;
+                        int nextDaysMin = getTableView().getItems().get(tmpIndex).getDaysMin();
+
+                        while (tmpIndex <= 2) {
+
+                            if (currentDaysMax >= nextDaysMin || currentDaysMax + 1 < nextDaysMin) {
+
+                                nextDaysMin = currentDaysMax + 1;
+                                getTableView().getItems().get(tmpIndex).setDaysMin(nextDaysMin);
+
+                                if (nextDaysMin > getTableView().getItems().get(tmpIndex).getDaysMax()) {
+                                    currentDaysMax = nextDaysMin;
+                                    getTableView().getItems().get(tmpIndex).setDaysMax(currentDaysMax);
+                                }
+                            }
+
+                            if (tmpIndex < 2) {
+                                currentDaysMax = getTableView().getItems().get(tmpIndex).getDaysMax();
+                                nextDaysMin = getTableView().getItems().get(tmpIndex + 1).getDaysMax();
+                            }
+
+                            tmpIndex++;
+                        }
+
+                        populateScoreTable();
+                    }
+                    break;
+            }
+
+            return isValidEntry;
+        }
+
         private void createTextField() {
             textField = new TextField(getString());
             textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
             textField.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
+
                 @Override
                 public void handle(KeyEvent t) {
-                    if (t.getCode() == KeyCode.ENTER) {
+                    if (t.getCode() == KeyCode.ENTER && isValidEntry()) {
+                        errorMessage.setText("");
                         commitEdit(Integer.parseInt(textField.getText()));
                     } else if (t.getCode() == KeyCode.ESCAPE) {
+                        textField.setText(getString());
                         cancelEdit();
-                    } else if (t.getCode() == KeyCode.TAB) {
+                    } else if (t.getCode() == KeyCode.TAB && isValidEntry()) {
+                        errorMessage.setText("");
                         commitEdit(Integer.parseInt(textField.getText()));
                         TableColumn nextColumn = getNextColumn(!t.isShiftDown());
                         if (nextColumn != null) {
                             getTableView().edit(getTableRow().getIndex(), nextColumn);
                         }
+                    } else if ((t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB) && !isValidEntry()) {
+                        errorMessage.setText("");
+                        errorMessage.setText(currentError);
+                        textField.setText(getString());
+                        cancelEdit();
                     }
                 }
             });
@@ -451,6 +557,27 @@ public class DeliveryPreferencesCtrl implements Initializable {
             }
         }
 
+
+        public boolean isValidEntry() {
+
+            int columnIndex = getTableView().getColumns().indexOf(getTableColumn());
+            int rowIndex = getIndex();
+            String newEntry = textField.getText();
+
+            boolean isValidEntry = newEntry != null && !newEntry.isEmpty()
+                    && (((newEntry.equals("VERY_EARLY"))
+                    || (newEntry.equals("EARLY"))
+                    || (newEntry.equals("IN_TIME"))
+                    || (newEntry.equals("LATE")))
+                    || (newEntry.equals("VERY_LATE")));
+
+            if(!isValidEntry) {
+                currentError = "Error: Please use 'VERY_EARLY', 'EARLY', \n\t\t'IN_TIME', 'LATE' or 'VERY_LATE'.";
+            }
+
+            return isValidEntry;
+        }
+
         private void createTextField() {
             textField = new TextField(getString());
             textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
@@ -458,16 +585,24 @@ public class DeliveryPreferencesCtrl implements Initializable {
 
                 @Override
                 public void handle(KeyEvent t) {
-                    if (t.getCode() == KeyCode.ENTER) {
+                    if (t.getCode() == KeyCode.ENTER && isValidEntry()) {
+                        errorMessage.setText("");
                         commitEdit(DeliveryRange.valueOf(textField.getText()));
                     } else if (t.getCode() == KeyCode.ESCAPE) {
+                        textField.setText(getString());
                         cancelEdit();
-                    } else if (t.getCode() == KeyCode.TAB) {
+                    } else if (t.getCode() == KeyCode.TAB && isValidEntry()) {
+                        errorMessage.setText("");
                         commitEdit(DeliveryRange.valueOf(textField.getText()));
                         TableColumn nextColumn = getNextColumn(!t.isShiftDown());
                         if (nextColumn != null) {
                             getTableView().edit(getTableRow().getIndex(), nextColumn);
                         }
+                    } else if ((t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB) && !isValidEntry()) {
+                        errorMessage.setText("");
+                        errorMessage.setText(currentError);
+                        textField.setText(getString());
+                        cancelEdit();
                     }
                 }
             });

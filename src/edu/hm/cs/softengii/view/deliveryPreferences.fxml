@@ -70,7 +70,7 @@
             <TableColumn fx:id="deliveryRangeCol" minWidth="0.0" prefWidth="149.0" text="DeliveryRange" />
         </columns>
       </TableView>
-      <Text fx:id="errorMessage" fill="#dd0000" layoutX="378.0" layoutY="423.0" strokeType="OUTSIDE" strokeWidth="0.0" text="errorMessage">
+      <Text fx:id="errorMessage" fill="#dd0000" layoutX="253.0" layoutY="423.0" strokeType="OUTSIDE" strokeWidth="0.0" text="errorMessage">
          <font>
             <Font size="14.0" />
          </font>
