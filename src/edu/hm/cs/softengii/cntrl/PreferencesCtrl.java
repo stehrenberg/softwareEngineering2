@@ -57,6 +57,7 @@ public class PreferencesCtrl implements Initializable {
     @FXML private Button updateButton;
     @FXML private Button resetButton;
     @FXML private Text errorMessage;
+    private String currentError;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -315,6 +316,111 @@ public class PreferencesCtrl implements Initializable {
             }
         }
 
+        public boolean isValidEntry() {
+
+            boolean isValidEntry = true;
+
+            int columnIndex = getTableView().getColumns().indexOf(getTableColumn());
+            int rowIndex = getIndex();
+            int oldEntry = (int) getItem();
+            int newEntry = Integer.parseInt(textField.getText());
+
+            int deliveriesMin = getTableView().getItems().get(getIndex()).getDeliveriesMin();
+            int deliveriesMax = getTableView().getItems().get(getIndex()).getDeliveriesMax();
+            SupplierClass suppliersClass = getTableView().getItems().get(getIndex()).getClassName();
+
+            switch (columnIndex) {
+                case 0:
+
+                    if (newEntry > deliveriesMax) {
+
+                        currentError = "Error: Min cannot be greater than Max in this row.";
+                        isValidEntry = false;
+
+                    } else {
+
+                        if (Math.abs(newEntry) >= rowIndex + 1) {
+
+
+
+                            int tmpIndex = 0;
+                            if(rowIndex > 0) {
+                                tmpIndex = --rowIndex;
+                            }
+                            int currentDeliveriesMin = newEntry;
+                            int prevDeliveriesMax = getTableView().getItems().get(tmpIndex).getDeliveriesMax();
+
+                            while (tmpIndex >= 0) {
+
+                                if (currentDeliveriesMin <= prevDeliveriesMax
+                                        || currentDeliveriesMin - 1 > prevDeliveriesMax) {
+
+                                    prevDeliveriesMax = currentDeliveriesMin - 1;
+                                    getTableView().getItems().get(tmpIndex).setDeliveriesMax(prevDeliveriesMax);
+
+                                    if (prevDeliveriesMax < getTableView().getItems().get(tmpIndex).getDeliveriesMin()) {
+                                        currentDeliveriesMin = prevDeliveriesMax;
+                                        getTableView().getItems().get(tmpIndex).setDeliveriesMin(currentDeliveriesMin);
+                                    }
+                                }
+
+                                if (tmpIndex > 0) {
+                                    currentDeliveriesMin = getTableView().getItems().get(tmpIndex).getDeliveriesMin();
+                                    prevDeliveriesMax = getTableView().getItems().get(tmpIndex - 1).getDeliveriesMax();
+                                }
+
+                                tmpIndex--;
+                            }
+
+                            populateScoreTable();
+
+                        } else {
+
+                            currentError = "Error: Minimum for DeliveriesMin in this row is: " + (rowIndex + 1);
+                            isValidEntry = false;
+                        }
+
+                    }
+                    break;
+                case 1:
+                    if (newEntry < deliveriesMin) {
+                        currentError = "Error: Max cannot be less than Min in this row.";
+                        isValidEntry = false;
+                    } else {
+
+                        int tmpIndex = ++rowIndex;
+                        int currentDeliveriesMax = newEntry;
+                        int nextDeliveriesMin = getTableView().getItems().get(tmpIndex).getDeliveriesMin();
+
+                        while (tmpIndex <= 2) {
+
+                            if (currentDeliveriesMax >= nextDeliveriesMin || currentDeliveriesMax + 1 < nextDeliveriesMin) {
+
+                                nextDeliveriesMin = currentDeliveriesMax + 1;
+                                getTableView().getItems().get(tmpIndex).setDeliveriesMin(nextDeliveriesMin);
+
+                                if (nextDeliveriesMin > getTableView().getItems().get(tmpIndex).getDeliveriesMax()) {
+                                    currentDeliveriesMax = nextDeliveriesMin;
+                                    getTableView().getItems().get(tmpIndex).setDeliveriesMax(currentDeliveriesMax);
+                                }
+                            }
+
+                            if (tmpIndex < 2) {
+                                currentDeliveriesMax = getTableView().getItems().get(tmpIndex).getDeliveriesMax();
+                                nextDeliveriesMin = getTableView().getItems().get(tmpIndex + 1).getDeliveriesMin();
+                            }
+
+                            tmpIndex++;
+                        }
+
+                        populateScoreTable();
+                    }
+                    break;
+            }
+
+            return isValidEntry;
+        }
+
         private void createTextField() {
             textField = new TextField(getString());
             textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
@@ -322,16 +428,24 @@ public class PreferencesCtrl implements Initializable {
 
                 @Override
                 public void handle(KeyEvent t) {
-                    if (t.getCode() == KeyCode.ENTER) {
+                    if (t.getCode() == KeyCode.ENTER && isValidEntry()) {
+                        errorMessage.setText("");
                         commitEdit(Integer.parseInt(textField.getText()));
                     } else if (t.getCode() == KeyCode.ESCAPE) {
+                        textField.setText(getString());
                         cancelEdit();
-                    } else if (t.getCode() == KeyCode.TAB) {
+                    } else if (t.getCode() == KeyCode.TAB && isValidEntry()) {
+                        errorMessage.setText("");
                         commitEdit(Integer.parseInt(textField.getText()));
                         TableColumn nextColumn = getNextColumn(!t.isShiftDown());
                         if (nextColumn != null) {
                             getTableView().edit(getTableRow().getIndex(), nextColumn);
                         }
+                    } else if ((t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB) && !isValidEntry()) {
+                        errorMessage.setText("");
+                        errorMessage.setText(currentError);
+                        textField.setText(getString());
+                        cancelEdit();
                     }
                 }
             });
@@ -451,6 +565,24 @@ public class PreferencesCtrl implements Initializable {
             }
         }
 
+        public boolean isValidEntry() {
+
+            int columnIndex = getTableView().getColumns().indexOf(getTableColumn());
+            int rowIndex = getIndex();
+            String newEntry = textField.getText();
+
+            boolean isValidEntry = newEntry != null && !newEntry.isEmpty()
+                    && ((newEntry.equals("ONE_OFF"))
+                        || (newEntry.equals("NORMAL"))
+                        || (newEntry.equals("TOP")));
+
+            if(!isValidEntry) {
+                currentError = "Error: Please use 'ONE_OFF', 'NORMAL' or 'TOP'.";
+            }
+
+            return isValidEntry;
+        }
+
         private void createTextField() {
             textField = new TextField(getString());
             textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
@@ -458,19 +590,28 @@ public class PreferencesCtrl implements Initializable {
 
                 @Override
                 public void handle(KeyEvent t) {
-                    if (t.getCode() == KeyCode.ENTER) {
+                    if (t.getCode() == KeyCode.ENTER && isValidEntry()) {
+                        errorMessage.setText("");
                         commitEdit(SupplierClass.valueOf(textField.getText()));
                     } else if (t.getCode() == KeyCode.ESCAPE) {
+                        textField.setText(getString());
                         cancelEdit();
-                    } else if (t.getCode() == KeyCode.TAB) {
+                    } else if (t.getCode() == KeyCode.TAB && isValidEntry()) {
+                        errorMessage.setText("");
                         commitEdit(SupplierClass.valueOf(textField.getText()));
                         TableColumn nextColumn = getNextColumn(!t.isShiftDown());
                         if (nextColumn != null) {
                             getTableView().edit(getTableRow().getIndex(), nextColumn);
                         }
+                    } else if ((t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB) && !isValidEntry()) {
+                        errorMessage.setText("");
+                        errorMessage.setText(currentError);
+                        textField.setText(getString());
+                        cancelEdit();
                     }
                 }
             });
+
 
             textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override

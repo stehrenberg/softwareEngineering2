@@ -540,9 +540,6 @@ public class ScorePreferencesCtrl implements Initializable {
 
                 @Override
                 public void handle(KeyEvent t) {
-
-
-
                     if (t.getCode() == KeyCode.ENTER && isValidEntry()) {
                         errorMessage.setText("");
                         commitEdit(Integer.parseInt(textField.getText()));
