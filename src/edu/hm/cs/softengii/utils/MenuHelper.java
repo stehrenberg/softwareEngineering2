@@ -32,7 +32,7 @@ public class MenuHelper {
 
     public void gotoCreateNewUser(){
 
-            String fxmlPath = "/createNewUser.fxml";
+            String fxmlPath = "/edu/hm/cs/softengii/view/createNewUser.fxml";
             FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         loadPage(loader, fxmlPath);
@@ -40,7 +40,7 @@ public class MenuHelper {
 
     public void gotoManageAllUsers() {
 
-        String fxmlPath = "/manageAllUsers.fxml";
+        String fxmlPath = "/edu/hm/cs/softengii/view/manageAllUsers.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         loadPage(loader, fxmlPath);
@@ -48,7 +48,7 @@ public class MenuHelper {
 
     public void gotoCompareSuppliers() {
 
-        String fxmlPath = "/compareSuppliers.fxml";
+        String fxmlPath = "/edu/hm/cs/softengii/view/compareSuppliers.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         loadPage(loader, fxmlPath);
@@ -56,7 +56,7 @@ public class MenuHelper {
 
     public void gotoAverageSuppliers() {
 
-        String fxmlPath = "/averageSuppliers.fxml";
+        String fxmlPath = "/edu/hm/cs/softengii/view/averageSuppliers.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         loadPage(loader, fxmlPath);
@@ -64,7 +64,7 @@ public class MenuHelper {
 
     public void gotoUserSettings() {
 
-        String fxmlPath = "/userSettings.fxml";
+        String fxmlPath = "/edu/hm/cs/softengii/view/userSettings.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         loadPage(loader, fxmlPath);
@@ -72,7 +72,7 @@ public class MenuHelper {
 
     public void gotoAbout() {
 
-        String fxmlPath = "/about.fxml";
+        String fxmlPath = "/edu/hm/cs/softengii/view/about.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         loadPage(loader, fxmlPath);
@@ -82,7 +82,7 @@ public class MenuHelper {
 
         Session.getInstance().close();
 
-        String fxmlPath = "/login.fxml";
+        String fxmlPath = "/edu/hm/cs/softengii/view/login.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         loadPage(loader, fxmlPath);
@@ -90,7 +90,7 @@ public class MenuHelper {
 
     public void gotoPreferences() {
 
-        String fxmlPath = "/preferences.fxml";
+        String fxmlPath = "/edu/hm/cs/softengii/view/preferences.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         loadPage(loader, fxmlPath);
@@ -98,7 +98,15 @@ public class MenuHelper {
 
     public void gotoScorePreferences() {
 
-        String fxmlPath = "/scorePreferences.fxml";
+        String fxmlPath = "/edu/hm/cs/softengii/view/scorePreferences.fxml";
+        FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
+
+        loadPage(loader, fxmlPath);
+    }
+
+    public void gotoDeliveryPreferences() {
+
+        String fxmlPath = "/edu/hm/cs/softengii/view/deliveryPreferences.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         loadPage(loader, fxmlPath);
@@ -106,7 +114,7 @@ public class MenuHelper {
 
     public void gotoMainMenu() {
 
-        String fxmlPath = "/compareSuppliers.fxml";
+        String fxmlPath = "/edu/hm/cs/softengii/view/compareSuppliers.fxml";
         FXMLLoader loader = new FXMLLoader(MenuHelper.class.getResource(fxmlPath));
 
         loadPage(loader, fxmlPath);
@@ -114,7 +122,7 @@ public class MenuHelper {
 
     public void gotoRegistration() {
 
-        String fxmlPath = "/registration.fxml";
+        String fxmlPath = "/edu/hm/cs/softengii/view/registration.fxml";
         FXMLLoader loader = new FXMLLoader (MenuHelper.class.getResource(fxmlPath));
 
         loadPage(loader, fxmlPath);
@@ -148,7 +156,7 @@ public class MenuHelper {
             scene = new Scene(page, SettingsPropertiesHelper.getInstance().getWindowWidth(),
                     SettingsPropertiesHelper.getInstance().getWindowHeight());
 
-            scene.getStylesheets().add(MenuHelper.class.getResource("/style.css").toExternalForm());
+            scene.getStylesheets().add(MenuHelper.class.getResource("/edu/hm/cs/softengii/view/css/style.css").toExternalForm());
             stage.setScene(scene);
 
         } else {

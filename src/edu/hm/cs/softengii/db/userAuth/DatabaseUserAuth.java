@@ -25,6 +25,8 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     private static DatabaseUserAuth instance = null;
 
     /** Database URL */
+//    private final static String DB_URL = "jdbc:sqlite::resource:" +
+//            DatabaseUserAuth.class.getResource("userAuth.db").toString();
     private final static String DB_URL = SettingsPropertiesHelper.getInstance().getUserAuthDbUrl();
 
     /** Database username */
@@ -32,6 +34,19 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
 
     /** Database password */
     private final static String PASSWORD = SettingsPropertiesHelper.getInstance().getUserAuthDbPswd();
+    
+    /**
+    GeneralDB : authUserAll
+    KevinBeck : authUserBeck
+    StephaniEhrenberg : authUserEhrenberg
+    SimonHolzmann : authUserHolzmann
+    MaxiOeckler : authUserOeckler
+    MaxiRenk : authUserRenk
+    */
+    
+    /** User tables */
+    private final static String USER_TABLE = "authUserAll";
+    
 
     /** Connection to the database */
     private Connection connection;
@@ -66,9 +81,11 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     @Override
     public void establishConnection() {
 
+
         try {
             if (this.connection == null || this.connection.isClosed()) {
-                this.connection = DriverManager.getConnection("jdbc:sqlite::resource:userAuth.db", USER, PASSWORD);
+            	//TODO PW vor finaler Abgabe aendern
+                this.connection = DriverManager.getConnection(DB_URL, USER, "2N682Gsa");//decryptPassword(PASSWORD));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -101,7 +118,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
 
         try {
             Statement statement = this.connection.createStatement();
-            ResultSet set = statement.executeQuery("SELECT * FROM Users");
+            ResultSet set = statement.executeQuery("SELECT * FROM " + USER_TABLE);
 
             while(set.next()) {
                 userLogins.add(set.getString("loginName"));
@@ -139,7 +156,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
         UserEntity tmpUser = null;
 
         try {
-            String query = String.format("SELECT * FROM Users WHERE loginName LIKE '%s'", loginName);
+            String query = String.format("SELECT * FROM " + USER_TABLE + " WHERE loginName LIKE '%s'", loginName);
             Statement statement = connection.createStatement();
             ResultSet set = statement.executeQuery(query);
 
@@ -177,7 +194,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
 
 
         try {
-            String query = String.format("SELECT * FROM Users WHERE loginName = '%s' AND pswd = '%s'",
+            String query = String.format("SELECT * FROM " + USER_TABLE + " WHERE loginName = '%s' AND pswd = '%s'",
                     loginName, generatedPass);
 
             Statement statement = connection.createStatement();
@@ -223,7 +240,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     public void deleteUserFromLoginName(String loginName) {
         establishConnection();
         try {
-            String query = String.format("DELETE FROM Users WHERE loginName = '%s'",loginName);
+            String query = String.format("DELETE FROM " + USER_TABLE + " WHERE loginName = '%s'",loginName);
             Statement statement = connection.createStatement();
             statement.execute(query);
 
@@ -253,8 +270,8 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
 
             String query = "";
             if (!password.equals("")) {
-                query = String.format("UPDATE Users " +
-                                "SET forename='%s', surname='%s', loginName='%s', pswd='%s', email='%s'" +
+                query = String.format("UPDATE " + USER_TABLE +
+                                " SET forename='%s', surname='%s', loginName='%s', pswd='%s', email='%s'" +
                                 "WHERE loginName='%s'",
                         forename, surname, newLoginName, generatedPswd, email, loginName);
             } else {
@@ -301,7 +318,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
                 admin = 1;
             }
 
-            String query = String.format("INSERT INTO Users (forename, surname, loginName, pswd, email, isAdmin)" +
+            String query = String.format("INSERT INTO " + USER_TABLE + " (forename, surname, loginName, pswd, email, isAdmin)" +
                             "VALUES('%s','%s', '%s', '%s', '%s', '%d')",
                     forename, surname, loginName, generatedPswd, email, admin);
 

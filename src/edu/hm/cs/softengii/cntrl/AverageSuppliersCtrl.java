@@ -6,6 +6,7 @@ Project: SupplyAlyticsApp
 package edu.hm.cs.softengii.cntrl;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,16 +17,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-
-import javafx.embed.swing.SwingFXUtils;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.*;
-import javafx.scene.image.WritableImage;
 
 import javax.imageio.ImageIO;
 
@@ -41,6 +32,22 @@ import edu.hm.cs.softengii.db.sap.Supplier;
 import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.ScoreCalculator;
 import edu.hm.cs.softengii.utils.Session;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.WritableImage;
+import javafx.stage.DirectoryChooser;
 
 /**
  * JavaFX Controller for 'averageSuppliers.fxml'.
@@ -50,6 +57,8 @@ import edu.hm.cs.softengii.utils.Session;
  *
  */
 public class AverageSuppliersCtrl implements Initializable {
+	
+	private final static int PAGE_HEIGHT = 8010;
 
     @FXML private MenuItem newUserMenuItem;
     @FXML private MenuItem manageAllUsersMenuItem;
@@ -123,6 +132,12 @@ public class AverageSuppliersCtrl implements Initializable {
 	public void gotoScorePreferences() {
 		MenuHelper.getInstance().gotoScorePreferences();
 	}
+
+	@FXML
+	public void gotoDeliveryPreferences() {
+		MenuHelper.getInstance().gotoDeliveryPreferences();
+	}
+
     @FXML
     public void quitApplication() {
         MenuHelper.getInstance().quitApplication();
@@ -157,38 +172,55 @@ public class AverageSuppliersCtrl implements Initializable {
 	@FXML
     void exportPDF(ActionEvent event) {
 	    Scene scene = compareChart.getScene();
-	    
 	    int widthScene = (int)scene.getWidth();
 	    int heightScene = (int)scene.getHeight();
-	    
-	    int width = (int)compareChart.getWidth();
-	    int height = (int)compareChart.getHeight();
         
-        Rectangle page = new Rectangle(widthScene, heightScene);
-        Document document = new Document(page);
-	    
+        Document document = new Document(new Rectangle(widthScene, heightScene));
 	    WritableImage writeableScene = scene.snapshot(new WritableImage(widthScene, heightScene));
-        WritableImage writeableGraph = compareChart.snapshot(null, null);
-        ByteArrayOutputStream byteOutputGraph = new ByteArrayOutputStream();
         ByteArrayOutputStream byteOutputScene = new ByteArrayOutputStream();
         PdfWriter writer = null;
         
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("Choose an export directory");
+        File selectedDirectory = chooser.showDialog(scene.getWindow());
+        
+        String path = "";
+        if(selectedDirectory.isDirectory()) {
+        	path = selectedDirectory.getAbsolutePath();
+        } else {
+        	path = getClass().getProtectionDomain().getCodeSource().getLocation().getHost();
+        }
+        
         try {
-            String pathJarFile = getClass().getProtectionDomain().getCodeSource().getLocation().getHost();
-            writer = PdfWriter.getInstance(document, new FileOutputStream(pathJarFile + "AverageSuppliers.pdf"));
+            writer = PdfWriter.getInstance(document, new FileOutputStream(path + "/AverageSuppliers.pdf"));
             document.open();
-            ImageIO.write(SwingFXUtils.fromFXImage(writeableGraph, null),"png", byteOutputGraph);
             ImageIO.write(SwingFXUtils.fromFXImage(writeableScene, null),"png", byteOutputScene);
-            
-            Image imageGraph = Image.getInstance(byteOutputGraph.toByteArray());
             Image imageScene = Image.getInstance(byteOutputScene.toByteArray());
             
             imageScene.setAbsolutePosition(0, 0);
             document.add(imageScene);
             
-            document.setPageSize(new Rectangle((float)width + 100, (float)height));
-            document.newPage();
-            document.add(imageGraph);
+            int compareChartheight = (int)compareChart.getHeight();
+            int width = (int)compareChart.getWidth();
+            
+            for(int currentHeight = 0; currentHeight < compareChartheight; currentHeight += PAGE_HEIGHT) {
+            	SnapshotParameters parameters = new SnapshotParameters();
+                parameters.setViewport(new Rectangle2D(0, currentHeight, width, PAGE_HEIGHT));
+        	    
+                WritableImage writeableGraph = compareChart.snapshot(parameters, null);
+                ByteArrayOutputStream byteOutputGraph = new ByteArrayOutputStream();
+                ImageIO.write(SwingFXUtils.fromFXImage(writeableGraph, null),"png", byteOutputGraph);
+                Image imageGraph = Image.getInstance(byteOutputGraph.toByteArray());
+            	
+                if(currentHeight + PAGE_HEIGHT > compareChartheight) {
+                	document.setPageSize(new Rectangle((float)width + 100, (float)compareChartheight - currentHeight + 100));
+                }
+                else {
+                	document.setPageSize(new Rectangle((float)width + 100, (float)PAGE_HEIGHT + 100));
+                }
+            	document.newPage();
+            	document.add(imageGraph);
+            }
             
         } catch (DocumentException | IOException e) {
             e.printStackTrace();

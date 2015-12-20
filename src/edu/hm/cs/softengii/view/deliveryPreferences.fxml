@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="rootPane" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.hm.cs.softengii.cntrl.DeliveryPreferencesCtrl">
+    <children>
+        <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Export PDF" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#quitApplication" text="Quit" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Perspectives">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#gotoCompareSuppliers" text="Compare Suppliers" />
+                        <MenuItem mnemonicParsing="false" onAction="#gotoAverageSuppliers" text="Suppliers Average" />
+                        <SeparatorMenuItem fx:id="preferencesMenuSeperator" mnemonicParsing="false" />
+                        <Menu fx:id="preferencesMenu" mnemonicParsing="false" text="Preferences">
+                            <items>
+                                <MenuItem fx:id="deliveryClassificationMenuItem1" mnemonicParsing="false" onAction="#gotoDeliveryPreferences" text="Delivery Classification" />
+                                <MenuItem fx:id="supplierClassificationMenuItem" mnemonicParsing="false" onAction="#gotoPreferences" text="Supplier Classification" />
+                                <MenuItem fx:id="scoreThresholdMenuItem" mnemonicParsing="false" onAction="#gotoScorePreferences" text="Score Thresholds" />
+                            </items>
+                        </Menu>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="User">
+                    <items>
+                        <MenuItem fx:id="newUserMenuItem" mnemonicParsing="false" onAction="#gotoCreateNewUser" text="New User" />
+                        <MenuItem fx:id="manageAllUsersMenuItem" mnemonicParsing="false" onAction="#gotoManageAllUsers" text="Manage all Users" />
+                        <SeparatorMenuItem fx:id="userMenuSeperator" mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#gotoUserSettings" text="Settings" />
+                        <MenuItem mnemonicParsing="false" onAction="#gotoLogin" text="Logout" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#gotoAbout" text="About SupplyAlytics" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+      <Text layoutX="30.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Preferences ">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Text>
+      <Line endX="580.0" fill="#00000099" layoutX="30.0" layoutY="77.0" />
+      <Text layoutX="35.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Here you can change the preferences for the delivery classification!">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+      <Button fx:id="updateButton" layoutX="30.0" layoutY="399.0" mnemonicParsing="false" onAction="#updateScoreSetttings" prefHeight="37.0" prefWidth="91.0" text="Update" />
+      <TableView fx:id="deliveryRangeTable" layoutX="35.0" layoutY="139.0" prefHeight="160.0" prefWidth="490.0">
+        <columns>
+          <TableColumn fx:id="daysMinCol" prefWidth="169.0" text="DaysMin" />
+          <TableColumn fx:id="daysMaxCol" minWidth="7.0" prefWidth="169.0" text="DaysMax (days)" />
+            <TableColumn fx:id="deliveryRangeCol" minWidth="0.0" prefWidth="149.0" text="DeliveryRange" />
+        </columns>
+      </TableView>
+      <Text fx:id="errorMessage" fill="#dd0000" layoutX="253.0" layoutY="423.0" strokeType="OUTSIDE" strokeWidth="0.0" text="errorMessage">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+      <Button fx:id="resetButton" layoutX="134.0" layoutY="399.0" mnemonicParsing="false" onAction="#resetScoreSetttings" prefHeight="37.0" prefWidth="104.0" text="Default Settings" />
+    </children>
+</AnchorPane>

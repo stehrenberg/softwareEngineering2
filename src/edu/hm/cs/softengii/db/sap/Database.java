@@ -193,11 +193,11 @@ public class Database implements IDatabase {
     	// Search for classification
         for (SupplierClassificationThresholdEntity threshold: thresholds) {
         	
-        	if (deliveryCount >= threshold.getDelivieriesMin() && 
-        		deliveryCount <= threshold.getDelivieriesMax()) {
+        	if (deliveryCount >= threshold.getDeliveriesMin() &&
+        		deliveryCount <= threshold.getDeliveriesMax()) {
         		
         		// found!!
-        		suppClass = threshold.getClassificationName();
+        		suppClass = threshold.getClassName();
         		break;
         	}
         }

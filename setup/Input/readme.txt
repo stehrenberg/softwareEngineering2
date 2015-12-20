@@ -1,1 +1,0 @@
-Input files should placed in this folder.

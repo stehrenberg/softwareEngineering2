@@ -1,10 +1,12 @@
 package edu.hm.cs.softengii.cntrl;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
 import edu.hm.cs.softengii.db.dataStorage.DatabaseDataStorage;
 import edu.hm.cs.softengii.db.dataStorage.ScoreThresholdEntity;
 import edu.hm.cs.softengii.utils.MenuHelper;
 import edu.hm.cs.softengii.utils.Session;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -22,6 +24,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
+import javax.naming.Binding;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +61,7 @@ public class ScorePreferencesCtrl implements Initializable {
     @FXML private Button updateButton;
     @FXML private Button resetButton;
     @FXML private Text errorMessage;
+    private String currentError;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -146,6 +150,11 @@ public class ScorePreferencesCtrl implements Initializable {
     }
 
     @FXML
+    public void gotoDeliveryPreferences() {
+        MenuHelper.getInstance().gotoDeliveryPreferences();
+    }
+
+    @FXML
     public void gotoPreferences() {
         MenuHelper.getInstance().gotoPreferences();
     }
@@ -171,14 +180,12 @@ public class ScorePreferencesCtrl implements Initializable {
             manageAllUsersMenuItem.setVisible(true);
             userMenuSeperator.setVisible(true);
             preferencesMenu.setVisible(true);
-            //preferencesMenuItem.setVisible(true);
             preferencesMenuSeperator.setVisible(true);
         } else {
             newUserMenuItem.setVisible(false);
             manageAllUsersMenuItem.setVisible(false);
             userMenuSeperator.setVisible(false);
             preferencesMenu.setVisible(false);
-            //preferencesMenuItem.setVisible(false);
             preferencesMenuSeperator.setVisible(false);
         }
     }
@@ -234,8 +241,8 @@ public class ScorePreferencesCtrl implements Initializable {
         earlyMinCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
-                    setEarlyMin((int) t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+                        .setEarlyMin((int) t.getNewValue());
             }
         });
 
@@ -243,31 +250,31 @@ public class ScorePreferencesCtrl implements Initializable {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
                 ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow()))
-                    .setEarlyMax((int)t.getNewValue());
+                        .setEarlyMax((int) t.getNewValue());
             }
         });
 
         lateMinCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
-                    setLateMin((int)t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+                        .setLateMin((int) t.getNewValue());
             }
         });
 
         lateMaxCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
-                    setLateMax((int)t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+                        .setLateMax((int) t.getNewValue());
             }
         });
 
         scoreCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<ScoreThresholdEntity, Number>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<ScoreThresholdEntity, Number> t) {
-                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow())).
-                    setScoreValue((int)t.getNewValue());
+                ((ScoreThresholdEntity) t.getTableView().getItems().get(t.getTablePosition().getRow()))
+                        .setScoreValue((int) t.getNewValue());
             }
         });
 
@@ -330,6 +337,202 @@ public class ScorePreferencesCtrl implements Initializable {
             }
         }
 
+
+        public boolean isValidEntry(){
+
+            boolean isValidEntry = true;
+
+            int columnIndex = getTableView().getColumns().indexOf(getTableColumn());
+            int rowIndex = getIndex();
+            int oldEntry = (int)getItem();
+            int newEntry = Integer.parseInt(textField.getText());
+
+            int earlyMin = getTableView().getItems().get(getIndex()).getEarlyMin();
+            int earlyMax = getTableView().getItems().get(getIndex()).getEarlyMax();
+            int lateMin = getTableView().getItems().get(getIndex()).getLateMin();
+            int lateMax = getTableView().getItems().get(getIndex()).getLateMax();
+
+            switch (columnIndex) {
+                case 0:
+
+                    if (newEntry > earlyMax) {
+
+                        currentError = "Error: EarlyMin cannot be greater than EarlyMax in this row.";
+                        isValidEntry = false;
+
+                    } else {
+
+                        int tmpIndex = ++rowIndex;
+                        int currentEarlyMin = newEntry;
+                        int nextEarlyMax = getTableView().getItems().get(tmpIndex).getEarlyMax();
+
+                        while (tmpIndex <= 5) {
+
+                            if (currentEarlyMin <= nextEarlyMax || currentEarlyMin - 1 > nextEarlyMax) {
+
+                                nextEarlyMax = currentEarlyMin - 1;
+                                getTableView().getItems().get(tmpIndex).setEarlyMax(nextEarlyMax);
+
+                                if (nextEarlyMax < getTableView().getItems().get(tmpIndex).getEarlyMin()) {
+                                    currentEarlyMin = nextEarlyMax;
+                                    getTableView().getItems().get(tmpIndex).setEarlyMin(currentEarlyMin);
+                                }
+                            }
+
+                            if(tmpIndex < 5) {
+                                currentEarlyMin = getTableView().getItems().get(tmpIndex).getEarlyMin();
+                                nextEarlyMax = getTableView().getItems().get(tmpIndex + 1).getEarlyMax();
+                            }
+
+                            tmpIndex++;
+                        }
+
+                        populateScoreTable();
+                    }
+                    break;
+
+                case 1:
+
+                    if (newEntry < earlyMin) {
+
+                        currentError = "Error: EarlyMax cannot be less than EarlyMin in this row.";
+                        isValidEntry = false;
+
+                    } else {
+
+                        if(Math.abs(newEntry) >= rowIndex + 1) {
+
+                            int tmpIndex = --rowIndex;
+                            int currentEarlyMax = newEntry;
+                            int prevEarlyMin = getTableView().getItems().get(tmpIndex).getEarlyMin();
+
+                            while (tmpIndex >= 0) {
+
+                                if (currentEarlyMax >= prevEarlyMin || currentEarlyMax + 1 < prevEarlyMin) {
+
+                                    prevEarlyMin = currentEarlyMax + 1;
+                                    getTableView().getItems().get(tmpIndex).setEarlyMin(prevEarlyMin);
+
+                                    if (prevEarlyMin > getTableView().getItems().get(tmpIndex).getEarlyMax()) {
+                                        currentEarlyMax = prevEarlyMin;
+                                        getTableView().getItems().get(tmpIndex).setEarlyMax(currentEarlyMax);
+                                    }
+                                }
+
+                                if (tmpIndex > 0) {
+                                    currentEarlyMax = getTableView().getItems().get(tmpIndex).getEarlyMax();
+                                    prevEarlyMin = getTableView().getItems().get(tmpIndex + 1).getEarlyMin();
+                                }
+
+                                tmpIndex--;
+                            }
+
+                            populateScoreTable();
+
+                        } else {
+
+                            currentError = "Error: Maximum for EarlyMax in this row is: " + ((rowIndex + 1) * -1);
+                            isValidEntry = false;
+                        }
+                    }
+                    break;
+
+                case 2:
+
+                    if (newEntry > lateMax) {
+
+                        currentError = "Error: LateMin cannot be greater than LateMax in this row.";
+                        isValidEntry = false;
+
+                    } else {
+
+                        if (Math.abs(newEntry) >= rowIndex + 1) {
+
+                            int tmpIndex = --rowIndex;
+                            int currentLateMin = newEntry;
+                            int prevLateMax = getTableView().getItems().get(tmpIndex).getLateMax();
+
+                            while (tmpIndex >= 0) {
+
+                                if (currentLateMin <= prevLateMax || currentLateMin - 1 > prevLateMax) {
+
+                                    prevLateMax = currentLateMin - 1;
+                                    getTableView().getItems().get(tmpIndex).setLateMax(prevLateMax);
+
+                                    if (prevLateMax < getTableView().getItems().get(tmpIndex).getLateMin()) {
+                                        currentLateMin = prevLateMax;
+                                        getTableView().getItems().get(tmpIndex).setLateMin(currentLateMin);
+                                    }
+                                }
+
+                                if (tmpIndex > 0) {
+                                    currentLateMin = getTableView().getItems().get(tmpIndex).getLateMin();
+                                    prevLateMax = getTableView().getItems().get(tmpIndex - 1).getLateMax();
+                                }
+
+                                tmpIndex--;
+                            }
+
+                            populateScoreTable();
+
+                        } else {
+
+                            currentError = "Error: Minimum for LateMin in this row is: " + (rowIndex + 1);
+                            isValidEntry = false;
+                        }
+
+                    }
+                    break;
+
+                case 3:
+
+                    if (newEntry < lateMin) {
+                        currentError = "Error: LateMax cannot be less than LateMin in this row.";
+                        isValidEntry = false;
+                    } else {
+
+                        int tmpIndex = ++rowIndex;
+                        int currentLateMax = newEntry;
+                        int nextLateMin = getTableView().getItems().get(tmpIndex).getLateMin();
+
+                        while (tmpIndex <= 5) {
+
+                            if (currentLateMax >= nextLateMin || currentLateMax + 1 < nextLateMin) {
+
+                                nextLateMin = currentLateMax + 1;
+                                getTableView().getItems().get(tmpIndex).setLateMin(nextLateMin);
+
+                                if (nextLateMin > getTableView().getItems().get(tmpIndex).getLateMax()) {
+                                    currentLateMax = nextLateMin;
+                                    getTableView().getItems().get(tmpIndex).setLateMax(currentLateMax);
+                                }
+                            }
+
+                            if (tmpIndex < 5) {
+                                currentLateMax = getTableView().getItems().get(tmpIndex).getLateMax();
+                                nextLateMin = getTableView().getItems().get(tmpIndex + 1).getLateMin();
+                            }
+
+                            tmpIndex++;
+                        }
+
+                        populateScoreTable();
+                    }
+                    break;
+                case 4:
+                    if(newEntry > 100) {
+                        currentError = "Error: The maximum for the score is 100%";
+                        isValidEntry = false;
+                    } else if (newEntry < 1) {
+                        currentError = "Error: The minimum for the score is 1%";
+                        isValidEntry = false;
+                    }
+                    break;
+            }
+
+            return isValidEntry;
+        }
+
         private void createTextField() {
             textField = new TextField(getString());
             textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
@@ -337,16 +540,24 @@ public class ScorePreferencesCtrl implements Initializable {
 
                 @Override
                 public void handle(KeyEvent t) {
-                    if (t.getCode() == KeyCode.ENTER) {
+                    if (t.getCode() == KeyCode.ENTER && isValidEntry()) {
+                        errorMessage.setText("");
                         commitEdit(Integer.parseInt(textField.getText()));
                     } else if (t.getCode() == KeyCode.ESCAPE) {
+                        textField.setText(getString());
                         cancelEdit();
-                    } else if (t.getCode() == KeyCode.TAB) {
+                    } else if (t.getCode() == KeyCode.TAB && isValidEntry()) {
+                        errorMessage.setText("");
                         commitEdit(Integer.parseInt(textField.getText()));
                         TableColumn nextColumn = getNextColumn(!t.isShiftDown());
                         if (nextColumn != null) {
                             getTableView().edit(getTableRow().getIndex(), nextColumn);
                         }
+                    } else if ((t.getCode() == KeyCode.ENTER || t.getCode() == KeyCode.TAB) && !isValidEntry()) {
+                        errorMessage.setText("");
+                        errorMessage.setText(currentError);
+                        textField.setText(getString());
+                        cancelEdit();
                     }
                 }
             });
@@ -354,7 +565,7 @@ public class ScorePreferencesCtrl implements Initializable {
             textField.focusedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    if (!newValue && textField != null) {
+                    if (!newValue && textField != null && isValidEntry()) {
                         commitEdit(Integer.parseInt(textField.getText()));
                     }
                 }

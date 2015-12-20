@@ -24,7 +24,8 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
     private static DatabaseDataStorage instance = null;
 
     /** Database URL */
-    private final static String DB_URL = SettingsPropertiesHelper.getInstance().getDataStorageDbUrl();
+	private final static String DB_URL = "jdbc:sqlite::resource:" +
+			DatabaseDataStorage.class.getResource("dataStorage.db").toString();
 
     /** Database username */
     private final static String USER = SettingsPropertiesHelper.getInstance().getDataStorageDbUser();
@@ -322,7 +323,6 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
 		}
 		
 		closeConnection();
-		
 		return thresholds;
     }
 
@@ -332,7 +332,7 @@ public class DatabaseDataStorage implements IDatabaseDataStorage {
     @Override
     public ArrayList<SupplierClassificationThresholdEntity> getSupplierClassificationDefaults() {
 
-ArrayList<SupplierClassificationThresholdEntity> thresholds = new ArrayList<>();
+        ArrayList<SupplierClassificationThresholdEntity> thresholds = new ArrayList<>();
     	
     	establishConnection();
     	
@@ -367,24 +367,25 @@ ArrayList<SupplierClassificationThresholdEntity> thresholds = new ArrayList<>();
     public void setSupplierClassificationThresholds(ObservableList<SupplierClassificationThresholdEntity> thresholds) {
     	
     	establishConnection();
-    	
+
 		try {
 			// First remove all old thresholds in db
 		    String query = "DELETE FROM SupplierClassificationThresholds;";
 		    Statement statement = this.connection.createStatement();
 		    statement.execute(query);
-		    
+
 		    // Then insert new thresholds to database
-		    for (SupplierClassificationThresholdEntity threshold: thresholds) {
-		    	
-		    	query = "INSERT INTO DeliveryRangeThresholds VALUES (" +
-		    			threshold.getClassificationName().ordinal() + ", " + 
-		    			threshold.getDelivieriesMin() + ", " + 
-		    			threshold.getDelivieriesMax() + ");";
-			    statement = this.connection.createStatement();
+		    for (SupplierClassificationThresholdEntity threshold : thresholds) {
+
+		    	query = "INSERT INTO SupplierClassificationThresholds VALUES (" +
+		    			threshold.getClassName().ordinal() + ", " +
+		    			threshold.getDeliveriesMin() + ", " +
+		    			threshold.getDeliveriesMax() + ");";
+
+                statement = this.connection.createStatement();
 			    statement.execute(query);
 		    }
-		
+
 		} catch (SQLException e) {
 		    e.printStackTrace();
 		}

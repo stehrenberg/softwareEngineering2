@@ -89,6 +89,11 @@ public class AboutCtrl implements Initializable {
     }
 
     @FXML
+    public void gotoDeliveryPreferences() {
+        MenuHelper.getInstance().gotoDeliveryPreferences();
+    }
+
+    @FXML
     public void quitApplication() {
         MenuHelper.getInstance().quitApplication();
     }

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.hm.cs.softengii.cntrl.CompareSuppliersCtrl">
+   <top>
+	  <MenuBar layoutY="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="File">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#exportPDF" text="Export PDF" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#quitApplication" text="Quit" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Perspectives">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#gotoCompareSuppliers" text="Compare Suppliers" />
+                        <MenuItem mnemonicParsing="false" onAction="#gotoAverageSuppliers" text="Suppliers Average" />
+                        <SeparatorMenuItem fx:id="preferencesMenuSeperator" mnemonicParsing="false" />
+                        <Menu fx:id="preferencesMenu" mnemonicParsing="false" text="Preferences">
+                            <items>
+                                <MenuItem fx:id="deliveryClassificationMenuItem1" mnemonicParsing="false" onAction="#gotoDeliveryPreferences" text="Delivery Classification" />
+                                <MenuItem fx:id="supplierClassificationMenuItem" mnemonicParsing="false" onAction="#gotoPreferences" text="Supplier Classification" />
+                                <MenuItem fx:id="scoreThresholdMenuItem" mnemonicParsing="false" onAction="#gotoScorePreferences" text="Score Thresholds" />
+                            </items>
+                        </Menu>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="User">
+                    <items>
+                        <MenuItem fx:id="newUserMenuItem" mnemonicParsing="false" onAction="#gotoCreateNewUser" text="New User" />
+                        <MenuItem fx:id="manageAllUsersMenuItem" mnemonicParsing="false" onAction="#gotoManageAllUsers" text="Manage all Users" />
+                        <SeparatorMenuItem fx:id="userMenuSeperator" mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#gotoUserSettings" text="Settings" />
+                        <MenuItem mnemonicParsing="false" onAction="#gotoLogin" text="Logout" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#gotoAbout" text="About SupplyAlytics" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+   </top>
+   <center>
+      <BarChart fx:id="compareChart" animated="false" legendVisible="false" title="Compare Suppliers" BorderPane.alignment="CENTER">
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis autoRanging="false" side="LEFT" />
+        </yAxis>
+      </BarChart>
+   </center>
+   <right>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Separator orientation="VERTICAL" />
+            <GridPane maxHeight="-Infinity" vgap="10.0" HBox.hgrow="ALWAYS">
+              <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+               <children>
+                  <Label text="Date Range">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
+                  <Label text="Start date" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
+                  <Label text="End date" GridPane.rowIndex="3">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
+                  <DatePicker fx:id="startDatePicker" editable="false" onAction="#startDatePickerAction" GridPane.rowIndex="2" />
+                  <DatePicker fx:id="endDatePicker" editable="false" onAction="#endDatePickerAction" GridPane.rowIndex="4" />
+                  <Separator GridPane.rowIndex="5" />
+                  <Label text="Selection Modes" GridPane.rowIndex="6">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font></Label>
+                  <ComboBox fx:id="supplier1Combo" onAction="#supplier1ComboAction" prefWidth="150.0" GridPane.rowIndex="7" />
+                  <ComboBox fx:id="supplier2Combo" onAction="#supplier2ComboAction" prefWidth="150.0" GridPane.rowIndex="8" />
+                  <ComboBox fx:id="supplier3Combo" onAction="#supplier3ComboAction" prefWidth="150.0" GridPane.rowIndex="9" />
+                  <ComboBox fx:id="supplier4Combo" onAction="#supplier4ComboAction" prefWidth="150.0" GridPane.rowIndex="10" />
+               </children>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+            </GridPane>
+         </children>
+      </HBox>
+   </right>
+</BorderPane>

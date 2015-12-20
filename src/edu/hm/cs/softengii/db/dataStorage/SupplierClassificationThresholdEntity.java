@@ -29,14 +29,14 @@ public class SupplierClassificationThresholdEntity {
     /**
      * Create a new instance
      * @param className Classification name
-     * @param delivieriesMin Minimum value of deliveries
-     * @param delivieriesMax Maximum value of delivieries
+     * @param deliveriesMin Minimum value of deliveries
+     * @param deliveriesMax Maximum value of delivieries
      */
-    public SupplierClassificationThresholdEntity(SupplierClass className, int deliveriesMin, int deliviriesMax) {
+    public SupplierClassificationThresholdEntity(SupplierClass className, int deliveriesMin, int deliveriesMax) {
     	
         this.className = className;
         this.deliveriesMin = deliveriesMin;
-        this.deliveriesMax = deliviriesMax;
+        this.deliveriesMax = deliveriesMax;
     }
 
     // Getter ---------------------------------------------------------------------------
@@ -45,33 +45,34 @@ public class SupplierClassificationThresholdEntity {
      * Get classification name
      * @return Classification name
      */
-    public SupplierClass getClassificationName() {
+    public SupplierClass getClassName() {
         return this.className;
     }
-    
+
+
     /**
      * Get minimum value of deliveries
      * @return Minimum value of deliveries
      */
-    public int getDelivieriesMin() {
-        return this.deliveriesMin;
+    public int getDeliveriesMin() {
+        return deliveriesMin;
     }
-    
+
     /**
      * Get maximum value of deliveries
      * @return Maximum value of deliveries
      */
-    public int getDelivieriesMax() {
-        return this.deliveriesMax;
+    public int getDeliveriesMax() {
+        return deliveriesMax;
     }
 
-    // Setter ---------------------------------------------------------------------------
+// Setter ---------------------------------------------------------------------------
 
     /**
      * Set the classfication name
      * @param className Classification name
      */
-    public void setClassificationName(SupplierClass className) {
+    public void setClassName(SupplierClass className) {
         this.className = className;
     }
 
