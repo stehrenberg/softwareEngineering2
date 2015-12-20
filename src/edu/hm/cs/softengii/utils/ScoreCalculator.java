@@ -19,7 +19,7 @@ public class ScoreCalculator {
 	 * Date pickers range start date
 	 */
 	private LocalDate rangeStart = LocalDate.MIN;
-	
+
 	/**
 	 * Date pickers range end date
 	 */
@@ -28,14 +28,18 @@ public class ScoreCalculator {
 	/**
 	 * Thresholds to score a delivery
 	 */
-	ArrayList<ScoreThresholdEntity> thresholds;
-	
+	List<ScoreThresholdEntity> thresholds;
+
 	/**
 	 * Create a new instance
 	 */
 	public ScoreCalculator()
 	{
 		this.thresholds = DatabaseDataStorage.getInstance().getScoreThresholds();
+	}
+
+	public ScoreCalculator(List<ScoreThresholdEntity> scoreTresholds) {
+		thresholds = scoreTresholds;
 	}
 
 	/**
@@ -94,7 +98,6 @@ public class ScoreCalculator {
 	 * Calculate score for a single delivery by a specific algorithm
      * Returns a single score value.
 	 * @param delayedDays The umber of delayed days
-     * @param thresholds A list containing the thresholds
 	 */
 	private int calculateSingleScore(int delayedDays) {
 

@@ -6,12 +6,14 @@
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/src/dataStorage.db</jdbc-url>
+      <libraries />
     </data-source>
     <data-source source="LOCAL" name="Sqlite (Xerial) - userAuth.db [2] SRC" uuid="ac3632ff-36e7-4bcc-8fcf-b28308153b81">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/src/userAuth.db</jdbc-url>
+      <libraries />
     </data-source>
   </component>
 </project>
