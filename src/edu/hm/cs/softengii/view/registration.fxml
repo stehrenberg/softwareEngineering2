@@ -72,8 +72,6 @@
       <PasswordField fx:id="pswd" layoutX="472.0" layoutY="289.0" />
       <PasswordField fx:id="pswdConfirm" layoutX="472.0" layoutY="319.0" />
       <Button fx:id="registerButton" layoutX="37.0" layoutY="402.0" mnemonicParsing="false" onAction="#register" prefHeight="37.0" prefWidth="91.0" text="Register" />
-      <Button fx:id="germanButton" layoutX="571.0" layoutY="30.0" mnemonicParsing="false" onAction="#switchToGerman" text="DE" />
-      <Button fx:id="englishButton" layoutX="530.0" layoutY="30.0" mnemonicParsing="false" onAction="#switchToEnglish" text="EN" />
       <Text fx:id="errorMessageLeft" fill="#dd0000" layoutX="142.0" layoutY="406.0" strokeType="OUTSIDE" strokeWidth="0.0" text="errorMessageLeft">
          <font>
             <Font size="14.0" />
