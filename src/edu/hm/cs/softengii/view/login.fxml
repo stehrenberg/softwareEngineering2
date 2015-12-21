@@ -38,7 +38,5 @@
             <Font size="14.0" />
          </font>
       </Text>
-      <Button fx:id="englishButton" layoutX="529.0" layoutY="28.0" mnemonicParsing="false" onAction="#switchToEnglish" text="EN" />
-      <Button fx:id="germanButton" layoutX="570.0" layoutY="28.0" mnemonicParsing="false" onAction="#switchToGerman" text="DE" />
    </children>
 </AnchorPane>
