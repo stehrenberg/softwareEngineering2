@@ -4,7 +4,6 @@ import edu.hm.cs.softengii.db.dataStorage.ScoreThresholdEntity;
 import edu.hm.cs.softengii.db.sap.Delivery;
 import edu.hm.cs.softengii.db.sap.Supplier;
 import edu.hm.cs.softengii.utils.ScoreCalculator;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -15,15 +14,78 @@ import static org.junit.Assert.assertEquals;
 
 public class ScoreCalculatorTest {
 
+	/**
+	 * Test the calculateScore method with a mocked supplier
+	 */
     @Test
     public void testCalculateScore() {
 
         List<ScoreThresholdEntity> scoreThresholds = createScoreTresholds();
         ScoreCalculator calc = new ScoreCalculator(scoreThresholds);
-        Supplier testSupplier1 = createSampleSupplier();
+        Supplier testSupplier = createSampleSupplier();
 
-        double calculatedScore = calc.calculateScore(testSupplier1);
-        double expectedScore = (100+100+80)/3.0;
+        double calculatedScore = calc.calculateScore(testSupplier);
+        double expectedScore = (80 + 100 + 100) / 3.0;
+        assertEquals(expectedScore, calculatedScore, 0.001);
+    }
+    
+    /**
+     * Test the calculateScore method with a mocked supplier in a specific date range (start & end)
+     */
+    @Test
+    public void testCalculateScoreDateRange() {
+    	
+    	List<ScoreThresholdEntity> scoreThresholds = createScoreTresholds();
+        ScoreCalculator calc = new ScoreCalculator(scoreThresholds);
+        
+        // take date range when first two deliveris were delivered
+        calc.setRangeStart(LocalDate.of(2015, 10, 4));
+        calc.setRangeEnd(LocalDate.of(2015, 10, 7));
+        
+        Supplier testSupplier = createSampleSupplier();
+
+        double calculatedScore = calc.calculateScore(testSupplier);
+        double expectedScore = (80 + 100) / 2.0;
+        assertEquals(expectedScore, calculatedScore, 0.001);
+    }
+    
+    /**
+     * Test the calculateScore method with a mocked supplier and just a start date
+     */
+    @Test
+    public void testCalculateScoreDateRangeStart() {
+    	
+    	List<ScoreThresholdEntity> scoreThresholds = createScoreTresholds();
+        ScoreCalculator calc = new ScoreCalculator(scoreThresholds);
+        
+        // take date range when last two deliveris were delivered
+        // end date should be now
+        calc.setRangeStart(LocalDate.of(2015, 10, 5));
+        
+        Supplier testSupplier = createSampleSupplier();
+
+        double calculatedScore = calc.calculateScore(testSupplier);
+        double expectedScore = (80 + 100) / 2.0;
+        assertEquals(expectedScore, calculatedScore, 0.001);
+    }
+    
+    /**
+     * Test the calculateScore method with a mocked supplier and just an end date
+     */
+    @Test
+    public void testCalculateScoreDateRangeEnd() {
+    	
+    	List<ScoreThresholdEntity> scoreThresholds = createScoreTresholds();
+        ScoreCalculator calc = new ScoreCalculator(scoreThresholds);
+        
+        // take date range when first delivery was delivered
+        // start date should be now
+        calc.setRangeEnd(LocalDate.of(2015, 10, 6));
+        
+        Supplier testSupplier = createSampleSupplier();
+
+        double calculatedScore = calc.calculateScore(testSupplier);
+        double expectedScore = 100 / 1.0;
         assertEquals(expectedScore, calculatedScore, 0.001);
     }
 
