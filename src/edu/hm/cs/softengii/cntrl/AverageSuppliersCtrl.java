@@ -48,6 +48,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.WritableImage;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 
 /**
  * JavaFX Controller for 'averageSuppliers.fxml'.
@@ -180,19 +181,14 @@ public class AverageSuppliersCtrl implements Initializable {
         ByteArrayOutputStream byteOutputScene = new ByteArrayOutputStream();
         PdfWriter writer = null;
         
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Choose an export directory");
-        File selectedDirectory = chooser.showDialog(scene.getWindow());
-        
-        String path = "";
-        if(selectedDirectory.isDirectory()) {
-        	path = selectedDirectory.getAbsolutePath();
-        } else {
-        	path = getClass().getProtectionDomain().getCodeSource().getLocation().getHost();
-        }
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose an selected file");
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PDF file (*.pdf)", "*.pdf");
+        chooser.getExtensionFilters().add(extFilter);
+        File selectedDirectory = chooser.showSaveDialog(scene.getWindow());
         
         try {
-            writer = PdfWriter.getInstance(document, new FileOutputStream(path + "/AverageSuppliers.pdf"));
+            writer = PdfWriter.getInstance(document, new FileOutputStream(selectedDirectory));
             document.open();
             ImageIO.write(SwingFXUtils.fromFXImage(writeableScene, null),"png", byteOutputScene);
             Image imageScene = Image.getInstance(byteOutputScene.toByteArray());
