@@ -34,7 +34,7 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
 
     /** Database password */
     private final static String PASSWORD = SettingsPropertiesHelper.getInstance().getUserAuthDbPswd();
-    
+
     /**
     GeneralDB : authUserAll
     KevinBeck : authUserBeck
@@ -43,10 +43,10 @@ public class DatabaseUserAuth implements IDatabaseUserAuth {
     MaxiOeckler : authUserOeckler
     MaxiRenk : authUserRenk
     */
-    
+
     /** User tables */
-    private final static String USER_TABLE = "authUserAll";
-    
+    private final static String USER_TABLE = "authUserEhrenberg";//"authUserAll";
+
 
     /** Connection to the database */
     private Connection connection;
